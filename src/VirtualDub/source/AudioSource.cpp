@@ -58,8 +58,7 @@ AudioSourceAVI::AudioSourceAVI(InputFileAVI *pParent, IAVIReadHandler *pAVI, int
 }
 
 AudioSourceAVI::~AudioSourceAVI() {
-	if (pAVIStream)
-		delete pAVIStream;
+	delete pAVIStream;
 }
 
 bool AudioSourceAVI::init() {
@@ -336,8 +335,7 @@ AudioSourceDV::AudioSourceDV(InputFileAVI *pParent, IAVIReadStream *pStream, boo
 }
 
 AudioSourceDV::~AudioSourceDV() {
-	if (mpStream)
-		delete mpStream;
+	delete mpStream;
 }
 
 bool AudioSourceDV::init() {

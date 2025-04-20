@@ -511,7 +511,7 @@ sint64 VDGetDiskFreeSpace(const wchar_t *path) {
 }
 
 bool VDDoesPathExist(const wchar_t *fileName) {
-	bool bExists = ((DWORD)-1 != GetFileAttributesW(fileName));
+	bool bExists = (INVALID_FILE_ATTRIBUTES != GetFileAttributesW(fileName));
 
 	return bExists;
 }

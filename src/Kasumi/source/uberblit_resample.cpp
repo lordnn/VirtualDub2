@@ -100,8 +100,7 @@ VDPixmapGenResampleRow::VDPixmapGenResampleRow()
 }
 
 VDPixmapGenResampleRow::~VDPixmapGenResampleRow() {
-	if (mpRowStage)
-		delete mpRowStage;
+	delete mpRowStage;
 }
 
 void VDPixmapGenResampleRow::Init(IVDPixmapGen *src, uint32 srcIndex, uint32 width, float offset, float step, nsVDPixmap::FilterMode filterMode, float filterFactor, bool interpolationOnly) {
@@ -633,8 +632,7 @@ VDPixmapGenResampleCol::VDPixmapGenResampleCol()
 }
 
 VDPixmapGenResampleCol::~VDPixmapGenResampleCol() {
-	if (mpColStage)
-		delete mpColStage;
+	delete mpColStage;
 }
 
 void VDPixmapGenResampleCol::Init(IVDPixmapGen *src, uint32 srcIndex, uint32 height, float offset, float step, nsVDPixmap::FilterMode filterMode, float filterFactor, bool interpolationOnly) {

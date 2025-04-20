@@ -23,7 +23,8 @@ int RunVectorTest(bool checkCapacity) {
 	CHECK(v.size() == 2);
 	CHECK(!checkCapacity || v.capacity() >= 2);
 
-	v.swap(C());
+	auto vtemp = C();
+	v.swap(vtemp);
 	CHECK(v.size() == 0);
 	v.reserve(2);
 	CHECK(v.size() == 0);

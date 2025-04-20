@@ -269,8 +269,7 @@ FilterSystem::~FilterSystem() {
 	DeinitFilters();
 	DeallocateBuffers();
 
-	if (mpBitmaps)
-		delete mpBitmaps;
+	delete mpBitmaps;
 }
 
 void FilterSystem::SetAccelEnabled(bool enable) {

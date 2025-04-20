@@ -988,38 +988,45 @@ void VDFilterAccelEngine::DownloadCallback2b(DownloadMsg& msg) {
 	IVDTReadbackBuffer *const rb = rbo.GetReadbackBuffer();
 
 	// do readback
-	if (p)
+	if (p) {
 		p->BeginScope(0x8040c0, "Readback");
+	}
 
 	VDPROFILEBEGIN("Readback");
-	bool rbsuccess = rt->Readback(rb);
+	bool success = rt->Readback(rb);
 	VDPROFILEEND();
 
-	if (p)
+	if (p) {
 		p->EndScope();
+	}
 
-	if (!rbsuccess)
+	if (!success) {
 		goto xit;
+	}
 
 	// lock and copy planes
-	if (p)
+	if (p) {
 		p->BeginScope(0x4080c0, "RB-Lock");
+	}
 
 	VDPROFILEBEGIN("RB-Lock");
 
 	VDTLockData2D lockData;
-	bool lksuccess = rb->Lock(lockData);
+	success = rb->Lock(lockData);
 
 	VDPROFILEEND();
 
-	if (p)
+	if (p) {
 		p->EndScope();
+	}
 
-	if (!lksuccess)
+	if (!success) {
 		goto xit;
+	}
 
-	if (p)
+	if (p) {
 		p->BeginScope(0x8080f0, "RB-Copy");
+	}
 
 	VDPROFILEBEGIN("RB-Copy");
 	if (!msg.mbDstYUV) {
@@ -1038,14 +1045,16 @@ void VDFilterAccelEngine::DownloadCallback2b(DownloadMsg& msg) {
 	rb->Unlock();
 	VDPROFILEEND();
 
-	if (p)
+	if (p) {
 		p->EndScope();
+	}
 
 	msg.mbSuccess = true;
 
 xit:
-	if (mpTC->IsDeviceLost())
+	if (mpTC->IsDeviceLost()) {
 		msg.mbDeviceLost = true;
+	}
 }
 
 struct VDFilterAccelEngine::ConvertMsg : public VDFilterAccelEngineMessage {

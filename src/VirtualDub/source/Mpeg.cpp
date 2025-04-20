@@ -2780,8 +2780,7 @@ InputFileMPEG::~InputFileMPEG() {
 	delete audio_packet_list;
 	delete audio_sample_list;
 
-	if (pFastRead)
-		delete pFastRead;
+	delete pFastRead;
 }
 
 void InputFileMPEG::StartScan() {

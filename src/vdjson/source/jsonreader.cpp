@@ -33,8 +33,7 @@ VDJSONReader::VDJSONReader()
 }
 
 VDJSONReader::~VDJSONReader() {
-	if (mNameBuffer)
-		delete[] mNameBuffer;
+	delete[] mNameBuffer;
 }
 
 bool VDJSONReader::Parse(const void *buf, size_t len, VDJSONDocument& doc) {
