@@ -30,6 +30,7 @@ DubSource::~DubSource() {
 void *DubSource::allocFormat(int format_len) {
 	if (this->format_len != format_len) {
 		delete[] format;
+
 		this->format_len = format_len;
 		format = new char[format_len];
 	}

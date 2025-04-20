@@ -881,7 +881,7 @@ IVDVideoDecompressor *VDFindVideoDecompressorEx(uint32 fccHandler, const VDAVIBi
 	bool is_mjpeg	 = isEqualFOURCC(hdr->biCompression, 'GPJM')
 					|| isEqualFOURCC(hdr->biCompression, '1bmd');
 	if (is_mjpeg) {
-		vdautoptr<VDVideoDecompressorMJPEG> pDecoder(new_nothrow VDVideoDecompressorMJPEG);
+		vdautoptr<VDVideoDecompressorMJPEG> pDecoder(new(std::nothrow) VDVideoDecompressorMJPEG);
 		if (pDecoder) {
 			pDecoder->Init(w, h);
 
@@ -908,7 +908,7 @@ IVDVideoDecompressor *VDFindVideoDecompressorEx(uint32 fccHandler, const VDAVIBi
 	// If it's Debugmode, use the internal decoder.
 	bool is_dfsc = isEqualFOURCC(hdr->biCompression, 'CSFD');
 	if (is_dfsc) {
-		vdautoptr<VDVideoDecompressorDFSC> pDecoder(new_nothrow VDVideoDecompressorDFSC);
+		vdautoptr<VDVideoDecompressorDFSC> pDecoder(new(std::nothrow) VDVideoDecompressorDFSC);
 		if (pDecoder) {
 			pDecoder->Init(hdr, hdrlen);
 
@@ -1565,12 +1565,12 @@ void VideoSourceAVI::redoKeyFlags(vdfastvector<uint32>& newFlags) {
 				if (!setDecompressedFormat(8))
 					throw MyError("Video decompressor is incapable of decompressing to an RGB format.");
 
-	lpInputBuffer = new_nothrow char[((lMaxFrame + 7) & -8) + lMaxFrame];
+	lpInputBuffer = new(std::nothrow) char[((lMaxFrame + 7) & -8) + lMaxFrame];
 	if (!lpInputBuffer) {
 		throw MyMemoryError();
 	}
 
-	pFrameSums = new_nothrow long[(size_t)(mSampleLast - mSampleFirst)];
+	pFrameSums = new(std::nothrow) long[(size_t)(mSampleLast - mSampleFirst)];
 	if (!pFrameSums) {
 		delete[] lpInputBuffer;
 		throw MyMemoryError();
