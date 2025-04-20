@@ -18,24 +18,17 @@
 #include "stdafx.h"
 #include "DubSource.h"
 
-DubSource::DubSource() {
-}
+DubSource::DubSource() = default;
 
-DubSource::~DubSource() {
-	if (format) {
-		delete[] format;
-	}
-}
+DubSource::~DubSource() = default;
 
 void *DubSource::allocFormat(int format_len) {
 	if (this->format_len != format_len) {
-		delete[] format;
-
 		this->format_len = format_len;
-		format = new char[format_len];
+		format.reset(new char[format_len]);
 	}
 
-	return (void *)format;
+	return (void *)format.get();
 }
 
 bool DubSource::isStreaming() {
