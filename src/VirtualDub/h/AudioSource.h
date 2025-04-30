@@ -26,25 +26,24 @@ class IAVIReadStream;
 
 class AudioSource : public DubSource {
 public:
-	char* src_format = nullptr;
-	int   src_format_len = 0;
+	std::unique_ptr<char[]> src_format;
+	int   src_format_len{};
 
-	AudioSource(){}
-	~AudioSource(){ delete[] src_format; }
+	AudioSource() = default;
 
 	void* allocSrcWaveFormat(int format_len) {
-		if (src_format) {
-			delete[] src_format;
+		if (this->src_format_len != format_len) {
+			src_format.reset(new char[format_len]);
+			this->src_format_len = format_len;
 		}
-		src_format = new(std::nothrow) char[this->src_format_len = format_len];
-		return (void*)src_format;
+		return (void*)src_format.get();
 	}
 
 	const VDWaveFormat *getWaveFormat() const {
 		return (const VDWaveFormat *)getFormat();
 	}
 	const VDWaveFormat *getSourceWaveFormat() const {
-		return (const VDWaveFormat *)src_format;
+		return (const VDWaveFormat *)src_format.get();
 	}
 	virtual void SetTargetFormat(const VDWaveFormat* format){}
 	virtual void streamAppendReinit(){}
