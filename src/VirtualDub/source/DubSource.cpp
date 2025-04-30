@@ -22,8 +22,8 @@ DubSource::DubSource() = default;
 
 void *DubSource::allocFormat(int format_len) {
 	if (this->format_len != format_len) {
-		this->format_len = format_len;
 		format.reset(new char[format_len]);
+    this->format_len = format_len;
 	}
 
 	return (void *)format.get();

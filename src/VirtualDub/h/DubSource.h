@@ -98,7 +98,7 @@ public:
 class DubSource : public vdrefcounted<IVDStreamSource> {
 private:
 	std::unique_ptr<char[]>	format;
-	int		format_len = 0;
+	int		format_len{};
 
 protected:
 	void *allocFormat(int format_len);

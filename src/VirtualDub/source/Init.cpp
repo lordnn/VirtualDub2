@@ -362,8 +362,8 @@ void VDEnableExceptionsFromUserCallbacksW32() {
 	}
 }
 
-bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
-
+bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine)
+{
 //#ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_CHECK_ALWAYS_DF);
 //#endif
@@ -373,7 +373,7 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 
 	VDSetDataPath(VDGetProgramPath().c_str());
 
-	const wchar_t *pDataPath = VDGetDataPath();
+	const wchar_t* pDataPath = VDGetDataPath();
 	VDSetCrashDumpPath(pDataPath);
 
 	// setup crash traps
@@ -392,7 +392,7 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 	VDInitVideoCodecBugTrap();
 
 	// initialize globals
-    g_hInst = hInstance;
+	g_hInst = hInstance;
 
 	// initialize TLS trace system
 	VDSetThreadInitHook(VDThreadInitHandler);
@@ -421,9 +421,9 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 
 		VDLog(kVDLogInfo, s);
 		VDLog(kVDLogInfo, VDswprintf(
-				L"Copyright (C) Avery Lee 1998-2009. Licensed under GNU General Public License\n"
-				,1
-				,&version_num));
+			L"Copyright (C) Avery Lee 1998-2009. Licensed under GNU General Public License\n"
+			, 1
+			, &version_num));
 	}
 
 	// prep system stuff
@@ -434,14 +434,15 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 
 	const bool resetAll = cmdLine.FindAndRemoveSwitch(L"resetall");
 
-	const wchar_t *portableAltFile = 0;
+	const wchar_t* portableAltFile = nullptr;
 	cmdLine.FindAndRemoveSwitch(L"portablealt", portableAltFile);
 
 	VDStringW portableRegPath;
-	if (portableAltFile)
+	if (portableAltFile) {
 		portableRegPath = portableAltFile;
-	else
+	} else {
 		portableRegPath = VDMakePath(VDGetProgramPath().c_str(), L"VirtualDub.ini");
+	}
 
 	if (portableAltFile || cmdLine.FindAndRemoveSwitch(L"portable") || VDDoesPathExist(portableRegPath.c_str())) {
 		g_portableRegistryPath = portableRegPath;
@@ -451,7 +452,8 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 		if (!resetAll && VDDoesPathExist(portableRegPath.c_str())) {
 			try {
 				VDLoadRegistry(portableRegPath.c_str());
-			} catch(const MyError& err) {
+			}
+			catch (const MyError& err) {
 				VDStringA message;
 
 				message.sprintf("There was an error loading the settings file:\n\n%s\n\nDo you want to continue? If so, settings will be reset to defaults and may not be saved.", err.c_str());
@@ -460,14 +462,15 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 			}
 		}
 	} else {
-		if (resetAll)
+		if (resetAll) {
 			SHDeleteKeyA(HKEY_CURRENT_USER, "Software\\VirtualDub.org\\VirtualDub");
+		}
 	}
 
 	VDRegistryAppKey::setDefaultKey("Software\\VirtualDub.org\\VirtualDub\\");
 
 	const bool regUseProfileSetting = VDRegistryAppKey("Preferences", false).getBool("Use profile-local path")
-		|| VDRegistryAppKey("Preferences", false, true).getBool("Use profile-local path") ;
+		|| VDRegistryAppKey("Preferences", false, true).getBool("Use profile-local path");
 	const bool useProfileSwitch = cmdLine.FindAndRemoveSwitch(L"useprofile");
 	const bool noUseProfileSwitch = cmdLine.FindAndRemoveSwitch(L"nouseprofile");
 	const bool useProfileSetting = useProfileSwitch || (!noUseProfileSwitch && regUseProfileSetting);
@@ -499,16 +502,19 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 		unsigned errorMode;
 
 		errorMode = key.getInt("Edit: Video error mode");
-		if (errorMode < DubSource::kErrorModeCount)
+		if (errorMode < DubSource::kErrorModeCount) {
 			g_videoErrorMode = (DubSource::ErrorMode)errorMode;
+		}
 
 		errorMode = key.getInt("Edit: Audio error mode");
-		if (errorMode < DubSource::kErrorModeCount)
+		if (errorMode < DubSource::kErrorModeCount) {
 			g_audioErrorMode = (DubSource::ErrorMode)errorMode;
+		}
 	}
 
-	if (!cmdLine.FindAndRemoveSwitch(L"safecpu"))
+	if (!cmdLine.FindAndRemoveSwitch(L"safecpu")) {
 		VDCPUTest();
+	}
 
 	int pluginsSucceeded = 0;
 	int pluginsFailed = 0;
@@ -540,15 +546,17 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 	VDInitTools();
 	VDLoadExternalEncoderProfiles();
 
-	if (!InitJobSystem())
+	if (!InitJobSystem()) {
 		return FALSE;
+	}
 
 	// initialize interface
 
 	VDCHECKPOINT;
 
-    if (!InitApplication(hInstance))
-            return (FALSE);
+	if (!InitApplication(hInstance)) {
+		return (FALSE);
+	}
 
 	VDInstallModelessDialogHookW32();
 
@@ -559,7 +567,7 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 	// Announce experimentality.
 	AnnounceExperimental();
 
-    // Create the main window.
+	// Create the main window.
 
 	if (cmdLine.FindAndRemoveSwitch(L"min")) {
 		nCmdShow = SW_SHOWMINNOACTIVE;
@@ -567,16 +575,19 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 		nCmdShow = SW_SHOWMAXIMIZED;
 	}
 
-	if (!InitInstance(hInstance, nCmdShow, cmdLine.FindAndRemoveSwitch(L"topmost")))
-        return (FALSE);
+	if (!InitInstance(hInstance, nCmdShow, cmdLine.FindAndRemoveSwitch(L"topmost"))) {
+		return (FALSE);
+	}
 
 	// Autoload filters.
 
 	VDCHECKPOINT;
-	if (pluginsFailed)
+	if (pluginsFailed) {
 		guiSetStatus("Autoloaded %d filter(s) (%d failed). Check the log for details.", 255, pluginsSucceeded, pluginsFailed);
-	else if (pluginsSucceeded)
+	}
+	else if (pluginsSucceeded) {
 		guiSetStatus("Autoloaded %d filter(s).", 255, pluginsSucceeded);
+	}
 
 	// Detect DivX.
 
@@ -586,8 +597,9 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine) {
 
 	VDCHECKPOINT;
 
-	if (g_pPostInitRoutine)
+	if (g_pPostInitRoutine) {
 		g_pPostInitRoutine();
+	}
 
 	return true;
 }

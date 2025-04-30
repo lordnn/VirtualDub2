@@ -849,26 +849,13 @@ VDStringW VDGetProgramFilePath() {
 	return wstr;
 }
 
-VDStringW VDGetSystemPath9x() {
-	char path[MAX_PATH];
-
-	if (!GetSystemDirectoryA(path, MAX_PATH))
-		throw MyWin32Error("Cannot locate system directory: %%s", GetLastError());
-
-	return VDTextAToW(path);
-}
-
-VDStringW VDGetSystemPathNT() {
+VDStringW VDGetSystemPath() {
 	wchar_t path[MAX_PATH];
 
 	if (!GetSystemDirectoryW(path, MAX_PATH))
 		throw MyWin32Error("Cannot locate system directory: %%s", GetLastError());
 
 	return VDStringW(path);
-}
-
-VDStringW VDGetSystemPath() {
-	return VDGetSystemPathNT();
 }
 
 void VDGetRootPaths(vdvector<VDStringW>& paths) {
