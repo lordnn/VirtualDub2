@@ -213,6 +213,8 @@ void VDToggleCaptureNRDialog(VDGUIHandle hwndParent, IVDCaptureProject *pProject
 extern void CaptureCloseBT848Tweaker();
 extern void CaptureDisplayBT848Tweaker(HWND hwndParent);
 
+extern bool VDPreferencesGetAttachExtension();
+
 IVDUIWindow *VDCreateUICaptureVumeter();
 IVDUIWindow *VDCreateUICaptureGraph();
 
@@ -2535,7 +2537,7 @@ void VDCaptureProjectUI::UICaptureEnd(bool success) {
 		}
 
 		if (mpProject->IsLogEnabled() && mpProject->IsLogAvailable()) {
-			const VDStringW logfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Save timing log", L"Comma-separated values (*.csv)\0*.csv\0All Files (*.*)\0*.*\0", g_prefs.main.fAttachExtension ? L"csv" : NULL));
+			const VDStringW logfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Save timing log", L"Comma-separated values (*.csv)\0*.csv\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"csv" : NULL));
 
 			if (!logfile.empty()) {
 				try {
@@ -3263,7 +3265,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 
 				int optvals[1]={false};
 
-				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Set Capture File", L"Audio-Video Interleave (*.avi)\0*.avi\0All Files (*.*)\0*.*\0", g_prefs.main.fAttachExtension ? L"avi" : NULL, opts, optvals));
+				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Set Capture File", L"Audio-Video Interleave (*.avi)\0*.avi\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"avi" : NULL, opts, optvals));
 
 				if (!capfile.empty()) {
 					mpProject->SetCaptureFile(capfile.c_str(), false);
@@ -3280,7 +3282,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 		case ID_FILE_SETSTRIPINGSYSTEM:
 			SuspendDisplay();
 			{
-				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Select Striping System for Internal Capture", L"AVI Stripe System (*.stripe)\0*.stripe\0All Files (*.*)\0*.*\0", g_prefs.main.fAttachExtension ? L"stripe" : NULL));
+				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Select Striping System for Internal Capture", L"AVI Stripe System (*.stripe)\0*.stripe\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"stripe" : NULL));
 
 				if (!capfile.empty()) {
 					try {

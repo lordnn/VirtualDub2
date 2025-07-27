@@ -194,7 +194,7 @@ void VDCPUTest() {
 
 	lEnableFlags = featureMask & CPUF_SUPPORTS_MASK;
 
-	if (!(featureMask & PreferencesMain::OPTF_FORCE)) {
+	if (!(featureMask & OPTF_FORCE)) {
 		SYSTEM_INFO si;
 
 		lEnableFlags = CPUCheckForExtensions();
@@ -254,7 +254,7 @@ void VDConsoleLogger::Write(const wchar_t *text, size_t len) {
 
 	int mblen = WideCharToMultiByte(CP_ACP, 0, text, len, NULL, 0, NULL, NULL);
 
-	char *buf = (char *)alloca(mblen + 2);
+	char *buf = (char *)_malloca(mblen + 2);
 
 	mblen = WideCharToMultiByte(CP_ACP, 0, text, len, buf, mblen, NULL, NULL);
 
@@ -264,6 +264,7 @@ void VDConsoleLogger::Write(const wchar_t *text, size_t len) {
 
 		WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), buf, mblen+2, &actual, NULL);
 	}
+	_freea(buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -463,11 +464,11 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine)
 		}
 	} else {
 		if (resetAll) {
-			SHDeleteKeyA(HKEY_CURRENT_USER, "Software\\VirtualDub.org\\VirtualDub");
+			SHDeleteKeyA(HKEY_CURRENT_USER, "Software\\VirtualDub2\\VirtualDub");
 		}
 	}
 
-	VDRegistryAppKey::setDefaultKey("Software\\VirtualDub.org\\VirtualDub\\");
+	VDRegistryAppKey::setDefaultKey("Software\\VirtualDub2\\VirtualDub\\");
 
 	const bool regUseProfileSetting = VDRegistryAppKey("Preferences", false).getBool("Use profile-local path")
 		|| VDRegistryAppKey("Preferences", false, true).getBool("Use profile-local path");
@@ -477,7 +478,7 @@ bool Init(HINSTANCE hInstance, int nCmdShow, VDCommandLine& cmdLine)
 
 	if (useProfileSetting) {
 		const VDStringW& localAppDataPath = VDGetLocalAppDataPath();
-		const VDStringW& localAppDataPath1 = VDMakePath(localAppDataPath.c_str(), L"virtualdub.org");
+		const VDStringW& localAppDataPath1 = VDMakePath(localAppDataPath.c_str(), L"VirtualDub2");
 		const VDStringW& localAppDataPath2 = VDMakePath(localAppDataPath1.c_str(), L"VirtualDub");
 		if (!VDDoesPathExist(localAppDataPath2.c_str())) {
 			VDCreateDirectory(localAppDataPath1.c_str());

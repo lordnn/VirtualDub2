@@ -85,11 +85,13 @@ void MyError::vsetf(const char *f, va_list val) {
 		buf = NULL;
 
 		buf = (char *)malloc(size);
-		if (!buf)
+		if (!buf) {
 			return;
+		}
 
-		if ((unsigned)_vsnprintf(buf, size, f, val) < (unsigned)size)
+		if ((unsigned)vsprintf_s(buf, size, f, val) < (unsigned)size) {
 			return;
+		}
 	}
 
 	free(buf);

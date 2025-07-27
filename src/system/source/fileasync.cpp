@@ -292,7 +292,7 @@ void VDFileAsyncNT::Write(sint64 pos, const void *p, uint32 bytes) {
 
 void VDFileAsyncNT::WriteZero(sint64 pos, uint32 bytes) {
 	uint32 bufsize = bytes > 2048 ? 2048 : bytes;
-	void *p = _alloca(bufsize);
+	void *p = _malloca(bufsize);
 	memset(p, 0, bufsize);
 
 	while(bytes > 0) {
@@ -302,6 +302,7 @@ void VDFileAsyncNT::WriteZero(sint64 pos, uint32 bytes) {
 		pos += tc;
 		bytes -= tc;
 	}
+	_freea(p);
 }
 
 bool VDFileAsyncNT::Extend(sint64 pos) {

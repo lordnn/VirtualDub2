@@ -267,7 +267,7 @@ void VDBackfaceService::operator()(const char *format, ...) {
 	va_list val;
 
 	va_start(val, format);
-	if ((unsigned)_vsnprintf(buf, 3072, format, val) < 3072) {
+	if ((unsigned)vsprintf_s(buf, format, val) < 3072) {
 		if (mpCaptureString)
 			mpCaptureString->assign(buf);
 		else {
@@ -553,13 +553,14 @@ LRESULT VDBackfaceConsole::OnNotify(NMHDR *pHdr) {
 				if (mf.wParam == '\r') {
 					int len = GetWindowTextLengthA(mhwndEdit);
 					if (len) {
-						char *buf = (char *)_alloca(len+1);
+						char *buf = (char *)_malloca(len+1);
 						buf[0] = 0;
 
 						if (GetWindowTextA(mhwndEdit, buf, len+1)) {
 							SetWindowTextA(mhwndEdit, "");
 							g_VDBackfaceService.Execute(*this, buf);
 						}
+						_freea(buf);
 					}
 					return true;
 				}

@@ -20,65 +20,30 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-class PreferencesMain {
-public:
-	enum {
-		/*
-		DEPTH_FASTEST	= 0,
-		DEPTH_OUTPUT	= 1,
-		DEPTH_DISPLAY	= 2,
-		DEPTH_16BIT		= 3,
-		DEPTH_24BIT		= 4,
-		DEPTH_32BIT		= 5,
-		*/
-
-		// The order of these must match the flags in cpuaccel.h!!
-
-		OPTF_FORCE			= 0x01,
-		OPTF_FPU			= 0x02,
-		OPTF_MMX			= 0x04,
-		OPTF_INTEGER_SSE	= 0x08,		// Athlon MMX extensions or Intel SSE
-		OPTF_SSE			= 0x10,		// Full SSE (PIII)
-		OPTF_SSE2			= 0x20,		// (PIV)
-		OPTF_3DNOW			= 0x40,
-		OPTF_3DNOW_EXT		= 0x80,		// Athlon 3DNow! extensions
-		OPTF_SSE3			= 0x100,	// (Prefs2 only)
-		OPTF_SSSE3			= 0x200,	// (Prefs2 only)
-		OPTF_SSE4_1			= 0x400,	// (Prefs2 only)
-		OPTF_AVX			= 0x800,	// (Prefs2 only)
-	};
-
-	char	iPreviewPriority;
-	char	deprecated_iPreviewDepth;
-	char	iDubPriority;
-	char	fAttachExtension;
-	char	fOptimizations;		// deprecated
+enum {
+	// The order of these must match the flags in cpuaccel.h!!
+	OPTF_FORCE       = 0x01,
+	OPTF_FPU         = 0x02,
+	OPTF_MMX         = 0x04,
+	OPTF_INTEGER_SSE = 0x08,  // Athlon MMX extensions or Intel SSE
+	OPTF_SSE         = 0x10,  // Full SSE (PIII)
+	OPTF_SSE2        = 0x20,  // (PIV)
+	OPTF_3DNOW       = 0x40,
+	OPTF_3DNOW_EXT   = 0x80,  // Athlon 3DNow! extensions
+	OPTF_SSE3        = 0x100,
+	OPTF_SSSE3       = 0x200,
+	OPTF_SSE4_1      = 0x400,
+	OPTF_AVX         = 0x800,
 };
 
-class PreferencesScene {
-public:
-	int		iCutThreshold;
-	int		iFadeThreshold;
-};
-
-class Preferences {
-public:
-	PreferencesMain	main;
-	PreferencesScene scene;
-
-	enum {
-		kDisplayDither16		= 0x01,
-		kDisplayDisableDX		= 0x02,
-		kDisplayUseDXWithTS		= 0x04,
-		kDisplayEnableD3D		= 0x08,
-		kDisplayEnableOpenGL	= 0x10,
-		kDisplayEnableD3DFX		= 0x20,
-		kDisplayEnableVSync		= 0x40
-	};
-
-	char fDisplay;
-	char fAVIRestrict1Gb;
-	char fNoCorrectLayer3;
+enum {
+	kDisplayDither16     = 0x01,
+	kDisplayDisableDX    = 0x02,
+	kDisplayUseDXWithTS  = 0x04,
+	kDisplayEnableD3D    = 0x08,
+	kDisplayEnableOpenGL = 0x10,
+	kDisplayEnableD3DFX  = 0x20,
+	kDisplayEnableVSync  = 0x40
 };
 
 enum {
@@ -100,10 +65,6 @@ enum {
 };
 
 ///////////////////////////////////////////////////////////////////////////
-
-#ifndef f_PREFS_CPP
-extern Preferences		g_prefs;
-#endif
 
 void LoadPreferences();
 

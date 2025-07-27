@@ -56,7 +56,7 @@
 // DO NOT USE stdio.h!  printf() calls malloc()!
 //#include <stdio.h>
 #include <stdarg.h>
-#include <malloc.h>		// for alloca()
+#include <malloc.h> // for _malloca()
 
 #include <windows.h>
 #ifndef _M_AMD64
@@ -1428,7 +1428,7 @@ static void VDDebugCrashDumpBombReason(VDDebugCrashTextOutput& out, const EXCEPT
 
 static void VDDebugCrashDumpMemoryRegion(VDDebugCrashTextOutput& out, uintptr base, const char *name, int dwords) {
 	HANDLE hProcess = GetCurrentProcess();
-	uint32 *savemem = (uint32 *)alloca(4 * dwords);
+	uint32 *savemem = (uint32 *)_malloca(4 * dwords);
 
 	base &= ~4;
 
@@ -1456,6 +1456,7 @@ static void VDDebugCrashDumpMemoryRegion(VDDebugCrashTextOutput& out, uintptr ba
 
 		name = "";
 	}
+	_freea(savemem);
 }
 static void VDDebugCrashDumpPointers(VDDebugCrashTextOutput& out, const EXCEPTION_POINTERS *pExc) {
 	const CONTEXT *const pContext = (const CONTEXT *)pExc->ContextRecord;

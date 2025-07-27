@@ -37,7 +37,7 @@ IF NOT EXIST "%SEVENZIP%" (
 
 REM -------------------------------------
 
-SET PCKG_DIR=_out\VirtualDub2_v2.3
+SET PCKG_DIR=_out\VirtualDub2_v2.4
 
 MKDIR %PCKG_DIR%
 MKDIR %PCKG_DIR%\extra

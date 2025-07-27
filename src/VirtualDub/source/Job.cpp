@@ -139,15 +139,16 @@ void JobScriptOutput::addf(const char *fmt, ...) {
 	va_list val;
 	va_start(val, fmt);
 
-	int len = _vsnprintf(buf, (sizeof buf) - 1, fmt, val);
+	int len = vsprintf_s(buf, fmt, val);
 
 	if ((unsigned)len >= sizeof buf) {
 		len = _vscprintf(fmt, val);
 
 		if (len >= 0) {
-			bufptr = (char *)malloc(len + 1);
+			len += 1; // for terminating null character
+			bufptr = (char *)malloc(len);
 
-			len = _vsnprintf(bufptr, len, fmt, val);
+			len = vsprintf_s(bufptr, len, fmt, val);
 		}
 	}
 

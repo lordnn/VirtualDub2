@@ -628,8 +628,8 @@ void VDScriptInterpreter::InvokeMethod(const VDScriptFunctionDef *sfd, int pcoun
 	// cleanly labeled goto's to excessive boolean variable usage.
 	const VDScriptFunctionDef *sfd_best = NULL;
 
-	int *best_scores = (int *)_alloca(sizeof(int) * (pcount + 1));
-	int *current_scores = (int *)_alloca(sizeof(int) * (pcount + 1));
+	int *best_scores = (int *)_malloca(sizeof(int) * (pcount + 1));
+	int *current_scores = (int *)_malloca(sizeof(int) * (pcount + 1));
 	int best_promotions = 0;
 	bool ambiguous = false;
 
@@ -729,6 +729,8 @@ void VDScriptInterpreter::InvokeMethod(const VDScriptFunctionDef *sfd, int pcoun
 arglist_nomatch:
 		++sfd;
 	}
+	_freea(current_scores);
+	_freea(best_scores);
 
 	if (!sfd_best)
 		SCRIPT_ERROR(OVERLOADED_FUNCTION_NOT_FOUND);

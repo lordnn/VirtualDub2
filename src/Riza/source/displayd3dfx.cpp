@@ -494,10 +494,8 @@ bool VDVideoDisplayMinidriverD3DFX::Init(HWND hwnd, HMONITOR hmonitor, const VDV
 	}
 
 	// pull the effect compiler pointer
-	tpD3DXCreateEffectCompilerFromFileA pD3DXCreateEffectCompilerFromFileA = NULL;
-	tpD3DXCreateEffectCompilerFromFileW pD3DXCreateEffectCompilerFromFileW = NULL;
-
-	pD3DXCreateEffectCompilerFromFileW = (tpD3DXCreateEffectCompilerFromFileW)GetProcAddress(mhmodD3DX, "D3DXCreateEffectCompilerFromFileW");
+	tpD3DXCreateEffectCompilerFromFileW pD3DXCreateEffectCompilerFromFileW =
+		(tpD3DXCreateEffectCompilerFromFileW)GetProcAddress(mhmodD3DX, "D3DXCreateEffectCompilerFromFileW");
 
 	if (!pD3DXCreateEffectCompilerFromFileW) {
 		Shutdown();
@@ -551,11 +549,7 @@ bool VDVideoDisplayMinidriverD3DFX::Init(HWND hwnd, HMONITOR hmonitor, const VDV
 
 	ID3DXBuffer *pEffectBuffer = NULL;
 
-	HRESULT hr;
-	if (pD3DXCreateEffectCompilerFromFileW)
-		hr = pD3DXCreateEffectCompilerFromFileW(srcfile.c_str(), NULL, NULL, 0, &mpEffectCompiler, &pError);
-	else
-		hr = pD3DXCreateEffectCompilerFromFileA(VDTextWToA(srcfile).c_str(), NULL, NULL, 0, &mpEffectCompiler, &pError);
+	HRESULT hr = pD3DXCreateEffectCompilerFromFileW(srcfile.c_str(), NULL, NULL, 0, &mpEffectCompiler, &pError);
 
 	if (SUCCEEDED(hr)) {
 		if (pError) {

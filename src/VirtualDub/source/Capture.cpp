@@ -98,6 +98,7 @@ IVDCaptureSystem *VDCreateCaptureSystemEmulation();
 
 IVDCaptureProfiler *g_pCaptureProfiler;		// a bit of a cheat for now
 
+extern bool VDPreferencesGetAVIRestrict1Gb();
 extern void VDPreferencesGetAVIIndexingLimits(uint32& superindex, uint32& subindex);
 
 int VDPreferencesGetMRUSize();
@@ -1997,14 +1998,14 @@ void VDCaptureProject::Capture(bool fTest) {
 				if (!icd.mpOutput)
 					throw MyMemoryError();
 
-				if (g_prefs.fAVIRestrict1Gb)
+				if (VDPreferencesGetAVIRestrict1Gb())
 					((AVIOutputStriped *)icd.mpOutput)->set_1Gb_limit();
 			} else {
 				icd.mpOutputFile = VDCreateMediaOutputAVIFile();
 				if (!icd.mpOutputFile)
 					throw MyMemoryError();
 
-				if (g_prefs.fAVIRestrict1Gb)
+				if (VDPreferencesGetAVIRestrict1Gb())
 					icd.mpOutputFile->set_1Gb_limit();
 
 				uint32 superIndexLimit, subIndexLimit;
@@ -3119,7 +3120,7 @@ void VDCaptureData::CreateNewFile() {
 		if (mpAudioOut)
 			pNewAudio = pNewFile->createAudioStream();
 
-		if (g_prefs.fAVIRestrict1Gb)
+		if (VDPreferencesGetAVIRestrict1Gb())
 			pNewFile->set_1Gb_limit();
 
 		uint32 superIndexLimit, subIndexLimit;

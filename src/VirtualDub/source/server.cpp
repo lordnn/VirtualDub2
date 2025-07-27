@@ -55,6 +55,7 @@ extern VDProject *g_project;
 
 extern wchar_t g_szInputAVIFile[MAX_PATH];
 
+extern bool VDPreferencesGetAttachExtension();
 extern bool VDPreferencesGetFilterAccelEnabled();
 extern sint32 VDPreferencesGetFilterThreadCount();
 
@@ -837,7 +838,7 @@ void ActivateFrameServerDialog(HWND hwnd, const char *server) {
 		vdrefptr<Frameserver> fs(new Frameserver(inputVideo, inputAudio, hwnd, &g_dubOpts, g_project->GetTimeline().GetSubset()));
 
 		if (!server || !*server) {
-			const VDStringW fname(VDGetSaveFileName(kFileDialog_Signpost, (VDGUIHandle)hwnd, L"Save .VDR signpost for AVIFile handler", fileFilters, g_prefs.main.fAttachExtension ? L"vdr" : NULL, 0, 0));
+			const VDStringW fname(VDGetSaveFileName(kFileDialog_Signpost, (VDGUIHandle)hwnd, L"Save .VDR signpost for AVIFile handler", fileFilters, VDPreferencesGetAttachExtension() ? L"vdr" : NULL, 0, 0));
 
 			if (!fname.empty()) {
 				long buf[5];

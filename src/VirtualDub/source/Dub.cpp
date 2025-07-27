@@ -100,6 +100,7 @@ using namespace nsVDDub;
 
 extern const char g_szError[];
 extern HWND g_hWnd;
+extern bool VDPreferencesGetNoCorrectLayer3();
 extern uint32& VDPreferencesGetRenderVideoBufferCount();
 extern bool VDPreferencesGetFilterAccelVisualDebugEnabled();
 extern bool VDPreferencesGetFilterAccelEnabled();
@@ -1047,7 +1048,7 @@ void Dubber::InitAudioConversionChain() {
 			}
 		}
 
-		if (!g_prefs.fNoCorrectLayer3 && pCompressor->GetFormat()->mTag == WAVE_FORMAT_MPEGLAYER3) {
+		if (!VDPreferencesGetNoCorrectLayer3() && pCompressor->GetFormat()->mTag == WAVE_FORMAT_MPEGLAYER3) {
 			if (!(audioCorrector = new_nothrow AudioStreamL3Corrector(audioStream)))
 				throw MyMemoryError();
 

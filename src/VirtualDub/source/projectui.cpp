@@ -165,6 +165,7 @@ extern void SaveConfiguration(HWND);
 extern void SaveProject(HWND, bool reset_path);
 extern void CreateExtractSparseAVI(HWND hwndParent, bool bExtract);
 
+extern bool VDPreferencesGetAttachExtension();
 extern const VDStringW& VDPreferencesGetTimelineFormat();
 extern int VDPreferencesGetTimeFormat();
 int VDPreferencesGetMRUSize();
@@ -1264,7 +1265,7 @@ void VDProjectUI::SaveWAVAsk(bool batchMode) {
 			L"All files (*.*)\0"						L"*.*\0"
 			;
 
-	const VDStringW filename(VDGetSaveFileName(kFileDialog_WAVAudioOut, mhwnd, L"Save WAV File", kWAVFileFilters, g_prefs.main.fAttachExtension ? L"wav" : NULL));
+	const VDStringW filename(VDGetSaveFileName(kFileDialog_WAVAudioOut, mhwnd, L"Save WAV File", kWAVFileFilters, VDPreferencesGetAttachExtension() ? L"wav" : NULL));
 
 	if (!filename.empty()) {
 		if (batchMode)
@@ -1279,7 +1280,7 @@ void VDProjectUI::SaveFilmstripAsk() {
 	if (!inputVideo)
 		throw MyError("No input video stream to process.");
 
-	const VDStringW filename(VDGetSaveFileName(kFileDialog_FLMOut, mhwnd, L"Save Filmstrip file", L"Adobe Filmstrip (*.flm)\0*.flm\0", g_prefs.main.fAttachExtension ? L"flm" : NULL));
+	const VDStringW filename(VDGetSaveFileName(kFileDialog_FLMOut, mhwnd, L"Save Filmstrip file", L"Adobe Filmstrip (*.flm)\0*.flm\0", VDPreferencesGetAttachExtension() ? L"flm" : NULL));
 	if (!filename.empty()) {
 		SaveFilmstrip(filename.c_str(), false);
 	}
@@ -1378,7 +1379,7 @@ namespace {
 					pBase->EndModal(false);
 					return true;
 				} else if (id == 300) {
-					const VDStringW filename(VDGetSaveFileName(kFileDialog_GIFOut, (VDGUIHandle)vdpoly_cast<IVDUIWindowW32 *>(pBase)->GetHandleW32(), L"Save animated GIF", L"Animated GIF (*.gif)\0*.gif\0", g_prefs.main.fAttachExtension ? L"gif" : NULL));
+					const VDStringW filename(VDGetSaveFileName(kFileDialog_GIFOut, (VDGUIHandle)vdpoly_cast<IVDUIWindowW32 *>(pBase)->GetHandleW32(), L"Save animated GIF", L"Animated GIF (*.gif)\0*.gif\0", VDPreferencesGetAttachExtension() ? L"gif" : NULL));
 
 					if (!filename.empty())
 						SetCaption(100, filename.c_str());
@@ -1457,7 +1458,7 @@ namespace {
 					pBase->EndModal(false);
 					return true;
 				} else if (id == 300) {
-					const VDStringW filename(VDGetSaveFileName(kFileDialog_PNGOut, (VDGUIHandle)vdpoly_cast<IVDUIWindowW32 *>(pBase)->GetHandleW32(), L"Save animated PNG", L"Animated PNG (*.png)\0*.png\0", g_prefs.main.fAttachExtension ? L"png" : NULL));
+					const VDStringW filename(VDGetSaveFileName(kFileDialog_PNGOut, (VDGUIHandle)vdpoly_cast<IVDUIWindowW32 *>(pBase)->GetHandleW32(), L"Save animated PNG", L"Animated PNG (*.png)\0*.png\0", VDPreferencesGetAttachExtension() ? L"png" : NULL));
 
 					if (!filename.empty())
 						SetCaption(100, filename.c_str());

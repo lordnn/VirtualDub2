@@ -85,6 +85,8 @@ extern VDProject *g_project;
 bool				g_drawDecompressedFrame	= FALSE;
 bool				g_showStatusWindow		= TRUE;
 
+extern int VDPreferencesGetDubPriority();
+extern bool VDPreferencesGetAVIRestrict1Gb();
 extern uint32& VDPreferencesGetRenderOutputBufferSize();
 extern bool VDPreferencesGetRenderBackgroundPriority();
 
@@ -223,7 +225,7 @@ void AppendAVIAutoscan(const wchar_t *pszFile, bool skip_first) {
 ///////////////////////////////////////////////////////////////////////////
 
 void VideoOperation::setPrefs() {
-	iDubPriority = g_prefs.main.iDubPriority;
+	iDubPriority = VDPreferencesGetDubPriority();
 	backgroundPriority = VDPreferencesGetRenderBackgroundPriority();
 }
 
@@ -263,14 +265,14 @@ void SavePlugin(RequestVideo& req) {
 	if (req.removeVideo){ type = 1; fileout.fAudioOnly = true; }
 	if (req.removeAudio) type = 3;
 
-	g_project->RunOperation(&fileout, type, req.opt, g_prefs.main.iDubPriority, req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
+	g_project->RunOperation(&fileout, type, req.opt, VDPreferencesGetDubPriority(), req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
 	*/
 }
 
 void SaveAVI(RequestVideo& req) {
 	VDAVIOutputFileSystem fileout;
 
-	fileout.Set1GBLimit(g_prefs.fAVIRestrict1Gb != 0);
+	fileout.Set1GBLimit(VDPreferencesGetAVIRestrict1Gb());
 	fileout.SetCaching(false);
 	fileout.SetIndexing(!req.compat);
 	fileout.SetFilename(req.fileOutput.c_str());
@@ -282,7 +284,7 @@ void SaveAVI(RequestVideo& req) {
 	op.setPrefs();
 	g_project->RunOperation(&fileout, op);
 
-	//g_project->RunOperation(&fileout, req.removeAudio ? 3:FALSE, req.opt, g_prefs.main.iDubPriority, req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
+	//g_project->RunOperation(&fileout, req.removeAudio ? 3:FALSE, req.opt, VDPreferencesGetDubPriority(), req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
 }
 
 void SaveStripedAVI(const wchar_t *szFile) {
@@ -291,13 +293,13 @@ void SaveStripedAVI(const wchar_t *szFile) {
 
 	VDAVIOutputStripedSystem outstriped(szFile);
 
-	outstriped.Set1GBLimit(g_prefs.fAVIRestrict1Gb != 0);
+	outstriped.Set1GBLimit(VDPreferencesGetAVIRestrict1Gb());
 
 	VideoOperation op;
 	op.setPrefs();
 	g_project->RunOperation(&outstriped, op);
 
-	//g_project->RunOperation(&outstriped, FALSE, NULL, g_prefs.main.iDubPriority, false, 0, 0, VDPreferencesGetRenderBackgroundPriority());
+	//g_project->RunOperation(&outstriped, FALSE, NULL, VDPreferencesGetDubPriority(), false, 0, 0, VDPreferencesGetRenderBackgroundPriority());
 }
 
 void SaveStripeMaster(const wchar_t *szFile) {
@@ -306,14 +308,14 @@ void SaveStripeMaster(const wchar_t *szFile) {
 
 	VDAVIOutputStripedSystem outstriped(szFile);
 
-	outstriped.Set1GBLimit(g_prefs.fAVIRestrict1Gb != 0);
+	outstriped.Set1GBLimit(VDPreferencesGetAVIRestrict1Gb());
 
 	VideoOperation op;
 	op.setPrefs();
 	g_project->RunOperation(&outstriped, op);
 	// it used setPhantomVideoMode in the past
 
-	//g_project->RunOperation(&outstriped, 2, NULL, g_prefs.main.iDubPriority, false, 0, 0, VDPreferencesGetRenderBackgroundPriority());
+	//g_project->RunOperation(&outstriped, 2, NULL, VDPreferencesGetDubPriority(), false, 0, 0, VDPreferencesGetRenderBackgroundPriority());
 }
 
 void SaveSegmentedAVI(RequestSegmentVideo& req) {
@@ -343,7 +345,7 @@ void SaveSegmentedAVI(RequestSegmentVideo& req) {
 	op.lSpillFrameThreshold = req.lSpillFrameThreshold;
 	g_project->RunOperation(&outfile, op);
 
-	//g_project->RunOperation(&outfile, FALSE, quick_opts, g_prefs.main.iDubPriority, fProp, lSpillThreshold, lSpillFrameThreshold, VDPreferencesGetRenderBackgroundPriority());
+	//g_project->RunOperation(&outfile, FALSE, quick_opts, VDPreferencesGetDubPriority(), fProp, lSpillThreshold, lSpillFrameThreshold, VDPreferencesGetRenderBackgroundPriority());
 }
 
 void SaveImageSequence(RequestImages& req) {
@@ -356,7 +358,7 @@ void SaveImageSequence(RequestImages& req) {
 	op.setPrefs();
 	g_project->RunOperation(&outimages, op);
 
-	//g_project->RunOperation(&outimages, FALSE, req.opt, g_prefs.main.iDubPriority, req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
+	//g_project->RunOperation(&outimages, FALSE, req.opt, VDPreferencesGetDubPriority(), req.propagateErrors, 0, 0, VDPreferencesGetRenderBackgroundPriority());
 }
 
 ///////////////////////////////////////////////////////////////////////////

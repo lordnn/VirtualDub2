@@ -33,6 +33,7 @@
 
 extern HINSTANCE g_hInst;
 
+extern int VDPreferencesGetDisplay();
 extern bool VDPreferencesIsDisplay3DEnabled();
 
 //static LRESULT APIENTRY VideoWindowWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -1098,8 +1099,8 @@ void VDVideoWindow::OnContextMenu(int x, int y) {
 	VDCheckMenuItemByCommandW32(hmenu, ID_DISPLAY_AR_FRAME_1777, explicitFrame && fabs(mAspectRatio - 16.0/ 9.0) < 1e-5);
 
 	DWORD dwEnabled1 = MF_BYCOMMAND | MF_GRAYED;
-	if (mpDisplay && !(g_prefs.fDisplay & Preferences::kDisplayDisableDX)) {
-		if ((g_prefs.fDisplay & (Preferences::kDisplayEnableD3D | Preferences::kDisplayEnableOpenGL))
+	if (mpDisplay && !(VDPreferencesGetDisplay() & kDisplayDisableDX)) {
+		if ((VDPreferencesGetDisplay() & (kDisplayEnableD3D | kDisplayEnableOpenGL))
 			|| VDPreferencesIsDisplay3DEnabled())
 			dwEnabled1 = MF_BYCOMMAND | MF_ENABLED;
 	}
@@ -1118,8 +1119,8 @@ void VDVideoWindow::OnContextMenu(int x, int y) {
 	}
 
 	DWORD dwEnabled2 = MF_BYCOMMAND | MF_GRAYED;
-	if (mpDisplay && !(g_prefs.fDisplay & Preferences::kDisplayDisableDX)) {
-		if ((g_prefs.fDisplay & (Preferences::kDisplayEnableD3D))
+	if (mpDisplay && !(VDPreferencesGetDisplay() & kDisplayDisableDX)) {
+		if ((VDPreferencesGetDisplay() & (kDisplayEnableD3D))
 			|| VDPreferencesIsDisplay3DEnabled())
 			dwEnabled2 = MF_BYCOMMAND | MF_ENABLED;
 	}

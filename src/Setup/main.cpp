@@ -537,7 +537,7 @@ void RemoveVirtualDubKeys(HWND hwndListbox)
 				continue;
 			}
 
-			wcscpy(bp, L"\\Software\\VirtualDub.org");
+			wcscpy(bp, L"\\Software\\VirtualDub2");
 
 			err = SHDeleteKeyW(HKEY_USERS, szKeyName);
 			if (err != ERROR_SUCCESS && err != ERROR_FILE_NOT_FOUND) {
@@ -561,7 +561,7 @@ BOOL APIENTRY RemoveSettingsDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM l
 
 				SetWindowTextW(hDlg, L"Remove VirtualDub preference data");
 
-				ListboxAddf(hwndListbox, L"Remove HKEY_USERS\\*\\Software\\VirtualDub.org\\*");
+				ListboxAddf(hwndListbox, L"Remove HKEY_USERS\\*\\Software\\VirtualDub2\\*");
 			}
 			return TRUE;
 
