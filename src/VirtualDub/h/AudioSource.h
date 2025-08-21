@@ -27,7 +27,7 @@ class IAVIReadStream;
 class AudioSource : public DubSource {
 public:
 	std::unique_ptr<char[]> src_format;
-	int   src_format_len{};
+	int src_format_len{};
 
 	AudioSource() = default;
 

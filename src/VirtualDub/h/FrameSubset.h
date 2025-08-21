@@ -101,6 +101,7 @@ public:
 	const_reference			front() const		{ return mTimeline.front(); }
 	reference				back()				{ return mTimeline.back(); }
 	const_reference			back() const		{ return mTimeline.back(); }
+	size_t					size() const noexcept	{ return mTimeline.size(); }
 
 	void assign(const FrameSubset& src, sint64 start, sint64 len);
 	iterator erase(iterator it) {
@@ -127,7 +128,7 @@ public:
 
 	void swap(FrameSubset& x);
 
-	void dump();
+	void dump() const;
 
 	void invalidateCache() {
 		mCachedIterator = mTimeline.begin();

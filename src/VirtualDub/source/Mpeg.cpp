@@ -1030,8 +1030,9 @@ const void *VideoSourceMPEG::streamGetFrame(const void *inputBuffer, uint32 data
 		}
 
 		// the "read" function gave us the extra 3 bytes we need
-		if (data_len<=3)
-			return mpFrameBuffer.get();	// HACK
+		if (data_len <= 3) {
+			return mpFrameBuffer.get(); // HACK
+		}
 
 		const int type = parentPtr->video_sample_list[frame_num].frame_type;
 

@@ -516,16 +516,17 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 }
 
 const void *VideoSourceImages::getFrame(VDPosition frameNum) {
-	uint32 lBytes;
-	const void *pFrame = NULL;
+	uint32 lBytes{};
+	const void *pFrame{};
 
-	if (mCachedFrame == frameNum)
+	if (mCachedFrame == frameNum) {
 		return mpFrameBuffer.get();
+	}
 
 	if (!read(frameNum, 1, NULL, 0x7FFFFFFF, &lBytes, NULL) && lBytes) {
 		auto buffer = std::make_unique<char[]>(lBytes);
 
-		uint32 lReadBytes;
+		uint32 lReadBytes{};
 
 		read(frameNum, 1, buffer.get(), lBytes, &lReadBytes, NULL);
 		pFrame = streamGetFrame(buffer.get(), lReadBytes, FALSE, frameNum, frameNum);

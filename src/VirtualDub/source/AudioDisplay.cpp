@@ -598,19 +598,19 @@ public:
 	void SetWaveformScale(int scale);
 	void SetSpectralBoost(int boost);
 
-	Mode GetMode();
-	void SetMode(Mode mode);
+	Mode GetMode() override;
+	void SetMode(Mode mode) override;
 
-	int GetZoom();
-	void SetZoom(int samplesPerPixel);
+	int GetZoom() override;
+	void SetZoom(int samplesPerPixel) override;
 
-	bool GetMonoMode();
-	void SetMonoMode(bool v);
+	bool GetMonoMode() override;
+	void SetMonoMode(bool v) override;
 
-	void ClearFailureMessage();
-	void SetFailureMessage(const wchar_t *s);
+	void ClearFailureMessage() override;
+	void SetFailureMessage(const wchar_t *s) override;
 
-	LRESULT WndProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT WndProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	void OnCommand(int command);
 	void OnInitMenu(HMENU hmenu);
@@ -626,25 +626,25 @@ public:
 	void PaintChannel(HDC hdc, int ch);
 	void CalcFocus(sint32& xh1, sint32& xh2, int64 p, int64 windowPosition);
 
-	void SetFormat(double samplingRate, int channels);
+	void SetFormat(double samplingRate, int channels) override;
 	void ResetFormat();
-	void SetFrameMarkers(sint64 mn, sint64 mx, double start, double rate);
-	void SetSelectedFrameRange(VDPosition start, VDPosition end);
-	void ClearSelectedFrameRange();
-	void SetPosition(VDPosition pos, VDPosition hpos);
-	void Rescan(bool redraw=true);
+	void SetFrameMarkers(sint64 mn, sint64 mx, double start, double rate) override;
+	void SetSelectedFrameRange(VDPosition start, VDPosition end) override;
+	void ClearSelectedFrameRange() override;
+	void SetPosition(VDPosition pos, VDPosition hpos) override;
+	void Rescan(bool redraw=true) override;
 	void SetReadPosition(sint64 p);
-	VDPosition GetReadPosition();
+	VDPosition GetReadPosition() override;
 	bool MoveImage(int delta);
-	bool ProcessAudio(const void *src, int count, const VDWaveFormat *wfex);
+	bool ProcessAudio(const void *src, int count, const VDWaveFormat *wfex) override;
 	void ProcessEnd();
-	VDEvent<IVDUIAudioDisplayControl, VDPosition>& AudioRequiredEvent();
-	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectStartEvent();
-	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectTrackEvent();
-	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectEndEvent();
-	VDEvent<IVDUIAudioDisplayControl, VDPosition>& SetPositionEvent();
-	VDEvent<IVDUIAudioDisplayControl, sint32>& TrackAudioOffsetEvent();
-	VDEvent<IVDUIAudioDisplayControl, sint32>& SetAudioOffsetEvent();
+	VDEvent<IVDUIAudioDisplayControl, VDPosition>& AudioRequiredEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectStartEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectTrackEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, VDUIAudioDisplaySelectionRange>& SetSelectEndEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, VDPosition>& SetPositionEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, sint32>& TrackAudioOffsetEvent() override;
+	VDEvent<IVDUIAudioDisplayControl, sint32>& SetAudioOffsetEvent() override;
 
 protected:
 	bool ProcessAudioSpectrum(const void *src, int count, int chanStride, int sampleStride, int format);

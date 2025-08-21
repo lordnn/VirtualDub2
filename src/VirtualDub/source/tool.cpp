@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <iterator>
 #include <vd2/plugin/vdtool.h>
 #include <vd2/system/filesys.h>
 #include "projectui.h"
@@ -34,23 +35,15 @@ public:
 
 	int GetSubsetCount() {
 		FrameSubset& s = g_project->GetTimeline().GetSubset();
-		FrameSubset::iterator p;
-		int count = 0;
-		for(p=s.begin(); p!=s.end(); p++) count++;
-		return count;
+		return static_cast<int>(s.size());
 	}
 
 	void GetSubsetRange(int i, int64& start, int64& end) {
 		FrameSubset& s = g_project->GetTimeline().GetSubset();
-		FrameSubset::iterator p;
-		int count = 0;
-		for(p=s.begin(); p!=s.end(); p++){
-			if (count==i) {
-				start = p->start;
-				end = p->start+p->len;
-				break;
-			}
-			count++;
+		if (i < s.size()) {
+			auto p = std::next(s.begin(), i);
+			start = p->start;
+			end = p->start+p->len;
 		}
 	}
 
@@ -158,7 +151,7 @@ void VDInitTools() {
 		tool->version = info->mTypeAPIVersionUsed;
 		tool->command_first = command;
 		tool->command_last = -1;
-		{for(int id=0; ; id++) {
+		{for(int id=0; ; ++id) {
 			char name[256];
 			if (!object->GetCommandId(id,name,sizeof(name))) break;
 
@@ -170,7 +163,7 @@ void VDInitTools() {
 			cmd.mpName = tool->strings.back().c_str();
 			kCommandList.push_back(cmd);
 
-			command++;
+			++command;
 		}}
 
 		g_VDTools.push_back(tool);
@@ -184,7 +177,7 @@ void VDInitTools() {
 void VDToolInsertMenu(HMENU menu, int pos) {
 	for(std::vector<VDTool*>::const_iterator it(g_VDTools.begin()), itEnd(g_VDTools.end()); it!=itEnd; ++it) {
 		VDTool *p = *it;
-		{for(int id=0; ; id++) {
+		{for(int id=0; ; ++id) {
 			char name[256];
 			bool enabled = true;
 			if (!p->object->GetMenuInfo(id,name,sizeof(name),&enabled)) break;
@@ -197,7 +190,7 @@ void VDToolInsertMenu(HMENU menu, int pos) {
 			mii.wID	= p->command_first-id;
 			mii.dwTypeData	= name;
 			InsertMenuItemA(menu, pos, TRUE, &mii);
-			pos++;
+			++pos;
 		}}
 	}
 }

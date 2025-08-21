@@ -597,9 +597,10 @@ output:
 	}
 }
 
-#if defined(NDEBUG) && defined(_M_AMD64) && _MSC_VER >= 1930
+#if defined(NDEBUG) && defined(_M_AMD64) && _MSC_VER >= 1930 && _MSC_VER <= 1943
 // Îptimization of this function for x64 does not work correctly.
-// The issue has been confirmed for VisualStudio 2022 17.10.5 and 17.11.4.
+// The issue has been confirmed for Visual Studio 2022 17.10.5 and 17.11.4.
+// The issue was not detected in Visual Studio 2022 17.14.10.
 #pragma optimize("", off)
 #endif
 void VDVideoDecoderDV::DecompressFrame(const void *src, bool isPAL) {
@@ -852,7 +853,7 @@ void VDVideoDecoderDV::DecompressFrame(const void *src, bool isPAL) {
 
 	mbLastWasPAL = isPAL;
 }
-#if defined(NDEBUG) && defined(_M_AMD64) && _MSC_VER >= 1930
+#if defined(NDEBUG) && defined(_M_AMD64) && _MSC_VER >= 1930 && _MSC_VER <= 1943
 // Turn on optimization again.
 #pragma optimize("", on)
 #endif

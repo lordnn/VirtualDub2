@@ -152,7 +152,7 @@ public:
 	const VDPixmap& getTargetFormat() override { return mTargetFormat; }
 	bool setTargetFormat(VDPixmapFormatEx format) override;
 	bool setDecompressedFormat(int depth) override;
-	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih)override;
+	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih) override;
 
 	VDAVIBitmapInfoHeader *getDecompressedFormat() override {
 		return mpTargetFormatHeader.empty() ? NULL : mpTargetFormatHeader.data();
@@ -189,7 +189,7 @@ public:
 	VDPosition	displayToStreamOrder(VDPosition display_num) override { return display_num; }
 	VDPosition	getRealDisplayFrame(VDPosition display_num) override { return display_num; }
 
-	sint64		getSampleBytePosition(VDPosition sample_num) override { return -1; }
+	sint64 getSampleBytePosition(VDPosition sample_num) override { return -1; }
 };
 
 #endif

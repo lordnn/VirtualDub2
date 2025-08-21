@@ -217,8 +217,9 @@ const void *VDVideoSourceFLM::getFrame(VDPosition frameNum) {
 	uint32 lBytes;
 	const void *pFrame = NULL;
 
-	if (mCachedFrame == frameNum)
+	if (mCachedFrame == frameNum) {
 		return mpFrameBuffer.get();
+	}
 
 	if (!read(frameNum, 1, NULL, 0x7FFFFFFF, &lBytes, NULL) && lBytes) {
 		vdblock<char> buffer(lBytes);

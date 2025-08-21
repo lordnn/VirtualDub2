@@ -487,7 +487,7 @@ void FrameSubset::swap(FrameSubset& x) {
 	x.invalidateCache();
 }
 
-void FrameSubset::dump() {
+void FrameSubset::dump() const {
 #ifdef _DEBUG
 	VDDEBUG("Frame subset dump:\n");
 	for(const_iterator it(begin()), itEnd(end()); it!=itEnd; ++it) {

@@ -4047,8 +4047,7 @@ void VDCaptureProjectUI::GetPanelItems(VDCapturePreferences::InfoItems& items) {
 			kVDCaptureInfo_AudioResamplingFactor,
 		};
 		for (const auto& val : list) {
-			VDCapturePreferences::InfoItems::iterator x = find(items.begin(), items.end(), val);
-			if (x != items.end()) {
+			if (auto x = find(items.begin(), items.end(), val); x != items.end()) {
 				items.erase(x);
 			}
 		}

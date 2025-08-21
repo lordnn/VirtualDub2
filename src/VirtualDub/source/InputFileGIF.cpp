@@ -466,8 +466,9 @@ int VDVideoSourceGIF::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, ui
 const void *VDVideoSourceGIF::getFrame(VDPosition frameNum) {
 	uint32 lBytes;
 
-	if (mCachedFrame == frameNum)
+	if (mCachedFrame == frameNum) {
 		return mpFrameBuffer.get();
+	}
 
 	VDPosition current = mCachedFrame + 1;
 	if (current < 0 || current > frameNum)

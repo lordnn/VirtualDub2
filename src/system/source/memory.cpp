@@ -24,6 +24,7 @@
 //		distribution.
 
 #include "stdafx.h"
+#include <cstdlib>
 #include <malloc.h>
 #include <windows.h>
 #include <vd2/system/atomic.h>
@@ -35,16 +36,7 @@ void *VDAlignedMalloc(size_t n, unsigned alignment) {
 #ifdef VD_COMPILER_MSVC
 	return _aligned_malloc(n, alignment);
 #else
-	void *p = malloc(n + sizeof(void *) + alignment - 1);
-
-	if (p) {
-		void *alignedp = (void *)(((uintptr)p + sizeof(void *) + alignment - 1) & ~((uintptr)alignment - 1));
-
-		((void **)alignedp)[-1] = p;
-		p = alignedp;
-	}
-
-	return p;
+	return std::aligned_alloc(alignment, n);
 #endif
 }
 
@@ -52,7 +44,7 @@ void VDAlignedFree(void *p) {
 #ifdef VD_COMPILER_MSVC
 	_aligned_free(p);
 #else
-	free(((void **)p)[-1]);
+	std::free(p);
 #endif
 }
 
