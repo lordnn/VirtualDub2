@@ -1320,18 +1320,18 @@ public:
 	AVIOutputAPNG();
 
 	AVIOutput *AsAVIOutput() { return this; }
-	void SetFramesCount(int count) { mFramesCount = count; }
-	void SetLoopCount(int count) { mLoopCount = count; }
-	void SetAlpha(int count) { mAlpha = count; }
-	void SetGrayscale(int count) { mGrayscale = count; }
-	void SetRate(int rate) { mRate = rate; }
-	void SetScale(int scale) { mScale = scale;}
+	void SetFramesCount(int count) override { mFramesCount = count; }
+	void SetLoopCount(int count) override { mLoopCount = count; }
+	void SetAlpha(int count) override { mAlpha = count; }
+	void SetGrayscale(int count) override { mGrayscale = count; }
+	void SetRate(int rate) override { mRate = rate; }
+	void SetScale(int scale) override { mScale = scale;}
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
-	bool init(const wchar_t *szFile);
-	void finalize();
+	bool init(const wchar_t *szFile) override;
+	void finalize() override;
 
 protected:
 	FILE * mpFile;

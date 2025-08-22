@@ -26,18 +26,18 @@
 class AVIOutputRawAudio : public AVIOutput {
 public:
 	AVIOutputRawAudio();
-	~AVIOutputRawAudio();
+	~AVIOutputRawAudio() override;
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
 	void setBufferSize(sint32 nBytes) {
 		mBufferSize = nBytes;
 	}
 
-	bool init(const wchar_t *szFile);
+	bool init(const wchar_t *szFile) override;
 	bool init(VDFileHandle h, bool pipeMode);
-	void finalize();
+	void finalize() override;
 
 	void write(const void *pBuffer, uint32 cbBuffer);
 

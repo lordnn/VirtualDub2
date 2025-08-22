@@ -110,7 +110,7 @@ void RunScript(const wchar_t *name, void *hwnd) {
 
 	VDTextInputFile f(name);
 
-	vdautoptr<IVDScriptInterpreter> isi(VDCreateScriptInterpreter());
+	std::unique_ptr<IVDScriptInterpreter> isi(VDCreateScriptInterpreter());
 
 	g_project->BeginTimelineUpdate();
 
@@ -168,7 +168,7 @@ void RunScriptMemory(const char *mem, int start_line, bool stopAtReloadMarker, b
 		g_project->CloseWAV();
 	}
 
-	vdautoptr<IVDScriptInterpreter> isi(VDCreateScriptInterpreter());
+	std::unique_ptr<IVDScriptInterpreter> isi(VDCreateScriptInterpreter());
 	const char *errorLineStart = mem;
 	int errorLine = 1;
 	if (start_line!=-1) errorLine += start_line;

@@ -28,20 +28,20 @@
 class AVIOutputRawVideo : public AVIOutput {
 public:
 	AVIOutputRawVideo(const VDAVIOutputRawVideoFormat& format);
-	~AVIOutputRawVideo();
+	~AVIOutputRawVideo() override;
 
 	void SetInputLayout(const VDPixmapLayout& layout);
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
 	void setBufferSize(sint32 nBytes) {
 		mBufferSize = nBytes;
 	}
 
-	bool init(const wchar_t *szFile);
+	bool init(const wchar_t *szFile) override;
 	bool init(VDFileHandle h);
-	void finalize();
+	void finalize() override;
 
 	void write(const void *pBuffer, uint32 cbBuffer);
 

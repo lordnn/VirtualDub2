@@ -766,7 +766,7 @@ void VDFilterAccelEngine::UploadCallback(VDFilterAccelEngineDispatchQueue *queue
 }
 
 VDFilterAccelReadbackBuffer *VDFilterAccelEngine::CreateReadbackBuffer(uint32 width, uint32 height, int format) {
-	vdautoptr<VDFilterAccelReadbackBuffer> rb(new VDFilterAccelReadbackBuffer);
+	std::unique_ptr<VDFilterAccelReadbackBuffer> rb(new VDFilterAccelReadbackBuffer);
 
 	if (!rb || !rb->Init(mpTC, width, height, format == nsVDXPixmap::kPixFormat_VDXA_YUV))
 		return NULL;

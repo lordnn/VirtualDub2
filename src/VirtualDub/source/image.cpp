@@ -448,10 +448,10 @@ void DecodeImage(const void *pBuffer, long cbBuffer, VDPixmapBuffer& vb, int des
 	if (!bIsBMP && !bIsTGA && !bIsJPG && !bIsPNG)
 		throw MyError("Image file must be in PNG, Windows BMP, truecolor TARGA format, or sequential JPEG format.");
 
-	vdautoptr<IVDJPEGDecoder> pDecoder;
+	std::unique_ptr<IVDJPEGDecoder> pDecoder;
 
 	if (bIsJPG) {
-		pDecoder = VDCreateJPEGDecoder();
+		pDecoder.reset(VDCreateJPEGDecoder());
 		pDecoder->Begin(pBuffer, cbBuffer);
 		pDecoder->DecodeHeader(w, h);
 	}
@@ -478,7 +478,7 @@ void DecodeImage(const void *pBuffer, long cbBuffer, VDPixmapBuffer& vb, int des
 		DecodeTGA(pBuffer, cbBuffer, vb);
 
 	if (bIsPNG) {
-		vdautoptr<IVDImageDecoderPNG> pPNGDecoder(VDCreateImageDecoderPNG());
+		std::unique_ptr<IVDImageDecoderPNG> pPNGDecoder(VDCreateImageDecoderPNG());
 
 		PNGDecodeError err = pPNGDecoder->Decode(pBuffer, cbBuffer);
 		if (err) {

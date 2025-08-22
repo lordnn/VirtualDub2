@@ -147,7 +147,7 @@ public:
 	AVIOutput();
 	~AVIOutput() override;
 
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
 	bool init(const wchar_t *szFile) override = 0;
 	void finalize() override = 0;

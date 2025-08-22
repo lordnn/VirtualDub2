@@ -125,7 +125,7 @@ void VDCreateTestPal8Video(VDGUIHandle h) {
 		if (!pVS->setTargetFormat(nsVDPixmap::kPixFormat_XRGB8888))
 			throw MyError("Cannot set decompression format to 32-bit.");
 
-		vdautoptr<IVDMediaOutputAVIFile> pOut(VDCreateMediaOutputAVIFile());
+		std::unique_ptr<IVDMediaOutputAVIFile> pOut(VDCreateMediaOutputAVIFile());
 
 		IVDMediaOutputStream *pVSOut = pOut->createVideoStream();
 

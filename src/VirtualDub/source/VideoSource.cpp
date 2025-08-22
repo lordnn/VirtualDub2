@@ -107,7 +107,7 @@ protected:
 	int		mWidth, mHeight;
 	int		mFormat;
 
-	vdautoptr<IMJPEGDecoder>	mpDecoder;
+	std::unique_ptr<IMJPEGDecoder>	mpDecoder;
 };
 
 VDVideoDecompressorMJPEG::VDVideoDecompressorMJPEG()
@@ -122,7 +122,7 @@ void VDVideoDecompressorMJPEG::Init(int w, int h) {
 	mWidth = w;
 	mHeight = h;
 
-	mpDecoder = CreateMJPEGDecoder(w, h);
+	mpDecoder.reset(CreateMJPEGDecoder(w, h));
 }
 
 bool VDVideoDecompressorMJPEG::QueryTargetFormat(int format) {
@@ -881,7 +881,7 @@ IVDVideoDecompressor *VDFindVideoDecompressorEx(uint32 fccHandler, const VDAVIBi
 	bool is_mjpeg	 = isEqualFOURCC(hdr->biCompression, 'GPJM')
 					|| isEqualFOURCC(hdr->biCompression, '1bmd');
 	if (is_mjpeg) {
-		vdautoptr<VDVideoDecompressorMJPEG> pDecoder(new(std::nothrow) VDVideoDecompressorMJPEG);
+		std::unique_ptr<VDVideoDecompressorMJPEG> pDecoder(new(std::nothrow) VDVideoDecompressorMJPEG);
 		if (pDecoder) {
 			pDecoder->Init(w, h);
 
@@ -908,7 +908,7 @@ IVDVideoDecompressor *VDFindVideoDecompressorEx(uint32 fccHandler, const VDAVIBi
 	// If it's Debugmode, use the internal decoder.
 	bool is_dfsc = isEqualFOURCC(hdr->biCompression, 'CSFD');
 	if (is_dfsc) {
-		vdautoptr<VDVideoDecompressorDFSC> pDecoder(new(std::nothrow) VDVideoDecompressorDFSC);
+		std::unique_ptr<VDVideoDecompressorDFSC> pDecoder(new(std::nothrow) VDVideoDecompressorDFSC);
 		if (pDecoder) {
 			pDecoder->Init(hdr, hdrlen);
 

@@ -600,25 +600,25 @@ void VDInputFileOptionsDialogMP3::OnDataExchange(bool write) {
 }
 
 InputFileOptions *VDInputFileMP3::promptForOptions(VDGUIHandle hwndParent) {
-	vdautoptr<VDInputFileOptionsMP3> opts(new_nothrow VDInputFileOptionsMP3);
+	std::unique_ptr<VDInputFileOptionsMP3> opts(new_nothrow VDInputFileOptionsMP3);
 	if (!opts)
-		return NULL;
+		return nullptr;
 
-	VDInputFileOptionsDialogMP3 dlg(opts);
+	VDInputFileOptionsDialogMP3 dlg(opts.get());
 
 	if (dlg.ShowDialog(hwndParent))
 		return opts.release();
 
-	return NULL;
+	return nullptr;
 }
 
 InputFileOptions *VDInputFileMP3::createOptions(const void *buf, uint32 len) {
-	vdautoptr<VDInputFileOptionsMP3> opts(new_nothrow VDInputFileOptionsMP3);
+	std::unique_ptr<VDInputFileOptionsMP3> opts(new_nothrow VDInputFileOptionsMP3);
 	if (!opts)
-		return NULL;
+		return nullptr;
 
 	if (!opts->read(buf, len))
-		return NULL;
+		return nullptr;
 
 	return opts.release();
 }
@@ -631,7 +631,7 @@ bool VDInputFileMP3::GetAudioSource(int index, AudioSource **ppSrc) {
 	if (index)
 		return false;
 
-	*ppSrc = new VDAudioSourceMP3(this);
+	*ppSrc = new (std::nothrow) VDAudioSourceMP3(this);
 	if (!*ppSrc)
 		return false;
 

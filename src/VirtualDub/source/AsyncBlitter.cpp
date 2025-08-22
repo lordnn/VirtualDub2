@@ -42,7 +42,7 @@ class VDAsyncBlitter : public VDThread, public IVDAsyncBlitter {
 public:
 	VDAsyncBlitter();
 	VDAsyncBlitter(int max_requests);
-	~VDAsyncBlitter();
+	~VDAsyncBlitter() override;
 
 	enum {
 		PCR_OKAY,
@@ -63,25 +63,25 @@ public:
 	VDAtomicInt lock_state;
 #endif
 
-	void enablePulsing(bool);
-	void setPulseCallback(PulseCallback pc, void *pcd);
-	void pulse(int delta);
-	void setPulseClock(uint32 clk);
-	uint32 getPulseClock() const;
-	bool lock(uint32, sint32 timeout = -1);
-	void unlock(uint32);
-	void nextFrame(long adv=1);
-	long getFrameDelta();
-	void sendAFC(uint32 id, AFC pFunc, void *pData);
-	void postAPC(uint32 id, sint64 timelinePos, APC pFunc, void *pData1, void *pData2);
-	void postAPC(uint32 id, sint64 timelinePos, uint32 t, APC pFunc, void *pData1, void *pData2);
-	void abort();
-	void beginFlush();
-	void stop();
+	void enablePulsing(bool) override;
+	void setPulseCallback(PulseCallback pc, void *pcd) override;
+	void pulse(int delta) override;
+	void setPulseClock(uint32 clk) override;
+	uint32 getPulseClock() const override;
+	bool lock(uint32, sint32 timeout = -1) override;
+	void unlock(uint32) override;
+	void nextFrame(long adv=1) override;
+	long getFrameDelta() override;
+	void sendAFC(uint32 id, AFC pFunc, void *pData) override;
+	void postAPC(uint32 id, sint64 timelinePos, APC pFunc, void *pData1, void *pData2) override;
+	void postAPC(uint32 id, sint64 timelinePos, uint32 t, APC pFunc, void *pData1, void *pData2) override;
+	void abort() override;
+	void beginFlush() override;
+	void stop() override;
 
-	bool ServiceRequests(bool fWait);
+	bool ServiceRequests(bool fWait) override;
 
-	VDSignal *getFlushCompleteSignal() {
+	VDSignal *getFlushCompleteSignal() override {
 		return mRequests ? &mEventAbort : NULL;
 	}
 
@@ -137,7 +137,7 @@ private:
 	void release(uint32);
 	bool waitPulse(uint32);
 	bool DoRequest(AsyncBlitRequest *req);
-	void ThreadRun();
+	void ThreadRun() override;
 };
 
 IVDAsyncBlitter *VDCreateAsyncBlitter() {

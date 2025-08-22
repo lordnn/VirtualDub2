@@ -134,7 +134,7 @@ private:
 	vdrefptr<VDFilterFrameVideoSource>	mpVideoFrameSource;
 	VDPixmapLayout		mFrameLayout;
 	uint32				mFrameSize;
-	vdautoptr<IVDPixmapBlitter>	mpOutputBlitter;
+	std::unique_ptr<IVDPixmapBlitter>	mpOutputBlitter;
 
 	long			lRequestCount, lFrameCount, lAudioSegCount;
 
@@ -644,7 +644,7 @@ LRESULT Frameserver::SessionFrame(LPARAM lParam, WPARAM original_frame) {
 		VDPixmap px = VDPixmapFromLayout(filters.GetOutputLayout(), (void *)buf->LockRead());
 		px.info = buf->info;
 		if (!mpOutputBlitter)
-			mpOutputBlitter = VDPixmapCreateBlitter(pxdst, px);
+			mpOutputBlitter.reset(VDPixmapCreateBlitter(pxdst, px));
 		mpOutputBlitter->Blit(pxdst, px);
 		buf->Unlock();
 	} catch(const MyError&) {

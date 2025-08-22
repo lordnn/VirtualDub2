@@ -50,16 +50,16 @@ private:
 
 public:
 	AVIOutputStriped(AVIStripeSystem *);
-	virtual ~AVIOutputStriped();
+	virtual ~AVIOutputStriped() override;
 
 	void disable_os_caching();
 	void set_1Gb_limit();
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
-	bool init(const wchar_t *szFile);
-	void finalize();
+	bool init(const wchar_t *szFile) override;
+	void finalize() override;
 
 	void writeChunk(bool is_audio, uint32 flags, const void *pBuffer, uint32 cbBuffer,
 											uint32 lSampleFirst, uint32 lSampleCount);

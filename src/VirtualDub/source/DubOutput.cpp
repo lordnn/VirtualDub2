@@ -123,7 +123,7 @@ void VDAVIOutputFileSystem::SetTextInfo(const std::list<std::pair<uint32, VDStri
 IVDMediaOutput *VDAVIOutputFileSystem::CreateSegment() {
 	VDASSERT(mBufferSize > 0);
 
-	vdautoptr<IVDMediaOutputAVIFile> pOutput(VDCreateMediaOutputAVIFile());
+	std::unique_ptr<IVDMediaOutputAVIFile> pOutput(VDCreateMediaOutputAVIFile());
 
 	if (!mbAllowCaching)
 		pOutput->disable_os_caching();
@@ -193,7 +193,7 @@ IVDMediaOutput *VDAVIOutputFileSystem::CreateSegment() {
 }
 
 void VDAVIOutputFileSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<IVDMediaOutputAVIFile> pFileSegment(static_cast<IVDMediaOutputAVIFile *>(pSegment));
+	std::unique_ptr<IVDMediaOutputAVIFile> pFileSegment(static_cast<IVDMediaOutputAVIFile *>(pSegment));
 	if (mSegmentDigits)
 		pFileSegment->setSegmentHintBlock(bLast, NULL, 1);
 	pFileSegment->finalize();
@@ -272,7 +272,7 @@ void VDAVIOutputStripedSystem::Set1GBLimit(bool bUse1GBLimit) {
 }
 
 IVDMediaOutput *VDAVIOutputStripedSystem::CreateSegment() {
-	vdautoptr<AVIOutputStriped> pFile(new AVIOutputStriped(mpStripeSystem));
+	std::unique_ptr<AVIOutputStriped> pFile(new AVIOutputStriped(mpStripeSystem));
 
 	if (!pFile)
 		throw MyMemoryError();
@@ -282,7 +282,7 @@ IVDMediaOutput *VDAVIOutputStripedSystem::CreateSegment() {
 }
 
 void VDAVIOutputStripedSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputStriped> pFile(static_cast<AVIOutputStriped *>(pSegment));
+	std::unique_ptr<AVIOutputStriped> pFile(static_cast<AVIOutputStriped *>(pSegment));
 
 	pFile->finalize();
 }
@@ -316,7 +316,7 @@ void VDAVIOutputWAVSystem::SetBuffer(int bufferSize) {
 }
 
 IVDMediaOutput *VDAVIOutputWAVSystem::CreateSegment() {
-	vdautoptr<AVIOutputWAV> pOutput(new AVIOutputWAV);
+	std::unique_ptr<AVIOutputWAV> pOutput(new AVIOutputWAV);
 
 	pOutput->createAudioStream()->setFormat(&mAudioFormat[0], mAudioFormat.size());
 
@@ -329,7 +329,7 @@ IVDMediaOutput *VDAVIOutputWAVSystem::CreateSegment() {
 }
 
 void VDAVIOutputWAVSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputWAV> pFile(static_cast<AVIOutputWAV *>(pSegment));
+	std::unique_ptr<AVIOutputWAV> pFile(static_cast<AVIOutputWAV *>(pSegment));
 
 	pFile->finalize();
 }
@@ -375,7 +375,7 @@ const char* VDAVIOutputPluginSystem::GetFormatName() {
 }
 
 IVDMediaOutput *VDAVIOutputPluginSystem::CreateSegment() {
-	vdautoptr<IVDMediaOutputPlugin> pOutput(VDCreateMediaOutputPlugin(driver,format.c_str()));
+	std::unique_ptr<IVDMediaOutputPlugin> pOutput(VDCreateMediaOutputPlugin(driver,format.c_str()));
 
 	const char* actual_format = pOutput->GetFormatName();
 	if (actual_format) format = actual_format;
@@ -405,7 +405,7 @@ IVDMediaOutput *VDAVIOutputPluginSystem::CreateSegment() {
 }
 
 void VDAVIOutputPluginSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<IVDMediaOutputPlugin> pFile(static_cast<IVDMediaOutputPlugin *>(pSegment));
+	std::unique_ptr<IVDMediaOutputPlugin> pFile(static_cast<IVDMediaOutputPlugin *>(pSegment));
 	pFile->finalize();
 }
 
@@ -429,7 +429,7 @@ void VDAVIOutputRawSystem::SetBuffer(int bufferSize) {
 }
 
 IVDMediaOutput *VDAVIOutputRawSystem::CreateSegment() {
-	vdautoptr<AVIOutputRawAudio> pOutput(new AVIOutputRawAudio);
+	std::unique_ptr<AVIOutputRawAudio> pOutput(new AVIOutputRawAudio);
 
 	pOutput->createAudioStream()->setFormat(&mAudioFormat[0], mAudioFormat.size());
 
@@ -471,7 +471,7 @@ void VDAVIOutputRawVideoSystem::SetBuffer(int bufferSize) {
 }
 
 IVDMediaOutput *VDAVIOutputRawVideoSystem::CreateSegment() {
-	vdautoptr<AVIOutputRawVideo> pOutput(new AVIOutputRawVideo(mFormat));
+	std::unique_ptr<AVIOutputRawVideo> pOutput(new AVIOutputRawVideo(mFormat));
 
 	pOutput->SetInputLayout(mVideoImageLayout);
 	pOutput->createVideoStream();
@@ -484,7 +484,7 @@ IVDMediaOutput *VDAVIOutputRawVideoSystem::CreateSegment() {
 }
 
 void VDAVIOutputRawVideoSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputRawVideo> pFile(static_cast<AVIOutputRawVideo *>(pSegment));
+	std::unique_ptr<AVIOutputRawVideo> pFile(static_cast<AVIOutputRawVideo *>(pSegment));
 
 	pFile->finalize();
 }
@@ -577,7 +577,7 @@ IVDMediaOutput *VDAVIOutputCLISystem::CreateSegment() {
 	tmpl.mpMultiplexerProfile = mpMuxProfile;
 	tmpl.mbUseOutputPathAsTemp = mbUseOutputPathAsTemp;
 
-	vdautoptr<IAVIOutputCLI> pOutput(VDCreateAVIOutputCLI(tmpl));
+	std::unique_ptr<IAVIOutputCLI> pOutput(VDCreateAVIOutputCLI(tmpl));
 	IVDMediaOutput *out = vdpoly_cast<IVDMediaOutput *>(&*pOutput);
 
 	if (mVideoImageLayout.format) {
@@ -599,7 +599,7 @@ IVDMediaOutput *VDAVIOutputCLISystem::CreateSegment() {
 }
 
 void VDAVIOutputCLISystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<IAVIOutputCLI> pFile(vdpoly_cast<IAVIOutputCLI *>(pSegment));
+	std::unique_ptr<IAVIOutputCLI> pFile(vdpoly_cast<IAVIOutputCLI *>(pSegment));
 
 	if (!finalize && !mbFinalizeOnAbort)
 		pFile->CloseWithoutFinalize();
@@ -639,7 +639,7 @@ VDAVIOutputImagesSystem::~VDAVIOutputImagesSystem() {
 }
 
 IVDMediaOutput *VDAVIOutputImagesSystem::CreateSegment() {
-	vdautoptr<AVIOutputImages> pOutput(new AVIOutputImages(mSegmentPrefix.c_str(), mSegmentSuffix.c_str(), mSegmentDigits, mStartDigit, mFormat, mQuality));
+	std::unique_ptr<AVIOutputImages> pOutput(new AVIOutputImages(mSegmentPrefix.c_str(), mSegmentSuffix.c_str(), mSegmentDigits, mStartDigit, mFormat, mQuality));
 
 	if (!mVideoFormat.empty())
 		pOutput->createVideoStream()->setFormat(&mVideoFormat[0], mVideoFormat.size());
@@ -652,7 +652,7 @@ IVDMediaOutput *VDAVIOutputImagesSystem::CreateSegment() {
 }
 
 void VDAVIOutputImagesSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputImages> pFile(static_cast<AVIOutputImages *>(pSegment));
+	std::unique_ptr<AVIOutputImages> pFile(static_cast<AVIOutputImages *>(pSegment));
 	pFile->finalize();
 }
 
@@ -753,7 +753,7 @@ VDAVIOutputFilmstripSystem::~VDAVIOutputFilmstripSystem() {
 }
 
 IVDMediaOutput *VDAVIOutputFilmstripSystem::CreateSegment() {
-	vdautoptr<AVIOutputFLM> pOutput(new AVIOutputFLM());
+	std::unique_ptr<AVIOutputFLM> pOutput(new AVIOutputFLM());
 
 	if (!mVideoFormat.empty()) {
 		IVDMediaOutputStream *pOutputStream = pOutput->createVideoStream();
@@ -768,7 +768,7 @@ IVDMediaOutput *VDAVIOutputFilmstripSystem::CreateSegment() {
 }
 
 void VDAVIOutputFilmstripSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
+	std::unique_ptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
 	pFile->finalize();
 }
 
@@ -803,7 +803,7 @@ int VDAVIOutputGIFSystem::GetVideoOutputFormatOverride(int last_format) {
 }
 
 IVDMediaOutput *VDAVIOutputGIFSystem::CreateSegment() {
-	vdautoptr<IVDAVIOutputGIF> pOutput(VDCreateAVIOutputGIF());
+	std::unique_ptr<IVDAVIOutputGIF> pOutput(VDCreateAVIOutputGIF());
 
 	pOutput->SetLoopCount(mLoopCount);
 
@@ -823,7 +823,7 @@ IVDMediaOutput *VDAVIOutputGIFSystem::CreateSegment() {
 }
 
 void VDAVIOutputGIFSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
+	std::unique_ptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
 	pFile->finalize();
 }
 
@@ -858,7 +858,7 @@ int VDAVIOutputAPNGSystem::GetVideoOutputFormatOverride(int last_format) {
 }
 
 IVDMediaOutput *VDAVIOutputAPNGSystem::CreateSegment() {
-	vdautoptr<IVDAVIOutputAPNG> pOutput(VDCreateAVIOutputAPNG());
+	std::unique_ptr<IVDAVIOutputAPNG> pOutput(VDCreateAVIOutputAPNG());
 
 	const VDXAVIStreamHeader& hdr = mVideoStreamInfo.aviHeader;
     pOutput->SetFramesCount(hdr.dwLength);
@@ -894,7 +894,7 @@ IVDMediaOutput *VDAVIOutputAPNGSystem::CreateSegment() {
 }
 
 void VDAVIOutputAPNGSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
+	std::unique_ptr<AVIOutputFLM> pFile(static_cast<AVIOutputFLM *>(pSegment));
 	pFile->finalize();
 }
 
@@ -916,7 +916,7 @@ VDAVIOutputPreviewSystem::~VDAVIOutputPreviewSystem() {
 }
 
 IVDMediaOutput *VDAVIOutputPreviewSystem::CreateSegment() {
-	vdautoptr<AVIOutputPreview> pOutput(new AVIOutputPreview);
+	std::unique_ptr<AVIOutputPreview> pOutput(new AVIOutputPreview);
 
 	if (mVideoImageLayout.format)
 		pOutput->createVideoStream();
@@ -937,7 +937,7 @@ IVDMediaOutput *VDAVIOutputPreviewSystem::CreateSegment() {
 }
 
 void VDAVIOutputPreviewSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputPreview> pFile(static_cast<AVIOutputPreview *>(pSegment));
+	std::unique_ptr<AVIOutputPreview> pFile(static_cast<AVIOutputPreview *>(pSegment));
 	pFile->finalize();
 }
 
@@ -963,18 +963,18 @@ VDAVIOutputNullVideoSystem::~VDAVIOutputNullVideoSystem() {
 }
 
 IVDMediaOutput *VDAVIOutputNullVideoSystem::CreateSegment() {
-	vdautoptr<AVIOutputNull> pOutput(new AVIOutputNull);
+	std::unique_ptr<AVIOutputNull> pOutput(new AVIOutputNull);
 
 	if (!mVideoFormat.empty())
 		pOutput->createVideoStream()->setFormat(&mVideoFormat[0], mVideoFormat.size());
 
-	pOutput->init(NULL);
+	pOutput->init(nullptr);
 
 	return pOutput.release();
 }
 
 void VDAVIOutputNullVideoSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<AVIOutputNull> pFile(static_cast<AVIOutputNull *>(pSegment));
+	std::unique_ptr<AVIOutputNull> pFile(static_cast<AVIOutputNull *>(pSegment));
 	pFile->finalize();
 }
 
@@ -1011,7 +1011,7 @@ IVDMediaOutput *VDAVIOutputSegmentedSystem::CreateSegment() {
 			interval = 1.0;
 	}
 
-	vdautoptr<IVDMediaOutput> pOutput(VDCreateMediaOutputSegmented(mpChildSystem, interval, mPreload, mMaxBytes, mMaxFrames));
+	std::unique_ptr<IVDMediaOutput> pOutput(VDCreateMediaOutputSegmented(mpChildSystem, interval, mPreload, mMaxBytes, mMaxFrames));
 
 	if (!mVideoFormat.empty()) {
 		IVDMediaOutputStream *pVideoOut = pOutput->createVideoStream();
@@ -1031,7 +1031,7 @@ IVDMediaOutput *VDAVIOutputSegmentedSystem::CreateSegment() {
 }
 
 void VDAVIOutputSegmentedSystem::CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) {
-	vdautoptr<IVDMediaOutput> pSegment2(pSegment);
+	std::unique_ptr<IVDMediaOutput> pSegment2(pSegment);
 	pSegment2->finalize();
 }
 

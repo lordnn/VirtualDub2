@@ -958,7 +958,7 @@ void AVIReadHandler::_construct(const wchar_t *pszFile) {
 
 	try {
 		// create first link
-		vdautoptr<AVIFileDesc> pDesc(new_nothrow AVIFileDesc);
+		std::unique_ptr<AVIFileDesc> pDesc(new_nothrow AVIFileDesc);
 
 		if (!pDesc)
 			throw MyMemoryError();
@@ -968,9 +968,9 @@ void AVIReadHandler::_construct(const wchar_t *pszFile) {
 		pDesc->mFileUnbuffered.openNT(pszFile, nsVDFile::kRead | nsVDFile::kDenyWrite | nsVDFile::kOpenExisting | nsVDFile::kUnbuffered);
 		pDesc->mFileSize = pDesc->mFile.size();
 
-		mpCurrentFile = pDesc;
+		mpCurrentFile = pDesc.release();
 		mCurrentFile = -1;
-		mFiles.push_back(pDesc.release());
+		mFiles.push_back(mpCurrentFile);
 
 		// recursively parse file
 
@@ -988,7 +988,7 @@ bool AVIReadHandler::AppendFile(const wchar_t *pszFile) {
 
 	// open file
 
-	vdautoptr<AVIFileDesc> pDesc(new_nothrow AVIFileDesc);
+	std::unique_ptr<AVIFileDesc> pDesc(new_nothrow AVIFileDesc);
 
 	if (!pDesc)
 		throw MyMemoryError();
@@ -1114,7 +1114,7 @@ bool AVIReadHandler::AppendFile(const wchar_t *pszFile) {
 		while(pasn_new = newstreams.RemoveHead())
 			delete pasn_new;
 
-		mpCurrentFile = NULL;
+		mpCurrentFile = nullptr;
 		mCurrentFile = -1;
 		delete mFiles.back();
 		mFiles.pop_back();
@@ -1658,7 +1658,7 @@ terminate_scan:
 }
 
 bool AVIReadHandler::_parseStreamHeader(List2<AVIStreamNode>& streamlist, uint32 dwLengthLeft, bool& bIndexDamaged) {
-	vdautoptr<AVIStreamNode> pasn(new_nothrow AVIStreamNode());
+	std::unique_ptr<AVIStreamNode> pasn(new_nothrow AVIStreamNode());
 	uint32 fccType;
 	uint32 dwLength;
 	bool hyperindexed = false;
@@ -1766,7 +1766,7 @@ bool AVIReadHandler::_parseStreamHeader(List2<AVIStreamNode>& streamlist, uint32
 
 	if (extendedIndexPos >= 0) {
 		try {
-			_parseExtendedIndexBlock(streamlist, pasn, extendedIndexPos, dwLength);
+			_parseExtendedIndexBlock(streamlist, pasn.get(), extendedIndexPos, dwLength);
 		} catch(const MyError&) {
 			bIndexDamaged = true;
 		}

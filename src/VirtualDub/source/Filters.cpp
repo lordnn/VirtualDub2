@@ -79,20 +79,20 @@ void FilterDefinitionInstance::Assign(const FilterDefinition& def, int len) {
 	if (mpExtModule)
 		mDef._module = const_cast<VDXFilterModule *>(&mpExtModule->GetFilterModuleInfo());
 	else
-		mDef._module = NULL;
+		mDef._module = nullptr;
 
 	mAPIVersion = mpExtModule ? mpExtModule->GetVideoFilterAPIVersion() : VIRTUALDUB_FILTERDEF_VERSION;
 
 	if (mAPIVersion >= 16) {
-		mDef.stringProc = NULL;
-		mDef.copyProc = NULL;
+		mDef.stringProc = nullptr;
+		mDef.copyProc = nullptr;
 	} else {
 		mDef.mSourceCountLowMinus1 = 0;
 		mDef.mSourceCountHighMinus1 = 0;
 	}
 
-	mbHasStaticAbout = (mDef.mpStaticAboutProc != NULL);
-	mbHasStaticConfigure = (mDef.mpStaticConfigureProc != NULL);
+	mbHasStaticAbout = (mDef.mpStaticAboutProc != nullptr);
+	mbHasStaticConfigure = (mDef.mpStaticConfigureProc != nullptr);
 }
 
 void FilterDefinitionInstance::AssignFilterMod(const FilterModDefinition& def, int len) {
@@ -146,22 +146,21 @@ FilterDefinitionInstance *FilterBaseAdd(VDXFilterModule *fm, FilterDefinition *p
 			}
 		}
 
-		vdautoptr<FilterDefinitionInstance> pfdi(new FilterDefinitionInstance(pExtModule));
+		std::unique_ptr<FilterDefinitionInstance> pfdi(new FilterDefinitionInstance(pExtModule));
 		pfdi->Assign(*pfd, fd_len);
 
-		FilterDefinitionInstance* fdi = pfdi;
-		g_filterDefs.AddTail(pfdi.release());
+		g_filterDefs.AddTail(pfdi.get());
 
-		return fdi;
+		return pfdi.release();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 FilterDefinition *FilterAdd(VDXFilterModule *fm, FilterDefinition *pfd, int fd_len) {
 	FilterDefinitionInstance* fdi = FilterBaseAdd(fm,pfd,fd_len);
 	if(fdi) return const_cast<FilterDefinition *>(&fdi->GetDef());
-	return NULL;
+	return nullptr;
 }
 
 FilterDefinition *FilterModAdd(VDXFilterModule *fm, FilterDefinition *pfd, int fd_len, FilterModDefinition *pfm, int fm_len) {
@@ -170,14 +169,14 @@ FilterDefinition *FilterModAdd(VDXFilterModule *fm, FilterDefinition *pfd, int f
 		fdi->AssignFilterMod(*pfm, fm_len);
 		return const_cast<FilterDefinition *>(&fdi->GetDef());
 	}
-	return NULL;
+	return nullptr;
 }
 
 void FilterAddBuiltin(const FilterDefinition *pfd) {
 	VDASSERT(!pfd->stringProc || pfd->stringProc2);
 	VDASSERT(!pfd->copyProc || pfd->copyProc2);
 
-	vdautoptr<FilterDefinitionInstance> fdi(new FilterDefinitionInstance(NULL));
+	std::unique_ptr<FilterDefinitionInstance> fdi(new FilterDefinitionInstance(NULL));
 	fdi->Assign(*pfd, sizeof(FilterDefinition));
 	if (pfd->fm) fdi->AssignFilterMod(*pfd->fm, sizeof(FilterModDefinition));
 

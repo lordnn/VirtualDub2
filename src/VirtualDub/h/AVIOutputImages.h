@@ -46,12 +46,12 @@ public:
 	};
 
 	AVIOutputImages(const wchar_t *pszPrefix, const wchar_t *pszSuffix, int iDigits, int start, int format, int q);
-	~AVIOutputImages();
+	~AVIOutputImages() override;
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
-	bool init(const wchar_t *szFile);
+	bool init(const wchar_t *szFile) override;
 	void finalize();
 
 	static void WriteSingleImage(const wchar_t *name, int format, int q, VDPixmap* px);

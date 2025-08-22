@@ -75,10 +75,10 @@ private:
 	bool mInitAlpha;
 	bool mTGADecoder;
 
-	vdautoptr<IVDJPEGDecoder> mpJPEGDecoder;
-	vdautoptr<IVDImageDecoderIFF> mpIFFDecoder;
-	vdautoptr<IVDImageDecoderPNG> mpPNGDecoder;
-	vdautoptr<IVDImageDecoderTIFF> mpTIFFDecoder;
+	std::unique_ptr<IVDJPEGDecoder> mpJPEGDecoder;
+	std::unique_ptr<IVDImageDecoderIFF> mpIFFDecoder;
+	std::unique_ptr<IVDImageDecoderPNG> mpPNGDecoder;
+	std::unique_ptr<IVDImageDecoderTIFF> mpTIFFDecoder;
 };
 
 IVDVideoSource *VDCreateVideoSourceImages(VDInputFileImages *parent) {
@@ -391,7 +391,7 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 
 	if (bIsJPG) {
 		if (!mpJPEGDecoder)
-			mpJPEGDecoder = VDCreateJPEGDecoder();
+			mpJPEGDecoder.reset(VDCreateJPEGDecoder());
 		mpJPEGDecoder->Begin(inputBuffer, data_len);
 		mpJPEGDecoder->DecodeHeader(w, h);
 	}
@@ -399,7 +399,7 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 	VDPixmap pxIFF;
 	if (bIsIFF) {
 		if (!mpIFFDecoder)
-			mpIFFDecoder = VDCreateImageDecoderIFF();
+			mpIFFDecoder.reset(VDCreateImageDecoderIFF());
 		pxIFF = mpIFFDecoder->Decode(inputBuffer, data_len);
 		w = pxIFF.w;
 		h = pxIFF.h;
@@ -407,7 +407,7 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 
 	if (bIsTIFF) {
 		if (!mpTIFFDecoder)
-			mpTIFFDecoder = VDCreateImageDecoderTIFF();
+			mpTIFFDecoder.reset(VDCreateImageDecoderTIFF());
 		mpTIFFDecoder->Decode(inputBuffer, data_len);
 		mpTIFFDecoder->GetSize(w, h);
 		format = mpTIFFDecoder->GetFormat();
@@ -494,7 +494,7 @@ const void *VideoSourceImages::streamGetFrame(const void *inputBuffer, uint32 da
 		DecodeTGA(inputBuffer, data_len, mTargetFormat);
 	if (bIsPNG) {
 		if (!mpPNGDecoder)
-			mpPNGDecoder = VDCreateImageDecoderPNG();
+			mpPNGDecoder.reset(VDCreateImageDecoderPNG());
 
 		PNGDecodeError err = mpPNGDecoder->Decode(inputBuffer, data_len);
 

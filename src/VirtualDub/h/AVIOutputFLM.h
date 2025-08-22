@@ -24,11 +24,11 @@ class AVIOutputFLM : public AVIOutput {
 public:
 	AVIOutputFLM();
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
-	bool init(const wchar_t *szFile);
-	void finalize();
+	bool init(const wchar_t *szFile) override;
+	void finalize() override;
 
 protected:
 	vdautoptr<IVDFileAsync> mpAsync;

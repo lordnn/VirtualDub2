@@ -33,7 +33,7 @@ class IVDAudioOutput;
 class AVIAudioPreviewOutputStream : public AVIOutputStream, public IVDDubPreviewTimer {
 public:
 	AVIAudioPreviewOutputStream();
-	~AVIAudioPreviewOutputStream();
+	~AVIAudioPreviewOutputStream() override;
 
 	void SetVBRMode(bool enable) { mbVBRMode = enable; }
 
@@ -41,9 +41,9 @@ public:
 	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
 	void partialWrite(const void *pBuffer, uint32 cbBuffer);
 	void partialWriteEnd();
-	void finish();
+	void finish() override;
 	void finalize();
-	void flush();
+	void flush() override;
 
 public:
 	void start();
@@ -81,13 +81,13 @@ class AVIOutputPreview : public AVIOutput {
 private:
 public:
 	AVIOutputPreview();
-	~AVIOutputPreview();
+	~AVIOutputPreview() override;
 
-	IVDMediaOutputStream *createVideoStream();
-	IVDMediaOutputStream *createAudioStream();
+	IVDMediaOutputStream *createVideoStream() override;
+	IVDMediaOutputStream *createAudioStream() override;
 
-	bool init(const wchar_t *szFile);
-	void finalize();
+	bool init(const wchar_t *szFile) override;
+	void finalize() override;
 };
 
 #endif

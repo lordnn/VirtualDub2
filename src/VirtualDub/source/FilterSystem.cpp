@@ -1244,7 +1244,7 @@ void FilterSystem::DeallocateBuffers() {
 	if (lpBuffer) {
 		VirtualFree(lpBuffer, 0, MEM_RELEASE);
 
-		lpBuffer = NULL;
+		lpBuffer = nullptr;
 	}
 }
 

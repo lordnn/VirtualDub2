@@ -345,10 +345,10 @@ private:
 	int mFormat;
 	int mQuality;
 
-	vdautoptr<IVDJPEGEncoder>		mpJPEGEncoder;
-	vdautoptr<IVDImageEncoderPNG>	mpPNGEncoder;
-	vdautoptr<IVDImageEncoderTIFF>	mpTIFFEncoder;
-	vdautoptr<TGAEncoder>	mpTGAEncoder;
+	std::unique_ptr<IVDJPEGEncoder>		mpJPEGEncoder;
+	std::unique_ptr<IVDImageEncoderPNG>	mpPNGEncoder;
+	std::unique_ptr<IVDImageEncoderTIFF>	mpTIFFEncoder;
+	std::unique_ptr<TGAEncoder>	mpTGAEncoder;
 	vdfastvector<char>				mOutputBuffer;
 
 public:
@@ -389,19 +389,19 @@ AVIVideoImageOutputStream::AVIVideoImageOutputStream(const wchar_t *pszPrefix, c
 
 	switch (mFormat) {
 	case AVIOutputImages::kFormatJPEG:
-		mpJPEGEncoder = VDCreateJPEGEncoder();
+		mpJPEGEncoder.reset(VDCreateJPEGEncoder());
 		break;
 	case AVIOutputImages::kFormatPNG:
-		mpPNGEncoder = VDCreateImageEncoderPNG();
+		mpPNGEncoder.reset(VDCreateImageEncoderPNG());
 		break;
 	case AVIOutputImages::kFormatTIFF_LZW:
 	case AVIOutputImages::kFormatTIFF_RAW:
 	case AVIOutputImages::kFormatTIFF_ZIP:
-		mpTIFFEncoder = VDCreateImageEncoderTIFF();
+		mpTIFFEncoder.reset(VDCreateImageEncoderTIFF());
 		break;
 	case AVIOutputImages::kFormatTGA:
 	case AVIOutputImages::kFormatTGAUncompressed:
-		mpTGAEncoder = new TGAEncoder;
+		mpTGAEncoder.reset(new TGAEncoder);
 		break;
 	}
 }

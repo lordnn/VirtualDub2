@@ -301,7 +301,7 @@ protected:
 	int			mHeight;
 	void		*mpFrameBufferBase;
 
-	vdautoptr<IVDVideoDecompressor> mpDecompressor;
+	std::unique_ptr<IVDVideoDecompressor> mpDecompressor;
 };
 
 VDVideoDecoderDefault::VDVideoDecoderDefault(IVDVideoDecompressor *decomp, int w, int h)
