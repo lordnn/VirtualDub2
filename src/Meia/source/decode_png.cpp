@@ -166,9 +166,9 @@ namespace {
 
 class VDImageDecoderPNG : public IVDImageDecoderPNG {
 public:
-	PNGDecodeError Decode(const void *src0, uint32 size);
-	const VDPixmap& GetFrameBuffer() { return mFrameBuffer; }
-	bool IsAlphaPresent() const { return mbAlphaPresent; }
+	PNGDecodeError Decode(const void *src0, uint32 size) override;
+	const VDPixmap& GetFrameBuffer() override { return mFrameBuffer; }
+	bool IsAlphaPresent() const override { return mbAlphaPresent; }
 
 protected:
 	VDPixmapBuffer	mFrameBuffer;

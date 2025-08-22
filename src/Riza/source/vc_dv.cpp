@@ -18,7 +18,6 @@
 
 #include <vd2/system/error.h>
 #include <vd2/system/vdalloc.h>
-#include <vd2/Kasumi/pixmap.h>
 #include <vd2/Kasumi/pixmapops.h>
 #include <vd2/Kasumi/pixmaputils.h>
 #include <vd2/Riza/bitmap.h>
@@ -28,27 +27,27 @@
 class VDVideoDecompressorDV : public IVDVideoDecompressor {
 public:
 	VDVideoDecompressorDV(int w, int h);
-	~VDVideoDecompressorDV();
+	~VDVideoDecompressorDV() override;
 
-	bool QueryTargetFormat(int format);
-	bool QueryTargetFormat(const void *format);
-	bool SetTargetFormat(int format);
-	bool SetTargetFormat(const void *format);
-	int GetTargetFormat() { return mFormat; }
-	int GetTargetFormatVariant() { return 0; }
-	const uint32 *GetTargetFormatPalette() { return NULL; }
-	void Start();
-	void Stop();
-	void DecompressFrame(void *dst, const void *src, uint32 srcSize, bool keyframe, bool preroll);
-	const void *GetRawCodecHandlePtr();
-	const wchar_t *GetName();
+	bool QueryTargetFormat(int format) override;
+	bool QueryTargetFormat(const void *format) override;
+	bool SetTargetFormat(int format) override;
+	bool SetTargetFormat(const void *format) override;
+	int GetTargetFormat() override { return mFormat; }
+	int GetTargetFormatVariant() override { return 0; }
+	const uint32 *GetTargetFormatPalette() override { return NULL; }
+	void Start() override;
+	void Stop() override;
+	void DecompressFrame(void *dst, const void *src, uint32 srcSize, bool keyframe, bool preroll) override;
+	const void *GetRawCodecHandlePtr() override;
+	const wchar_t *GetName() override;
 
 protected:
 	int	mFormat;
 	int	mWidth;
 	int	mHeight;
 
-	vdautoptr<IVDVideoDecoderDV> mpDecoder;
+	std::unique_ptr<IVDVideoDecoderDV> mpDecoder;
 };
 
 IVDVideoDecompressor *VDCreateVideoDecompressorDV(int w, int h) {

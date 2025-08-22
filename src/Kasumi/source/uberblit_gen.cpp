@@ -2405,7 +2405,7 @@ void VDPixmapUberBlitterGenerator::ycbcr_to_ycbcr_generic(const VDPixmapGenYCbCr
 }
 
 IVDPixmapBlitter *VDPixmapUberBlitterGenerator::create() {
-	vdautoptr<VDPixmapUberBlitter> blitter(new VDPixmapUberBlitter);
+	std::unique_ptr<VDPixmapUberBlitter> blitter(new VDPixmapUberBlitter);
 
 	int numStackEntries = (int)mStack.size();
 

@@ -60,19 +60,19 @@ protected:
 };
 
 IVDAudioCodec *VDCreateAudioDecompressorMuLaw(const VDWaveFormat *srcFormat, const VDWaveFormat *dstFormat) {
-	vdautoptr<VDAudioDecompressorXLaw> codec(new VDAudioDecompressorXLaw);
+	std::unique_ptr<VDAudioDecompressorXLaw> codec(new VDAudioDecompressorXLaw);
 
 	if (!codec->Init(srcFormat, dstFormat, false))
-		return NULL;
+		return nullptr;
 
 	return codec.release();
 }
 
 IVDAudioCodec *VDCreateAudioDecompressorALaw(const VDWaveFormat *srcFormat, const VDWaveFormat *dstFormat) {
-	vdautoptr<VDAudioDecompressorXLaw> codec(new VDAudioDecompressorXLaw);
+	std::unique_ptr<VDAudioDecompressorXLaw> codec(new VDAudioDecompressorXLaw);
 
 	if (!codec->Init(srcFormat, dstFormat, true))
-		return NULL;
+		return nullptr;
 
 	return codec.release();
 }

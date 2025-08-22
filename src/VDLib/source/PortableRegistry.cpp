@@ -22,7 +22,7 @@
 void VDLoadRegistry(const wchar_t *path) {
 	VDTextInputFile ini(path);
 
-	vdautoptr<VDRegistryKey> key;
+	std::unique_ptr<VDRegistryKey> key;
 	VDStringA token;
 	VDStringW strvalue;
 	vdfastvector<char> binvalue;
@@ -34,7 +34,7 @@ void VDLoadRegistry(const wchar_t *path) {
 			continue;
 
 		if (*s == '[') {
-			key = NULL;
+			key.reset();
 
 			++s;
 			const char *end = strchr(s, ']');
@@ -43,10 +43,10 @@ void VDLoadRegistry(const wchar_t *path) {
 
 			if (!strncmp(s, "Shared\\", 7)) {
 				token.assign(s + 7, end);
-				key = new VDRegistryKey(token.c_str(), true, true);
+				key.reset(new VDRegistryKey(token.c_str(), true, true));
 			} else if (!strncmp(s, "User\\", 5)) {
 				token.assign(s + 5, end);
-				key = new VDRegistryKey(token.c_str(), false, true);
+				key.reset(new VDRegistryKey(token.c_str(), false, true));
 			}
 
 			continue;

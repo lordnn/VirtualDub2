@@ -30,27 +30,27 @@
 class VDAudioCodecW32 : public IVDAudioCodec {
 public:
 	VDAudioCodecW32();
-	~VDAudioCodecW32();
+	~VDAudioCodecW32() override;
 
 	bool Init(const WAVEFORMATEX *pSrcFormat, const WAVEFORMATEX *pDstFormat, bool isCompression, const char *pShortNameDriverHint, bool throwOnError);
-	void Shutdown();
+	void Shutdown() override;
 
-	bool IsEnded() const { return mbEnded; }
+	bool IsEnded() const override { return mbEnded; }
 
-	unsigned	GetInputLevel() const { return mBufferHdr.cbSrcLength; }
-	unsigned	GetInputSpace() const { return mInputBuffer.size() - mBufferHdr.cbSrcLength; }
-	unsigned	GetOutputLevel() const { return mBufferHdr.cbDstLengthUsed - mOutputReadPt; }
-	const VDWaveFormat *GetOutputFormat() const { return mDstFormat.data(); }
-	unsigned	GetOutputFormatSize() const { return mDstFormat.size(); }
+	unsigned	GetInputLevel() const override { return mBufferHdr.cbSrcLength; }
+	unsigned	GetInputSpace() const override { return mInputBuffer.size() - mBufferHdr.cbSrcLength; }
+	unsigned	GetOutputLevel() const override { return mBufferHdr.cbDstLengthUsed - mOutputReadPt; }
+	const VDWaveFormat *GetOutputFormat() const override { return mDstFormat.data(); }
+	unsigned	GetOutputFormatSize() const override { return mDstFormat.size(); }
 
-	void		Restart();
-	bool		Convert(bool flush, bool requireOutput);
+	void		Restart() override;
+	bool		Convert(bool flush, bool requireOutput) override;
 
-	void		*LockInputBuffer(unsigned& bytes);
-	void		UnlockInputBuffer(unsigned bytes);
-	const void	*LockOutputBuffer(unsigned& bytes);
-	void		UnlockOutputBuffer(unsigned bytes);
-	unsigned	CopyOutput(void *dst, unsigned bytes);
+	void		*LockInputBuffer(unsigned& bytes) override;
+	void		UnlockInputBuffer(unsigned bytes) override;
+	const void	*LockOutputBuffer(unsigned& bytes) override;
+	void		UnlockOutputBuffer(unsigned bytes) override;
+	unsigned	CopyOutput(void *dst, unsigned bytes) override;
 
 protected:
 	HACMDRIVER		mhDriver;

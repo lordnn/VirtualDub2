@@ -77,26 +77,26 @@ namespace {
 }
 
 IVDAudioCodec *VDCreateAudioCompressorW32(const VDWaveFormat *srcFormat, const VDWaveFormat *dstFormat, const char *pShortNameDriverHint, bool throwIfNotFound) {
-	vdautoptr<VDAudioCodecW32> codec(new VDAudioCodecW32);
+	std::unique_ptr<VDAudioCodecW32> codec(new VDAudioCodecW32);
 
 	if (!codec->Init((const WAVEFORMATEX *)srcFormat, (const WAVEFORMATEX *)dstFormat, true, pShortNameDriverHint, throwIfNotFound))
-		return NULL;
+		return nullptr;
 
 	return codec.release();
 }
 
 IVDAudioCodec *VDCreateAudioDecompressorW32(const VDWaveFormat *srcFormat, const VDWaveFormat *dstFormat, const char *pShortNameDriverHint, bool throwIfNotFound) {
-	vdautoptr<VDAudioCodecW32> codec(new VDAudioCodecW32);
+	std::unique_ptr<VDAudioCodecW32> codec(new VDAudioCodecW32);
 
 	if (!codec->Init((const WAVEFORMATEX *)srcFormat, (const WAVEFORMATEX *)dstFormat, false, pShortNameDriverHint, throwIfNotFound))
-		return NULL;
+		return nullptr;
 
 	return codec.release();
 }
 
 VDAudioCodecW32::VDAudioCodecW32()
-	: mhDriver(NULL)
-	, mhStream(NULL)
+	: mhDriver(nullptr)
+	, mhStream(nullptr)
 	, mOutputReadPt(0)
 {
 	mDriverName[0] = 0;

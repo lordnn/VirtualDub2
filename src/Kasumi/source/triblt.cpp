@@ -1831,7 +1831,7 @@ VDPixmapTextureMipmapChain::VDPixmapTextureMipmapChain(const VDPixmap& src, bool
 	mBuffers.resize(mipcount);
 	mMipMaps.resize(mipcount);
 
-	vdautoptr<IVDPixmapResampler> r(VDCreatePixmapResampler());
+	std::unique_ptr<IVDPixmapResampler> r(VDCreatePixmapResampler());
 	r->SetFilters(IVDPixmapResampler::kFilterLinear, IVDPixmapResampler::kFilterLinear, false);
 
 	float fw = (float)src.w;

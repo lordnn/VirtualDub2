@@ -71,7 +71,7 @@ protected:
 		kStateData
 	} mState;
 
-	vdautoptr<IVDMPEGAudioDecoder>	mpDecoder;
+	std::unique_ptr<IVDMPEGAudioDecoder>	mpDecoder;
 
 	vdfastvector<uint8>		mInputBuffer;
 	uint32					mInputBufferReadPt;
@@ -85,10 +85,10 @@ protected:
 };
 
 IVDAudioCodec *VDCreateAudioDecompressorMPEG(const VDWaveFormat *srcFormat, const VDWaveFormat *dstFormat) {
-	vdautoptr<VDAudioDecompressorMPEG> codec(new VDAudioDecompressorMPEG);
+	std::unique_ptr<VDAudioDecompressorMPEG> codec(new VDAudioDecompressorMPEG);
 
 	if (!codec->Init(srcFormat, dstFormat, false))
-		return NULL;
+		return nullptr;
 
 	return codec.release();
 }
@@ -244,7 +244,7 @@ void VDAudioDecompressorMPEG::Shutdown() {
 	mDstFormat.clear();
 	mInputBuffer.clear();
 	mOutputBuffer.Shutdown();
-	mpDecoder = NULL;
+	mpDecoder.reset();
 }
 
 bool VDAudioDecompressorMPEG::IsEnded() const {

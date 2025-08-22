@@ -1059,14 +1059,14 @@ void VDImageEncoderPNG::Encode(const VDPixmap& px, const void *&p, uint32& len, 
 	VDPixmapBuffer pxtmp(px.w, px.h, tmp_format);
 	VDPixmapBlt(pxtmp, px);
 
-	vdautoptr<VDPNGDeflateEncoder> enc(new VDPNGDeflateEncoder);	// way too big for stack
+	std::unique_ptr<VDPNGDeflateEncoder> enc(new VDPNGDeflateEncoder);	// way too big for stack
 
-	vdautoptr<VDPNGDeflateEncoder> tempenc[5]={
-		vdautoptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
-		vdautoptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
-		vdautoptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
-		vdautoptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
-		vdautoptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder)
+	std::unique_ptr<VDPNGDeflateEncoder> tempenc[5]={
+		std::unique_ptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
+		std::unique_ptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
+		std::unique_ptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
+		std::unique_ptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder),
+		std::unique_ptr<VDPNGDeflateEncoder>(new VDPNGDeflateEncoder)
 	};
 
 	const uint32 w = pxtmp.w;

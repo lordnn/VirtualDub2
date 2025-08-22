@@ -22,7 +22,7 @@
 #include "uberblit.h"
 
 void VDPixmapBlt_UberblitAdapter(const VDPixmap& dst, const VDPixmap& src, vdpixsize w, vdpixsize h) {
-	vdautoptr<IVDPixmapBlitter> blitter(VDPixmapCreateBlitter(dst, src));
+	std::unique_ptr<IVDPixmapBlitter> blitter(VDPixmapCreateBlitter(dst, src));
 
 	if (w > src.w)
 		w = src.w;

@@ -35,23 +35,23 @@ IVDVideoCodecBugTrap *g_pVDVideoCodecBugTrap;
 class VDVideoDecompressorVCM : public IVDVideoDecompressor {
 public:
 	VDVideoDecompressorVCM();
-	~VDVideoDecompressorVCM();
+	~VDVideoDecompressorVCM() override;
 
 	void Init(const void *srcFormat, uint32 srcFormatSize, HIC hic);
 
-	bool QueryTargetFormat(int format);
-	bool QueryTargetFormat(const void *format);
-	bool SetTargetFormat(int format);
-	bool SetTargetFormat(const void *format);
-	int GetTargetFormat() { return mFormat; }
-	int GetTargetFormatVariant() { return mFormatVariant; }
-	const uint32 *GetTargetFormatPalette() { return mFormatPalette; }
-	void Start();
-	void Stop();
-	void DecompressFrame(void *dst, const void *src, uint32 srcSize, bool keyframe, bool preroll);
-	const void *GetRawCodecHandlePtr();
-	const wchar_t *GetName();
-	bool GetAlpha(){ return mbUseAlpha; }
+	bool QueryTargetFormat(int format) override;
+	bool QueryTargetFormat(const void *format) override;
+	bool SetTargetFormat(int format) override;
+	bool SetTargetFormat(const void *format) override;
+	int GetTargetFormat() override { return mFormat; }
+	int GetTargetFormatVariant() override { return mFormatVariant; }
+	const uint32 *GetTargetFormatPalette() override { return mFormatPalette; }
+	void Start() override;
+	void Stop() override;
+	void DecompressFrame(void *dst, const void *src, uint32 srcSize, bool keyframe, bool preroll) override;
+	const void *GetRawCodecHandlePtr() override;
+	const wchar_t *GetName() override;
+	bool GetAlpha() override { return mbUseAlpha; }
 
 protected:
 	HIC			mhic;
@@ -70,19 +70,19 @@ protected:
 };
 
 IVDVideoDecompressor *VDCreateVideoDecompressorVCM(const void *srcFormat, uint32 srcFormatSize, const void *pHIC) {
-	vdautoptr<VDVideoDecompressorVCM> p(new VDVideoDecompressorVCM);
+	std::unique_ptr<VDVideoDecompressorVCM> p(new VDVideoDecompressorVCM);
 
 	p->Init(srcFormat, srcFormatSize, *(const HIC *)pHIC);
 	return p.release();
 }
 
 VDVideoDecompressorVCM::VDVideoDecompressorVCM()
-	: mhic(NULL)
-	, mbActive(false)
-	, mbUseAlpha(false)
+	: mhic(nullptr)
 	, mBestFormat(0)
 	, mFormat(0)
 	, mFormatVariant(0)
+	, mbActive(false)
+	, mbUseAlpha(false)
 {
 }
 
