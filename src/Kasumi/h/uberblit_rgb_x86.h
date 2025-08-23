@@ -21,7 +21,7 @@ extern "C" void vdasm_pixblt_RGB888_to_XRGB8888_MMX(void *dst0, ptrdiff_t dstpit
 
 class VDPixmapGen_X1R5G5B5_To_R5G6B5_MMX : public VDPixmapGen_X1R5G5B5_To_R5G6B5 {
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -31,7 +31,7 @@ protected:
 
 class VDPixmapGen_R5G6B5_To_X1R5G5B5_MMX : public VDPixmapGen_R5G6B5_To_X1R5G5B5 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -47,7 +47,7 @@ protected:
 
 class VDPixmapGen_X1R5G5B5_To_X8R8G8B8_MMX : public VDPixmapGen_X1R5G5B5_To_X8R8G8B8 {
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -57,7 +57,7 @@ protected:
 
 class VDPixmapGen_R5G6B5_To_X8R8G8B8_MMX : public VDPixmapGen_R5G6B5_To_X8R8G8B8 {
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -67,7 +67,7 @@ protected:
 
 class VDPixmapGen_R8G8B8_To_X8R8G8B8_MMX : public VDPixmapGen_R8G8B8_To_A8R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -83,7 +83,7 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_X1R5G5B5_MMX : public VDPixmapGen_X8R8G8B8_To_X1R5G5B5 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -93,7 +93,7 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_R5G6B5_MMX : public VDPixmapGen_X8R8G8B8_To_R5G6B5 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -103,7 +103,7 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_R8G8B8_MMX : public VDPixmapGen_X8R8G8B8_To_R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 

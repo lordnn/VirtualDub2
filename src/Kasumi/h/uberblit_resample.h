@@ -28,20 +28,20 @@ public:
 
 	void Init(IVDPixmapGen *src, uint32 srcIndex, uint32 width, float offset, float step, nsVDPixmap::FilterMode filterMode, float filterFactor, bool interpolationOnly);
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		mpSrc->TransformPixmapInfo(src,dst);
 	}
 
-	void Start();
+	void Start() override;
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const  override{
 		return mpSrc->GetType(mSrcIndex);
 	}
 
-	virtual const char* dump_name(){ return "ResampleRow"; }
+	const char* dump_name() override { return "ResampleRow"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 	void Compute8(void *dst0, sint32 y);
 	void Compute16(void *dst0, sint32 y);
 	void Compute32(void *dst0, sint32 y);
@@ -68,20 +68,20 @@ public:
 
 	void Init(IVDPixmapGen *src, uint32 srcIndex, uint32 height, float offset, float step, nsVDPixmap::FilterMode filterMode, float filterFactor, bool interpolationOnly);
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		mpSrc->TransformPixmapInfo(src,dst);
 	}
 
-	void Start();
+	void Start() override;
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return mpSrc->GetType(mSrcIndex);
 	}
 
-	virtual const char* dump_name(){ return "ResampleCol"; }
+	const char* dump_name() override { return "ResampleCol"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDResamplerSeparableColStage *mpColStage;
 

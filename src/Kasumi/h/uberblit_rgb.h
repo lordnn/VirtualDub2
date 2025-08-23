@@ -12,18 +12,18 @@
 
 class VDPixmapGen_X1R5G5B5_To_R5G6B5 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_565_LE;
 	}
 
-	virtual const char* dump_name(){ return "X1R5G5B5_To_R5G6B5"; }
+	const char* dump_name() override { return "X1R5G5B5_To_R5G6B5"; }
 
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -41,18 +41,18 @@ protected:
 
 class VDPixmapGen_R5G6B5_To_X1R5G5B5 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "R5G6B5_To_X1R5G5B5"; }
+	const char* dump_name() override{ return "R5G6B5_To_X1R5G5B5"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -76,18 +76,18 @@ protected:
 
 class VDPixmapGen_X1R5G5B5_To_X8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "X1R5G5B5_To_X8R8G8B8"; }
+	const char* dump_name() override { return "X1R5G5B5_To_X8R8G8B8"; }
 
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -103,18 +103,18 @@ protected:
 
 class VDPixmapGen_R5G6B5_To_X8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "R5G6B5_To_X8R8G8B8"; }
+	const char* dump_name() override { return "R5G6B5_To_X8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -131,18 +131,18 @@ protected:
 
 class VDPixmapGen_R8G8B8_To_A8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "R8G8B8_To_A8R8G8B8"; }
+	const char* dump_name() override { return "R8G8B8_To_A8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -166,18 +166,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_X1R5G5B5 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_1555_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_X1R5G5B5"; }
+	const char* dump_name() override { return "X8R8G8B8_To_X1R5G5B5"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -192,18 +192,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_R5G6B5 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_565_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_R5G6B5"; }
+	const char* dump_name() override { return "X8R8G8B8_To_R5G6B5"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -218,18 +218,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 3);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_888;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_R8G8B8"; }
+	const char* dump_name() override { return "X8R8G8B8_To_R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -253,18 +253,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_X1R5G5B5_Dithered : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_1555_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_X1R5G5B5_Dithered"; }
+	const char* dump_name() override { return "X8R8G8B8_To_X1R5G5B5_Dithered"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -292,18 +292,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_R5G6B5_Dithered : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 2);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_565_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_R5G6B5_Dithered"; }
+	const char* dump_name() override { return "X8R8G8B8_To_R5G6B5_Dithered"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint32 *src = (const uint32 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -337,18 +337,18 @@ protected:
 
 class VDPixmapGen_8_To_32F : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_32F_LE;
 	}
 
-	virtual const char* dump_name(){ return "8_To_32F"; }
+	const char* dump_name() override { return "8_To_32F"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dst = (float *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -362,18 +362,18 @@ protected:
 
 class VDPixmapGen_X8R8G8B8_To_X32B32G32R32F : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 16);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_32Fx4_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_X32B32G32R32F"; }
+	const char* dump_name() override { return "X8R8G8B8_To_X32B32G32R32F"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dst = (float *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -401,18 +401,18 @@ class VDPixmapGen_32F_To_8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 	VDPixmapGen_32F_To_8(){ invalid = false; }
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8;
 	}
 
-	virtual const char* dump_name(){ return "32F_To_8"; }
+	const char* dump_name() override { return "32F_To_8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		if (invalid) return;
 		uint8 *dst = (uint8 *)dst0;
 		const float *src = (const float *)mpSrc->GetRow(y, mSrcIndex);
@@ -434,7 +434,7 @@ protected:
 
 class VDPixmapGen_a32F_To_a8 : public VDPixmapGen_32F_To_8 {
 public:
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,buf);
 		dst.copy_alpha(buf);
@@ -444,18 +444,18 @@ public:
 
 class VDPixmapGen_32F_To_8_Dithered : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8;
 	}
 
-	virtual const char* dump_name(){ return "32F_To_8_Dithered"; }
+	const char* dump_name() override{ return "32F_To_8_Dithered"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const float *src = (const float *)mpSrc->GetRow(y, mSrcIndex);
 		VDCPUCleanupExtensions();
@@ -496,18 +496,18 @@ protected:
 
 class VDPixmapGen_X32B32G32R32F_To_X8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "X32B32G32R32F_To_X8R8G8B8"; }
+	const char* dump_name() override { return "X32B32G32R32F_To_X8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const float *src = (const float *)mpSrc->GetRow(y, mSrcIndex);
 
@@ -532,18 +532,18 @@ protected:
 
 class VDPixmapGen_X32B32G32R32F_To_X8R8G8B8_Dithered : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "X32B32G32R32F_To_X8R8G8B8_Dithered"; }
+	const char* dump_name() override { return "X32B32G32R32F_To_X8R8G8B8_Dithered"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const float *src = (const float *)mpSrc->GetRow(y, mSrcIndex);
 

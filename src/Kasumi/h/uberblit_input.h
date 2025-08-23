@@ -20,38 +20,38 @@ public:
 		mPlane = -1;
 	}
 
-	void SetSource(const void *src, ptrdiff_t pitch, const uint32 *palette) {
+	void SetSource(const void *src, ptrdiff_t pitch, const uint32 *palette) override {
 		mpSrc = src;
 		mPitch = pitch;
 	}
 
-	void SetPlane(int i) {
+	void SetPlane(int i) override {
 		mPlane = i;
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		dst.copy_dynamic(src);
 	}
 
-	void AddWindowRequest(int minY, int maxY) {
+	void AddWindowRequest(int minY, int maxY) override {
 	}
 
-	void Start() {
+	void Start() override {
 	}
 
-	sint32 GetWidth(int) const {
+	sint32 GetWidth(int) const override {
 		return mWidth;
 	}
 
-	sint32 GetHeight(int) const {
+	sint32 GetHeight(int) const override {
 		return mHeight;
 	}
 
-	bool IsStateful() const {
+	bool IsStateful() const override {
 		return false;
 	}
 
-	const void *GetRow(sint32 y, uint32 output) {
+	const void *GetRow(sint32 y, uint32 output) override {
 		if (y < 0)
 			y = 0;
 		else if (y >= mHeight)
@@ -59,16 +59,16 @@ public:
 		return vdptroffset(mpSrc, mPitch*y);
 	}
 
-	void ProcessRow(void *dst, sint32 y) {
+	void ProcessRow(void *dst, sint32 y) override {
 		memcpy(dst, GetRow(y, 0), mBpr);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return mType;
 	}
 
-	virtual const char* dump_name(){ return "src"; }
-	virtual IVDPixmapGen* dump_src(int index){ return 0; }
+	const char* dump_name() override { return "src"; }
+	IVDPixmapGen* dump_src(int index) override { return 0; }
 
 protected:
 	const void *mpSrc;
@@ -82,7 +82,7 @@ protected:
 
 class VDPixmapGenSrcAlpha: public VDPixmapGenSrc {
 public:
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		dst.copy_alpha(src);
 		dst.ref_a = src.ref_a;
 	}

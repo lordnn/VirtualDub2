@@ -12,7 +12,7 @@ extern "C" void __cdecl vdasm_pixblt_YUV444Planar_to_XRGB8888_scan_MMX(void *dst
 
 class VDPixmapGenYCbCr601ToRGB32_MMX : public VDPixmapGenYCbCr601ToRGB32 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -25,7 +25,7 @@ protected:
 
 class VDPixmapGenRGB32ToYCbCr601_SSE2 : public VDPixmapGenRGB32ToYCbCr601 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 #endif

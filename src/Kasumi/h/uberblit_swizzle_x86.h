@@ -23,22 +23,22 @@
 
 class VDPixmapGen_8In16_Even_MMX : public VDPixmapGen_8In16 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_8In16_Odd_MMX : public VDPixmapGen_8In16 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_8In32_MMX : public VDPixmapGen_8In32 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_Swap8In16_MMX : public VDPixmapGen_Swap8In16 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ protected:
 
 class VDPixmapGen_B8x2_To_B8R8_MMX : public VDPixmapGen_B8x2_To_B8R8 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,12 +60,12 @@ protected:
 
 class VDPixmapGen_B8x3_To_G8B8_G8R8_MMX : public VDPixmapGen_B8x3_To_G8B8_G8R8 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_B8x3_To_B8G8_R8G8_MMX : public VDPixmapGen_B8x3_To_B8G8_R8G8 {
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 #endif

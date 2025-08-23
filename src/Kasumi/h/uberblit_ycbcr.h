@@ -24,21 +24,21 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcY->TransformPixmapInfo(src,unused);
 		mpSrcCb->TransformPixmapInfo(src,unused);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcY;
 		if(index==1) return mpSrcCb;
 		if(index==2) return mpSrcCr;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "YCbCrToRGB"; }
+	const char* dump_name() override { return "YCbCrToRGB"; }
 
 protected:
 	IVDPixmapGen *mpSrcY;
@@ -51,7 +51,7 @@ protected:
 
 class VDPixmapGenYCbCrToRGB32Base : public VDPixmapGenYCbCrToRGBBase {
 public:
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -59,13 +59,13 @@ public:
 		StartWindow(mWidth * 4);
 	}
 
-	virtual const char* dump_name(){ return "YCbCrToRGB32"; }
+	const char* dump_name() override { return "YCbCrToRGB32"; }
 };
 
 
 class VDPixmapGenYCbCrToRGB64Base : public VDPixmapGenYCbCrToRGBBase {
 public:
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -73,13 +73,13 @@ public:
 		StartWindow(mWidth * 8);
 	}
 
-	virtual const char* dump_name(){ return "YCbCrToRGB64"; }
+	const char* dump_name() override { return "YCbCrToRGB64"; }
 };
 
 
 class VDPixmapGenYCbCrToRGB32FBase : public VDPixmapGenYCbCrToRGBBase {
 public:
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -87,7 +87,7 @@ public:
 		StartWindow(mWidth * 16);
 	}
 
-	virtual const char* dump_name(){ return "YCbCrToRGB32F"; }
+	const char* dump_name() override { return "YCbCrToRGB32F"; }
 };
 
 
@@ -97,15 +97,15 @@ public:
 		InitSource(src, srcindex);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth, 3);
 	}
 
-	const void *GetRow(sint32 y, uint32 index) {
+	const void *GetRow(sint32 y, uint32 index) override {
 		return (const uint8 *)VDPixmapGenWindowBasedOneSource::GetRow(y, index) + mWindowPitch * index;
 	}
 
-	virtual const char* dump_name(){ return "RGB32ToYCbCr"; }
+	const char* dump_name() override { return "RGB32ToYCbCr"; }
 };
 
 class VDPixmapGenRGB32FToYCbCrBase : public VDPixmapGenWindowBasedOneSource {
@@ -114,15 +114,15 @@ public:
 		InitSource(src, srcindex);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * sizeof(float), 3);
 	}
 
-	const void *GetRow(sint32 y, uint32 index) {
+	const void *GetRow(sint32 y, uint32 index) override {
 		return (const uint8 *)VDPixmapGenWindowBasedOneSource::GetRow(y, index) + mWindowPitch * index;
 	}
 
-	virtual const char* dump_name(){ return "RGB32FToYCbCr"; }
+	const char* dump_name() override { return "RGB32FToYCbCr"; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ public:
 	}
 
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -180,12 +180,12 @@ protected:
 
 class VDPixmapGenYCbCr601ToRGB32F : public VDPixmapGenYCbCrToRGB32FBase {
 public:
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_32Fx4_LE | kVDPixSpace_BGR;
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dst = (float *)dst0;
 		const float *srcY = (const float *)mpSrcY->GetRow(y, mSrcIndexY);
 		const float *srcCb = (const float *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -211,12 +211,12 @@ protected:
 
 class VDPixmapGenRGB32ToYCbCr601 : public VDPixmapGenRGB32ToYCbCrBase {
 public:
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_8 | kVDPixSpace_YCC_601;
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dstCr = (uint8 *)dst0;
 		uint8 *dstY = dstCr + mWindowPitch;
 		uint8 *dstCb = dstY + mWindowPitch;
@@ -248,12 +248,12 @@ protected:
 
 class VDPixmapGenRGB32FToYCbCr601 : public VDPixmapGenRGB32FToYCbCrBase {
 public:
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_32F_LE | kVDPixSpace_YCC_601;
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dstCr = (float *)dst0;
 		float *dstY  = vdptroffset(dstCr, mWindowPitch);
 		float *dstCb = vdptroffset(dstY, mWindowPitch);
@@ -311,7 +311,7 @@ public:
 	}
 
 protected:
-	virtual void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -339,7 +339,7 @@ protected:
 
 class VDPixmapGenYCbCr709ToRGB32F : public VDPixmapGenYCbCrToRGBBase {
 public:
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -347,12 +347,12 @@ public:
 		StartWindow(mWidth * 16);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_32Fx4_LE | kVDPixSpace_BGR;
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dst = (float *)dst0;
 		const float *srcY = (const float *)mpSrcY->GetRow(y, mSrcIndexY);
 		const float *srcCb = (const float *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -382,22 +382,22 @@ public:
 		InitSource(src, srcindex);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth, 3);
 	}
 
-	const void *GetRow(sint32 y, uint32 index) {
+	const void *GetRow(sint32 y, uint32 index) override {
 		return (const uint8 *)VDPixmapGenWindowBasedOneSource::GetRow(y, index) + mWindowPitch * index;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_8 | kVDPixSpace_YCC_709;
 	}
 
-	virtual const char* dump_name(){ return "RGB32ToYCbCr709"; }
+	const char* dump_name() override { return "RGB32ToYCbCr709"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dstCr = (uint8 *)dst0;
 		uint8 *dstY = dstCr + mWindowPitch;
 		uint8 *dstCb = dstY + mWindowPitch;
@@ -423,22 +423,22 @@ public:
 		InitSource(src, srcindex);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * sizeof(float), 3);
 	}
 
-	const void *GetRow(sint32 y, uint32 index) {
+	const void *GetRow(sint32 y, uint32 index) override {
 		return (const uint8 *)VDPixmapGenWindowBasedOneSource::GetRow(y, index) + mWindowPitch * index;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~(kVDPixType_Mask | kVDPixSpace_Mask)) | kVDPixType_32F_LE | kVDPixSpace_YCC_709;
 	}
 
-	virtual const char* dump_name(){ return "RGB32FToYCbCr709"; }
+	const char* dump_name() override { return "RGB32FToYCbCr709"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		float *dstCr = (float *)dst0;
 		float *dstY  = vdptroffset(dstCr, mWindowPitch);
 		float *dstCb = vdptroffset(dstY, mWindowPitch);

@@ -6,7 +6,7 @@
 
 class VDPixmapGenBase_Pal_To_X8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple, public IVDPixmapGenSrc {
 public:
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
@@ -23,11 +23,11 @@ public:
 		mPlane = i;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "Pal_To_X8R8G8B8"; }
+	const char* dump_name() override { return "Pal_To_X8R8G8B8"; }
 
 protected:
 	const uint32 *mpPal;
@@ -36,7 +36,7 @@ protected:
 
 class VDPixmapGen_Pal1_To_X8R8G8B8 : public VDPixmapGenBase_Pal_To_X8R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -73,7 +73,7 @@ protected:
 
 class VDPixmapGen_Pal2_To_X8R8G8B8 : public VDPixmapGenBase_Pal_To_X8R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -106,7 +106,7 @@ protected:
 
 class VDPixmapGen_Pal4_To_X8R8G8B8 : public VDPixmapGenBase_Pal_To_X8R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;
@@ -137,7 +137,7 @@ protected:
 
 class VDPixmapGen_Pal8_To_X8R8G8B8 : public VDPixmapGenBase_Pal_To_X8R8G8B8 {
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint32 *dst = (uint32 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		sint32 w = mWidth;

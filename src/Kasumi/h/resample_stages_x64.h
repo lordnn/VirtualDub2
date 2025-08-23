@@ -13,14 +13,14 @@ class VDResamplerSeparableTableRowStageSSE2 : public VDResamplerRowStageSeparabl
 public:
 	VDResamplerSeparableTableRowStageSSE2(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 class VDResamplerSeparableTableColStageSSE2 : public VDResamplerColStageSeparableTable32 {
 public:
 	VDResamplerSeparableTableColStageSSE2(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *const *src, uint32 w, sint32 phase);
+	void Process(void *dst, const void *const *src, uint32 w, sint32 phase) override;
 };
 
 #endif

@@ -11,19 +11,19 @@ class VDPixmapGenWindowBasedOneSourceSimple;
 class VDPixmapUberBlitterDirectCopy : public IVDPixmapBlitter {
 public:
 	VDPixmapUberBlitterDirectCopy();
-	~VDPixmapUberBlitterDirectCopy();
+	~VDPixmapUberBlitterDirectCopy() override;
 
-	void Blit(const VDPixmap& dst, const VDPixmap& src);
-	void Blit(const VDPixmap& dst, const vdrect32 *rDst, const VDPixmap& src);
+	void Blit(const VDPixmap& dst, const VDPixmap& src) override;
+	void Blit(const VDPixmap& dst, const vdrect32 *rDst, const VDPixmap& src) override;
 };
 
 class VDPixmapUberBlitter : public IVDPixmapBlitter {
 public:
 	VDPixmapUberBlitter();
-	~VDPixmapUberBlitter();
+	~VDPixmapUberBlitter() override;
 
-	void Blit(const VDPixmap& dst, const VDPixmap& src);
-	void Blit(const VDPixmap& dst, const vdrect32 *rDst, const VDPixmap& src);
+	void Blit(const VDPixmap& dst, const VDPixmap& src) override;
+	void Blit(const VDPixmap& dst, const vdrect32 *rDst, const VDPixmap& src) override;
 
 protected:
 	void Blit(const VDPixmap& dst, const vdrect32 *rDst, const FilterModPixmapInfo& src);

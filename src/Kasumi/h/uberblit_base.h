@@ -18,7 +18,7 @@ public:
 	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
 	}
 
-	void AddWindowRequest(int minDY, int maxDY) {
+	void AddWindowRequest(int minDY, int maxDY) override {
 		if (mWindowMinDY > minDY)
 			mWindowMinDY = minDY;
 		if (mWindowMaxDY < maxDY)
@@ -41,14 +41,14 @@ public:
 		mWindowLastY = -0x3FFFFFFF;
 	}
 
-	sint32 GetWidth(int) const { return mWidth; }
-	sint32 GetHeight(int) const { return mHeight; }
+	sint32 GetWidth(int) const override { return mWidth; }
+	sint32 GetHeight(int) const override { return mHeight; }
 
-	bool IsStateful() const {
+	bool IsStateful() const  override{
 		return true;
 	}
 
-	const void *GetRow(sint32 y, uint32 index) {
+	const void *GetRow(sint32 y, uint32 index)  override{
 		sint32 tostep = y - mWindowLastY;
 		VDASSERT(y >= mWindowLastY - (sint32)mWindowSize + 1);
 
@@ -67,7 +67,7 @@ public:
 		return mWindow[y + mWindowSize - 1 - mWindowLastY + mWindowIndex];
 	}
 
-	void ProcessRow(void *dst, sint32 y) {
+	void ProcessRow(void *dst, sint32 y)  override {
 		Compute(dst, y);
 	}
 
@@ -111,7 +111,7 @@ public:
 		}
 	}
 
-	void AddWindowRequest(int minDY, int maxDY) {
+	void AddWindowRequest(int minDY, int maxDY)  override {
 		VDPixmapGenWindowBased::AddWindowRequest(minDY, maxDY);
 		mpSrc->AddWindowRequest(minDY, maxDY);
 	}
@@ -122,15 +122,13 @@ public:
 		VDPixmapGenWindowBased::StartWindow(rowbytes, outputCount);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const  override {
 		return mpSrc->GetType(mSrcIndex);
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){ if(index==0) return mpSrc; return 0; }
+	IVDPixmapGen* dump_src(int index) override { if(index==0) return mpSrc; return 0; }
 
 protected:
-	virtual void Compute(void *dst0, sint32 y) = 0;
-
 	IVDPixmapGen *mpSrc;
 	uint32 mSrcIndex;
 	sint32 mSrcWidth;
@@ -150,7 +148,7 @@ class VDPixmapGenWindowBasedOneSourceAlign16 : public VDPixmapGenWindowBasedOneS
 public:
   int bpp;
 
-	void Start() {
+	void Start()  override {
 		int type = mpSrc->GetType(0);
 		bpp = 2;
 		if ((type & kVDPixType_Mask)==kVDPixType_16x2_LE) bpp = 4;
@@ -158,7 +156,7 @@ public:
 		if ((type & kVDPixType_Mask)==kVDPixType_YU64) bpp = 4;
 		StartWindow(mWidth * bpp);
 	}
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y)  override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		int w = mWidth*bpp/2;
@@ -179,10 +177,10 @@ public:
 
 class VDPixmapGenWindowBasedOneSourceAlign8to16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start()  override {
 		StartWindow(mWidth * 2);
 	}
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y)  override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		int w = mWidth;
@@ -203,10 +201,10 @@ public:
 
 class VDPixmapGenWindowBasedOneSourceAlign16to8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start() {
+	void Start()  override {
 		StartWindow(mWidth);
 	}
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y)  override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		int w = mWidth;

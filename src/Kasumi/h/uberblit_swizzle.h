@@ -31,14 +31,14 @@
 class VDPixmapGen_Swap8In16 : public VDPixmapGenWindowBasedOneSource {
 public:
 	void Init(IVDPixmapGen *gen, int srcIndex, uint32 w, uint32 h, uint32 bpr);
-	void Start();
+	void Start() override;
 
-	uint32 GetType(uint32 index) const;
+	uint32 GetType(uint32 index) const override;
 
-	virtual const char* dump_name(){ return "Swap8In16"; }
+	const char* dump_name() override { return "Swap8In16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	uint32 mRowLength;
 };
@@ -58,22 +58,22 @@ public:
 		gen->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8;
 	}
 
-	virtual const char* dump_name(){
+	const char* dump_name() override {
 		if(mOffset==0) return "8In16.0";
 		if(mOffset==1) return "8In16.1";
 		return "8In16";
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		const uint8 *srcp = (const uint8 *)mpSrc->GetRow(y, mSrcIndex) + mOffset;
 		uint8 *dst = (uint8 *)dst0;
 		sint32 w = mWidth;
@@ -95,15 +95,15 @@ public:
 		gen->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8;
 	}
 
-	virtual const char* dump_name(){
+	const char* dump_name() override {
 		if(mOffset==0) return "8In32.0";
 		if(mOffset==1) return "8In32.1";
 		if(mOffset==2) return "8In32.2";
@@ -112,7 +112,7 @@ public:
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		const uint8 *srcp = (const uint8 *)mpSrc->GetRow(y, mSrcIndex) + mOffset;
 		uint8 *dst = (uint8 *)dst0;
 		sint32 w = mWidth;
@@ -134,22 +134,22 @@ public:
 		gen->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth*2);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16_LE;
 	}
 
-	virtual const char* dump_name(){
+	const char* dump_name() override {
 		if(mOffset==0) return "16In32.0";
 		if(mOffset==1) return "16In32.1";
 		return "16In32";
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	int mOffset;
 };
@@ -163,15 +163,15 @@ public:
 		gen->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth*2);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16_LE;
 	}
 
-	virtual const char* dump_name(){
+	const char* dump_name() override {
 		if(mOffset==0) return "16In64.0";
 		if(mOffset==1) return "16In64.1";
 		if(mOffset==2) return "16In64.2";
@@ -180,7 +180,7 @@ public:
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	int mOffset;
 };
@@ -194,15 +194,15 @@ public:
 		gen->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth*4);
 	}
 
-	uint32 GetType(uint32 index) const {
+	uint32 GetType(uint32 index) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_32F_LE;
 	}
 
-	virtual const char* dump_name(){
+	const char* dump_name() override {
 		if(mOffset==0) return "32In128.0";
 		if(mOffset==1) return "32In128.1";
 		if(mOffset==2) return "32In128.2";
@@ -211,7 +211,7 @@ public:
 	}
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	int mOffset;
 };
@@ -225,25 +225,25 @@ protected:
 class VDPixmapGen_B8x2_To_B8R8 : public VDPixmapGenWindowBased {
 public:
 	void Init(IVDPixmapGen *srcCb, uint32 srcindexCb, IVDPixmapGen *srcCr, uint32 srcindexCr);
-	void Start();
-	uint32 GetType(uint32 output) const;
+	void Start() override;
+	uint32 GetType(uint32 output) const override;
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcCb->TransformPixmapInfo(src,unused);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override{
 		if(index==0) return mpSrcCb;
 		if(index==1) return mpSrcCr;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B8x2_To_B8R8"; }
+	const char* dump_name() override { return "B8x2_To_B8R8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDPixmapGen *mpSrcCb;
 	uint32 mSrcIndexCb;
@@ -274,7 +274,7 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -282,28 +282,28 @@ public:
 		StartWindow(((mWidth + 1) & ~1) * 2);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcY->TransformPixmapInfo(src,unused);
 		mpSrcCb->TransformPixmapInfo(src,unused);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~kVDPixType_Mask) | kVDPixType_B8G8_R8G8;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcY;
 		if(index==1) return mpSrcCb;
 		if(index==2) return mpSrcCr;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B8x3_To_G8B8_G8R8"; }
+	const char* dump_name() override { return "B8x3_To_G8B8_G8R8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *VDRESTRICT dst = (uint8 *)dst0;
 		const uint8 *VDRESTRICT srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *VDRESTRICT srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -364,7 +364,7 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -372,28 +372,28 @@ public:
 		StartWindow(((mWidth + 1) & ~1) * 2);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcY->TransformPixmapInfo(src,unused);
 		mpSrcCb->TransformPixmapInfo(src,unused);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~kVDPixType_Mask) | kVDPixType_G8B8_G8R8;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcY;
 		if(index==1) return mpSrcCb;
 		if(index==2) return mpSrcCr;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B8x3_To_B8G8_R8G8"; }
+	const char* dump_name() override { return "B8x3_To_B8G8_R8G8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 * VDRESTRICT dst = (uint8 *)dst0;
 		const uint8 *VDRESTRICT srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *VDRESTRICT srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -453,7 +453,7 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -461,28 +461,28 @@ public:
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcY->TransformPixmapInfo(src,unused);
 		mpSrcCb->TransformPixmapInfo(src,unused);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcCr;
 		if(index==1) return mpSrcY;
 		if(index==2) return mpSrcCb;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B8x3_To_X8R8G8B8"; }
+	const char* dump_name() override { return "B8x3_To_X8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *srcY = (const uint8 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint8 *srcCb = (const uint8 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -529,7 +529,7 @@ public:
 		srcA->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -538,7 +538,7 @@ public:
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcR->TransformPixmapInfo(src,unused);
 		mpSrcG->TransformPixmapInfo(src,unused);
@@ -548,11 +548,11 @@ public:
 		dst.copy_alpha(buf);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcR->GetType(mSrcIndexR) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
@@ -560,10 +560,10 @@ public:
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B8x4_To_A8R8G8B8"; }
+	const char* dump_name() override { return "B8x4_To_A8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *srcR = (const uint8 *)mpSrcR->GetRow(y, mSrcIndexR);
 		const uint8 *srcG = (const uint8 *)mpSrcG->GetRow(y, mSrcIndexG);
@@ -611,7 +611,7 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcY->Start();
 		mpSrcCb->Start();
 		mpSrcCr->Start();
@@ -619,7 +619,7 @@ public:
 		StartWindow(mWidth * 8);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcY->TransformPixmapInfo(src,dst);
 		mpSrcCb->TransformPixmapInfo(src,unused);
@@ -627,21 +627,21 @@ public:
 		dst.alpha_type = 0;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcY->GetType(mSrcIndexY) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcCr;
 		if(index==1) return mpSrcY;
 		if(index==2) return mpSrcCb;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B16x3_To_Y416"; }
+	const char* dump_name() override { return "B16x3_To_Y416"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *srcY = (const uint16 *)mpSrcY->GetRow(y, mSrcIndexY);
 		const uint16 *srcCb = (const uint16 *)mpSrcCb->GetRow(y, mSrcIndexCb);
@@ -685,7 +685,7 @@ public:
 		srcB->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -693,7 +693,7 @@ public:
 		StartWindow(mWidth * 8);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrcR->TransformPixmapInfo(src,dst);
 		mpSrcG->TransformPixmapInfo(src,buf); dst.ref_g = buf.ref_r;
@@ -701,21 +701,21 @@ public:
 		dst.alpha_type = 0;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcR->GetType(mSrcIndexR) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B16x3_To_RGB64"; }
+	const char* dump_name() override { return "B16x3_To_RGB64"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *srcR = (const uint16 *)mpSrcR->GetRow(y, mSrcIndexR);
 		const uint16 *srcG = (const uint16 *)mpSrcG->GetRow(y, mSrcIndexG);
@@ -762,7 +762,7 @@ public:
 		srcA->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -771,7 +771,7 @@ public:
 		StartWindow(mWidth * 8);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrcR->TransformPixmapInfo(src,dst);
 		mpSrcG->TransformPixmapInfo(src,buf); dst.ref_g = buf.ref_r;
@@ -780,11 +780,11 @@ public:
 		dst.copy_alpha(buf);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcR->GetType(mSrcIndexR) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
@@ -792,10 +792,10 @@ public:
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B16x4_To_RGB64"; }
+	const char* dump_name() override { return "B16x4_To_RGB64"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *srcR = (const uint16 *)mpSrcR->GetRow(y, mSrcIndexR);
 		const uint16 *srcG = (const uint16 *)mpSrcG->GetRow(y, mSrcIndexG);
@@ -840,34 +840,34 @@ public:
 		srcA->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrc->Start();
 		mpSrcA->Start();
 
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,dst);
 		mpSrcA->TransformPixmapInfo(src,buf);
 		dst.copy_alpha(src);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return mpSrc->GetType(mSrcIndex);
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrc;
 		if(index==1) return mpSrcA;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_A8R8G8B8"; }
+	const char* dump_name() override { return "X8R8G8B8_To_A8R8G8B8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint8 *dst = (uint8 *)dst0;
 		const uint8 *src = (const uint8 *)mpSrc->GetRow(y, mSrcIndex);
 		const uint8 *srcA = (const uint8 *)mpSrcA->GetRow(y, mSrcIndexA);
@@ -903,14 +903,14 @@ public:
 		srcA->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrc->Start();
 		mpSrcA->Start();
 
 		StartWindow(mWidth * 8);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,dst);
 		mpSrcA->TransformPixmapInfo(src,buf);
@@ -918,20 +918,20 @@ public:
 		dst.ref_a = buf.ref_a;
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return mpSrc->GetType(mSrcIndex);
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrc;
 		if(index==1) return mpSrcA;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_A16R16G16B16"; }
+	const char* dump_name() override { return "X16R16G16B16_To_A16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *src = (const uint16 *)mpSrc->GetRow(y, mSrcIndex);
 		const uint16 *srcA = (const uint16 *)mpSrcA->GetRow(y, mSrcIndexA);
@@ -967,33 +967,33 @@ public:
 		srcCr->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcCb->Start();
 		mpSrcCr->Start();
 
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcCb->TransformPixmapInfo(src,dst);
 		mpSrcCr->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrcCb->GetType(mSrcIndexCb) & ~kVDPixType_Mask) | kVDPixType_16x2_LE;
 	}
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcCb;
 		if(index==1) return mpSrcCr;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "B16x2_To_B16R16"; }
+	const char* dump_name() override { return "B16x2_To_B16R16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y) {
+	void Compute(void *dst0, sint32 y) override {
 		uint16 *dst = (uint16 *)dst0;
 		const uint16 *srcCb = (const uint16 *)mpSrcCb->GetRow(y, mSrcIndexCb);
 		const uint16 *srcCr = (const uint16 *)mpSrcCr->GetRow(y, mSrcIndexCr);

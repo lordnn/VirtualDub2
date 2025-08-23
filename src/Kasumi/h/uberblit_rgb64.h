@@ -37,18 +37,18 @@ public:
 		dst.ref_a = 0xFFFF;
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_To_X16R16G16B16"; }
+	const char* dump_name() override { return "X8R8G8B8_To_X16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_To_X32B32G32R32F : public VDPixmapGenWindowBasedOneSourceSimple {
@@ -67,15 +67,15 @@ public:
 		ma = float(1.0/buf.ref_a);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 16);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_32Fx4_LE;
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_X32B32G32R32F"; }
+	const char* dump_name() override { return "X16R16G16B16_To_X32B32G32R32F"; }
 
 protected:
 	int ref_r;
@@ -86,8 +86,8 @@ protected:
 	float mg;
 	float mb;
 	float ma;
-	
-	void Compute(void *dst0, sint32 y);
+
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X32B32G32R32F_To_X16R16G16B16 : public VDPixmapGenWindowBasedOneSourceSimple {
@@ -106,29 +106,29 @@ public:
 		ma = float(dst.ref_a);
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "X32B32G32R32F_To_X16R16G16B16"; }
+	const char* dump_name() override { return "X32B32G32R32F_To_X16R16G16B16"; }
 
 protected:
 	float mr;
 	float mg;
 	float mb;
 	float ma;
-	
-	void Compute(void *dst0, sint32 y);
+
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_To_X8R8G8B8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,buf);
 		if(buf.alpha_type==FilterModPixmapInfo::kAlphaInvalid) buf.ref_a = 0xFFFF;
@@ -144,15 +144,15 @@ public:
 		ma = 0xFF0000/buf.ref_a;
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_8888;
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_X8R8G8B8"; }
+	const char* dump_name() override { return "X16R16G16B16_To_X8R8G8B8"; }
 
 protected:
 	int ref_r;
@@ -164,101 +164,101 @@ protected:
 	uint32 mb;
 	uint32 ma;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_To_R210 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_R210;
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_R210"; }
+	const char* dump_name() override { return "X16R16G16B16_To_R210"; }
 
 protected:
-	
-	void Compute(void *dst0, sint32 y);
+
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_To_R10K : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_R10K;
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_R10K"; }
+	const char* dump_name() override { return "X16R16G16B16_To_R10K"; }
 
 protected:
-	
-	void Compute(void *dst0, sint32 y);
+
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_To_B48R : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 6);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_B48R;
 	}
 
-	virtual const char* dump_name(){ return "X16R16G16B16_To_B48R"; }
+	const char* dump_name() override { return "X16R16G16B16_To_B48R"; }
 
 protected:
-	
-	void Compute(void *dst0, sint32 y);
+
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_B64A_To_X16R16G16B16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "B64A_To_X16R16G16B16"; }
+	const char* dump_name() override { return "B64A_To_X16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_B48R_To_X16R16G16B16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "B48R_To_X16R16G16B16"; }
+	const char* dump_name() override { return "B48R_To_X16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_R210_To_X16R16G16B16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,buf);
 		dst.copy_frame(buf);
@@ -268,24 +268,24 @@ public:
 		dst.ref_a = 0xFFFF;
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "R210_To_X16R16G16B16"; }
+	const char* dump_name() override { return "R210_To_X16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_R10K_To_X16R16G16B16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrc->TransformPixmapInfo(src,buf);
 		dst.copy_frame(buf);
@@ -295,18 +295,18 @@ public:
 		dst.ref_a = 0xFFFF;
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 8);
 	}
 
-	uint32 GetType(uint32 output) const {
+	uint32 GetType(uint32 output) const override {
 		return (mpSrc->GetType(mSrcIndex) & ~kVDPixType_Mask) | kVDPixType_16x4_LE;
 	}
 
-	virtual const char* dump_name(){ return "R10K_To_X16R16G16B16"; }
+	const char* dump_name() override { return "R10K_To_X16R16G16B16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 class VDPixmapGen_X16R16G16B16_Normalize : public VDPixmapGenWindowBasedOneSourceAlign16 {
@@ -315,9 +315,9 @@ public:
 
 	VDPixmapGen_X16R16G16B16_Normalize(){ max_r=0xFFFF; max_a=0xFFFF; isChroma=false; wipe_alpha=true; }
 
-	virtual const char* dump_name(){ return "X16R16G16B16_Normalize"; }
+	const char* dump_name() override { return "X16R16G16B16_Normalize"; }
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst);
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override;
 	void set_normalize(FilterModPixmapInfo& dst, bool v);
 
 	uint32 max_r;
@@ -332,7 +332,7 @@ protected:
 	bool scale_down;
 	bool isChroma;
 
-	int ComputeSpan(uint16* dst, const uint16* src, int n);
+	int ComputeSpan(uint16* dst, const uint16* src, int n) override;
 	void ComputeNormalize(uint16* dst, const uint16* src, int n);
 	void ComputeNormalizeBias(uint16* dst, const uint16* src, int n);
 	void ComputeWipeAlpha(uint16* dst, const uint16* src, int n);
@@ -342,9 +342,9 @@ class VDPixmapGen_Y416_Normalize : public VDPixmapGen_X16R16G16B16_Normalize {
 public:
 	VDPixmapGen_Y416_Normalize(){ max_r=0xFF00; max_a=0xFFFF; isChroma=true; }
 
-	virtual const char* dump_name(){ return "Y416_Normalize"; }
+	const char* dump_name() override { return "Y416_Normalize"; }
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst);
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override;
 };
 
 class ExtraGen_X16R16G16B16_Normalize : public IVDPixmapExtraGen {
@@ -352,13 +352,13 @@ public:
 	uint32 max_value;
 
 	ExtraGen_X16R16G16B16_Normalize(){ max_value=0xFFFF; }
-	virtual void Create(VDPixmapUberBlitterGenerator& gen, const VDPixmapLayout& dst);
+	void Create(VDPixmapUberBlitterGenerator& gen, const VDPixmapLayout& dst) override;
 };
 
 class VDPixmapGen_X8R8G8B8_Normalize : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		mpSrc->TransformPixmapInfo(src,dst);
 
 		a_mask = 0;
@@ -366,22 +366,22 @@ public:
 			a_mask = 0xFF000000;
 	}
 
-	void Start() {
+	void Start() override {
 		StartWindow(mWidth * 4);
 	}
 
-	virtual const char* dump_name(){ return "X8R8G8B8_Normalize"; }
+	const char* dump_name() override { return "X8R8G8B8_Normalize"; }
 
 protected:
 	uint32 a_mask;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 	void ComputeWipeAlpha(void *dst0, sint32 y);
 };
 
 class ExtraGen_X8R8G8B8_Normalize : public IVDPixmapExtraGen {
 public:
-	virtual void Create(VDPixmapUberBlitterGenerator& gen, const VDPixmapLayout& dst);
+	void Create(VDPixmapUberBlitterGenerator& gen, const VDPixmapLayout& dst) override;
 };
 
 #endif

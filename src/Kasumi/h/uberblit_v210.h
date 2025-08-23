@@ -27,7 +27,7 @@ public:
 		srcB->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -36,7 +36,7 @@ public:
 		StartWindow(qw * 128);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcR->TransformPixmapInfo(src,unused);
 		mpSrcG->TransformPixmapInfo(src,unused);
@@ -48,22 +48,22 @@ public:
 		bias = -128.0f / 255.0f + 512.0f / max_value;
 	}
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "32F_To_V210"; }
+	const char* dump_name() override { return "32F_To_V210"; }
 
 protected:
 	int max_value;
 	float bias;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDPixmapGen *mpSrcR;
 	uint32 mSrcIndexR;
@@ -81,8 +81,8 @@ protected:
 
 class VDPixmapGen_V210_To_32F : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void Start() override;
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		VDPixmapGenWindowBasedOneSourceSimple::TransformPixmapInfo(src,dst);
 		if (src.colorRangeMode==vd2::kColorRangeMode_Full)
 			max_value = 0x3FF;
@@ -91,18 +91,18 @@ public:
 		bias = 128.0f / 255.0f - 512.0f / max_value;
 	}
 
-	const void *GetRow(sint32 y, uint32 index);
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	sint32 GetWidth(int index) const;
-	uint32 GetType(uint32 output) const;
+	sint32 GetWidth(int index) const override;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "V210_To_32F"; }
+	const char* dump_name() override { return "V210_To_32F"; }
 
 protected:
 	int max_value;
 	float bias;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 
@@ -114,10 +114,10 @@ protected:
 
 class VDPixmapGen_V210_To_P16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrc->TransformPixmapInfo(src,unused);
 		dst.colorSpaceMode = src.colorSpaceMode;
@@ -131,13 +131,13 @@ public:
 		dst.ref_a = 0;
 	}
 
-	sint32 GetWidth(int index) const;
-	uint32 GetType(uint32 output) const;
+	sint32 GetWidth(int index) const override;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "V210_To_P16"; }
+	const char* dump_name() override { return "V210_To_P16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 
@@ -149,16 +149,16 @@ protected:
 
 class VDPixmapGen_YU64_To_P16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	sint32 GetWidth(int index) const;
-	uint32 GetType(uint32 output) const;
+	sint32 GetWidth(int index) const override;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "YU64_To_P16"; }
+	const char* dump_name() override { return "YU64_To_P16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ public:
 		srcB->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -192,26 +192,26 @@ public:
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcR->TransformPixmapInfo(src,unused);
 		mpSrcG->TransformPixmapInfo(src,dst);
 		mpSrcB->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "P16_To_YU64"; }
+	const char* dump_name() override { return "P16_To_YU64"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDPixmapGen *mpSrcR;
 	uint32 mSrcIndexR;
@@ -244,7 +244,7 @@ public:
 		srcB->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -252,7 +252,7 @@ public:
 		StartWindow(mWidth * 4);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcR->TransformPixmapInfo(src,unused);
 		mpSrcG->TransformPixmapInfo(src,unused);
@@ -264,22 +264,22 @@ public:
 		bias = -128.0f / 255.0f + 512.0f / max_value;
 	}
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "32F_To_V410"; }
+	const char* dump_name() override { return "32F_To_V410"; }
 
 protected:
 	int max_value;
 	float bias;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDPixmapGen *mpSrcR;
 	uint32 mSrcIndexR;
@@ -297,8 +297,8 @@ protected:
 
 class VDPixmapGen_V410_To_32F : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void Start() override;
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		VDPixmapGenWindowBasedOneSourceSimple::TransformPixmapInfo(src,dst);
 		if (src.colorRangeMode==vd2::kColorRangeMode_Full)
 			max_value = 0x3FF;
@@ -307,17 +307,17 @@ public:
 		bias = 128.0f / 255.0f - 512.0f / max_value;
 	}
 
-	const void *GetRow(sint32 y, uint32 index);
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "V410_To_32F"; }
+	const char* dump_name() override { return "V410_To_32F"; }
 
 protected:
 	int max_value;
 	float bias;
 
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 
@@ -329,10 +329,10 @@ protected:
 
 class VDPixmapGen_V410_To_P16 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrc->TransformPixmapInfo(src,unused);
 		dst.colorSpaceMode = src.colorSpaceMode;
@@ -346,12 +346,12 @@ public:
 		dst.ref_a = 0;
 	}
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "V410_To_P16"; }
+	const char* dump_name() override { return "V410_To_P16"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 
@@ -363,11 +363,11 @@ protected:
 
 class VDPixmapGen_32F_To_Y410 : public VDPixmapGen_32F_To_V410 {
 public:
-	uint32 GetType(uint32 output) const;
-	virtual const char* dump_name(){ return "32F_To_Y410"; }
+	uint32 GetType(uint32 output) const override;
+	const char* dump_name() override { return "32F_To_Y410"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -378,9 +378,9 @@ protected:
 
 class VDPixmapGen_Y410_To_32F : public VDPixmapGen_V410_To_32F {
 public:
-	virtual const char* dump_name(){ return "Y410_To_32F"; }
+	const char* dump_name() override { return "Y410_To_32F"; }
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 
@@ -392,9 +392,9 @@ protected:
 
 class VDPixmapGen_Y410_To_P16 : public VDPixmapGen_V410_To_P16 {
 public:
-	virtual const char* dump_name(){ return "Y410_To_P16"; }
+	const char* dump_name() override { return "Y410_To_P16"; }
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -405,15 +405,15 @@ protected:
 
 class VDPixmapGen_V308_To_P8 : public VDPixmapGenWindowBasedOneSourceSimple {
 public:
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "V308_To_P8"; }
+	const char* dump_name() override { return "V308_To_P8"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -439,7 +439,7 @@ public:
 		srcB->AddWindowRequest(0, 0);
 	}
 
-	void Start() {
+	void Start() override {
 		mpSrcR->Start();
 		mpSrcG->Start();
 		mpSrcB->Start();
@@ -447,26 +447,26 @@ public:
 		StartWindow(mWidth * 3);
 	}
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo unused;
 		mpSrcR->TransformPixmapInfo(src,unused);
 		mpSrcG->TransformPixmapInfo(src,unused);
 		mpSrcB->TransformPixmapInfo(src,unused);
 	}
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	virtual IVDPixmapGen* dump_src(int index){
+	IVDPixmapGen* dump_src(int index) override {
 		if(index==0) return mpSrcR;
 		if(index==1) return mpSrcG;
 		if(index==2) return mpSrcB;
 		return 0; 
 	}
 
-	virtual const char* dump_name(){ return "P8_To_V308"; }
+	const char* dump_name() override { return "P8_To_V308"; }
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	IVDPixmapGen *mpSrcR;
 	uint32 mSrcIndexR;

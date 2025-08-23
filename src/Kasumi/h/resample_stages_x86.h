@@ -11,8 +11,8 @@
 
 class VDResamplerSeparablePointRowStageX86 : public IVDResamplerSeparableRowStage {
 public:
-	int GetWindowSize() const;
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	int GetWindowSize() const override;
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -23,28 +23,28 @@ public:
 
 class VDResamplerSeparablePointRowStageMMX : public IVDResamplerSeparableRowStage {
 public:
-	int GetWindowSize() const;
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	int GetWindowSize() const override;
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 class VDResamplerSeparableLinearRowStageMMX : public IVDResamplerSeparableRowStage {
 public:
-	int GetWindowSize() const;
-	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx);
+	int GetWindowSize() const override;
+	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 class VDResamplerSeparableLinearColStageMMX : public IVDResamplerSeparableColStage {
 public:
-	int GetWindowSize() const;
-	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase);
+	int GetWindowSize() const override;
+	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase) override;
 };
 
 class VDResamplerSeparableCubicRowStageMMX : public IVDResamplerSeparableRowStage {
 public:
 	VDResamplerSeparableCubicRowStageMMX(double A);
 
-	int GetWindowSize() const;
-	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx);
+	int GetWindowSize() const override;
+	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx) override;
 
 protected:
 	vdblock<sint32, vdaligned_alloc<sint32> > mFilterBank;
@@ -54,8 +54,8 @@ class VDResamplerSeparableCubicColStageMMX : public IVDResamplerSeparableColStag
 public:
 	VDResamplerSeparableCubicColStageMMX(double A);
 
-	int GetWindowSize() const;
-	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase);
+	int GetWindowSize() const override;
+	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase) override;
 
 protected:
 	vdblock<sint32, vdaligned_alloc<sint32> > mFilterBank;
@@ -68,8 +68,8 @@ public:
 	IVDResamplerSeparableRowStage2 *AsRowStage2() { return this; } 
 
 	void Init(const VDResamplerAxis& axis, uint32 srcw);
-	void Process(void *dst, const void *src, uint32 w);
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst, const void *src, uint32 w) override;
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 
 protected:
 	void RedoRowFilters(const VDResamplerAxis& axis, uint32 w, uint32 srcw);
@@ -93,21 +93,21 @@ class VDResamplerSeparableTableRowStageMMX : public VDResamplerRowStageSeparable
 public:
 	VDResamplerSeparableTableRowStageMMX(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 class VDResamplerSeparableTableColStage8MMX : public VDResamplerColStageSeparableTable8 {
 public:
 	VDResamplerSeparableTableColStage8MMX(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *const *src, uint32 w, sint32 phase);
+	void Process(void *dst, const void *const *src, uint32 w, sint32 phase) override;
 };
 
 class VDResamplerSeparableTableColStageMMX : public VDResamplerColStageSeparableTable32 {
 public:
 	VDResamplerSeparableTableColStageMMX(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *const *src, uint32 w, sint32 phase);
+	void Process(void *dst, const void *const *src, uint32 w, sint32 phase) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ public:
 
 class VDResamplerRowStageSeparableLinear8_phaseZeroStepHalf_ISSE : public VDResamplerRowStageSeparableLinear8 {
 public:
-	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst0, const void *src0, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 
@@ -132,21 +132,21 @@ class VDResamplerSeparableCubicColStageSSE2 : public VDResamplerSeparableCubicCo
 public:
 	VDResamplerSeparableCubicColStageSSE2(double A);
 
-	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase);
+	void Process(void *dst0, const void *const *srcarray, uint32 w, sint32 phase) override;
 };
 
 class VDResamplerSeparableTableRowStageSSE2 : public VDResamplerSeparableTableRowStageMMX {
 public:
 	VDResamplerSeparableTableRowStageSSE2(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 };
 
 class VDResamplerSeparableTableColStageSSE2 : public VDResamplerSeparableTableColStageMMX {
 public:
 	VDResamplerSeparableTableColStageSSE2(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *const *src, uint32 w, sint32 phase);
+	void Process(void *dst, const void *const *src, uint32 w, sint32 phase) override;
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -162,8 +162,8 @@ public:
 	IVDResamplerSeparableRowStage2 *AsRowStage2() { return this; } 
 
 	void Init(const VDResamplerAxis& axis, uint32 srcw);
-	void Process(void *dst, const void *src, uint32 w);
-	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx);
+	void Process(void *dst, const void *src, uint32 w) override;
+	void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) override;
 
 protected:
 	void RedoRowFilters(const VDResamplerAxis& axis, uint32 w, uint32 srcw);
@@ -187,7 +187,7 @@ class VDResamplerSeparableTableColStage8SSE41 : public VDResamplerColStageSepara
 public:
 	VDResamplerSeparableTableColStage8SSE41(const IVDResamplerFilter& filter);
 
-	void Process(void *dst, const void *const *src, uint32 w, sint32 phase);
+	void Process(void *dst, const void *const *src, uint32 w, sint32 phase) override;
 };
 
 #endif

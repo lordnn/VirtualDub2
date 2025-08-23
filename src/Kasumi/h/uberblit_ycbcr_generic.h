@@ -18,10 +18,10 @@ class VDPixmapGenYCbCrToRGB32Generic : public VDPixmapGenYCbCrToRGB32Base {
 public:
 	VDPixmapGenYCbCrToRGB32Generic(const VDPixmapGenYCbCrBasis& basis, bool studioRGB);
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
 protected:
-	virtual void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	sint32 mCoY;
 	sint32 mCoRCr;
@@ -39,9 +39,9 @@ class VDPixmapGenYCbCrToRGB64Generic : public VDPixmapGenYCbCrToRGB64Base {
 public:
 	VDPixmapGenYCbCrToRGB64Generic(const VDPixmapGenYCbCrBasis& basis, bool studioRGB);
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
-	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) {
+	void TransformPixmapInfo(const FilterModPixmapInfo& src, FilterModPixmapInfo& dst) override {
 		FilterModPixmapInfo buf;
 		mpSrcY->TransformPixmapInfo(src,buf);
 		mpSrcCr->TransformPixmapInfo(src,buf);
@@ -54,14 +54,14 @@ public:
 		ref_r = buf.ref_r;
 	}
 
-	void Start() {
+	void Start() override {
 		VDPixmapGenYCbCrToRGB64Base::Start();
 		UpdateParams();
 	}
 
 protected:
 	void UpdateParams();
-	virtual void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	VDPixmapGenYCbCrBasis basis;
 	bool studioRGB;
@@ -83,10 +83,10 @@ class VDPixmapGenYCbCrToRGB32FGeneric : public VDPixmapGenYCbCrToRGB32FBase {
 public:
 	VDPixmapGenYCbCrToRGB32FGeneric(const VDPixmapGenYCbCrBasis& basis, bool studioRGB);
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	float mCoY;
 	float mCoRCr;
@@ -104,10 +104,10 @@ class VDPixmapGenRGB32ToYCbCrGeneric : public VDPixmapGenRGB32ToYCbCrBase {
 public:
 	VDPixmapGenRGB32ToYCbCrGeneric(const VDPixmapGenYCbCrBasis& basis, bool studioRGB, uint32 colorSpace);
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
 	sint32 mCoYR;
 	sint32 mCoYG;
@@ -131,10 +131,10 @@ class VDPixmapGenRGB32FToYCbCrGeneric : public VDPixmapGenRGB32FToYCbCrBase {
 public:
 	VDPixmapGenRGB32FToYCbCrGeneric(const VDPixmapGenYCbCrBasis& basis, bool studioRGB, uint32 colorSpace);
 
-	uint32 GetType(uint32 output) const;
+	uint32 GetType(uint32 output) const override;
 
 protected:
-	void Compute(void *dst0, sint32 y);
+	void Compute(void *dst0, sint32 y) override;
 
  	float mCoYR;
 	float mCoYG;
@@ -158,14 +158,14 @@ class VDPixmapGenYCbCrToYCbCrGeneric : public VDPixmapGenYCbCrToRGBBase {
 public:
 	VDPixmapGenYCbCrToYCbCrGeneric(const VDPixmapGenYCbCrBasis& dstBasis, bool dstLimitedRange, const VDPixmapGenYCbCrBasis& srcBasis, bool srcLimitedRange, uint32 colorSpace);
 	 
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
-	uint32 GetType(uint32 output) const;
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "YCbCrToYCbCr"; }
+	const char* dump_name() override { return "YCbCrToYCbCr"; }
 
 protected:
-	void Compute(void *dst0, sint32 ypos);
+	void Compute(void *dst0, sint32 ypos) override;
 
 	sint32 mCoYY;
 	sint32 mCoYCb;
@@ -187,14 +187,14 @@ class VDPixmapGenYCbCrToYCbCrGeneric_32F : public VDPixmapGenYCbCrToRGBBase {
 public:
 	VDPixmapGenYCbCrToYCbCrGeneric_32F(const VDPixmapGenYCbCrBasis& dstBasis, bool dstLimitedRange, const VDPixmapGenYCbCrBasis& srcBasis, bool srcLimitedRange, uint32 colorSpace);
 
-	void Start();
-	const void *GetRow(sint32 y, uint32 index);
-	uint32 GetType(uint32 output) const;
+	void Start() override;
+	const void *GetRow(sint32 y, uint32 index) override;
+	uint32 GetType(uint32 output) const override;
 
-	virtual const char* dump_name(){ return "YCbCrToYCbCr_32F"; }
+	const char* dump_name() override { return "YCbCrToYCbCr_32F"; }
 
 protected:
-	void Compute(void *dst0, sint32 ypos);
+	void Compute(void *dst0, sint32 ypos) override;
 
 	float mCoYY;
 	float mCoYCb;

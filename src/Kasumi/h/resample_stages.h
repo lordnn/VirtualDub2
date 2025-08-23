@@ -61,7 +61,7 @@ public:
 
 class IVDResamplerSeparableRowStage : public IVDResamplerStage {
 public:
-	virtual IVDResamplerSeparableRowStage2 *AsRowStage2() { return NULL; }
+	virtual IVDResamplerSeparableRowStage2 *AsRowStage2() { return nullptr; }
 	virtual void Process(void *dst, const void *src, uint32 w, uint32 u, uint32 dudx) = 0;
 	virtual int GetWindowSize() const = 0;
 };
