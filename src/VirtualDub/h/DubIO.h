@@ -94,7 +94,7 @@ public:
 	const VDRenderVideoPipeFrameInfo* SyncReadVideo();
 
 protected:
-	void ThreadRun();
+	void ThreadRun() override;
 	bool MainAddVideoFrame();
 	void ReadRawVideoFrame(int sourceIndex, VDPosition streamFrame, VDPosition displayFrame, VDPosition targetSample, bool preload, bool direct);
 	void ReadNullVideoFrame(int sourceIndex, VDPosition displayFrame, VDPosition targetSample);

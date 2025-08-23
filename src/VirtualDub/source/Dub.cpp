@@ -390,7 +390,7 @@ private:
 	MyError				err;
 	bool				fError{};
 
-	VDAtomicInt			mStopLock{};
+	std::atomic_bool	mStopLock{};
 
 	DubOptions			mOptions;
 
@@ -413,8 +413,8 @@ private:
 	bool				fPreview;
 	bool				mbCompleted{};
 	bool				mbBackground{};
-	VDAtomicInt			mbAbort{};
-	VDAtomicInt			mbUserAbort{};
+	std::atomic_bool	mbAbort{};
+	std::atomic_bool	mbUserAbort{};
 	bool				fADecompressionOk{};
 	bool				fVDecompressionOk{};
 
@@ -1891,10 +1891,10 @@ void Dubber::Go(int iPriority) {
 //////////////////////////////////////////////
 
 void Dubber::Stop() {
-	if (mStopLock.xchg(1))
+	if (mStopLock.exchange(true))
 		return;
 
-	mbAbort = true;
+	mbAbort.store(true, std::memory_order_release);
 
 	if (mpIOThread)
 		mpIOThread->Abort();
@@ -2033,7 +2033,7 @@ void Dubber::Stop() {
 ///////////////////////////////////////////////////////////////////
 
 void Dubber::InternalSignalStop() {
-	if (!mbAbort.compareExchange(true, false) && !mStopLock) {
+	if (bool bExpected{}; mbAbort.compare_exchange_weak(bExpected, true) && !mStopLock.load(std::memory_order_acquire)) {
 		if (mpIOThread)
 			mpIOThread->Abort();
 
@@ -2044,13 +2044,13 @@ void Dubber::InternalSignalStop() {
 }
 
 void Dubber::Abort(bool userAbort) {
-	if (!mbAbort.compareExchange(true, false) && !mStopLock) {
+	if (bool bExpected{}; mbAbort.compare_exchange_weak(bExpected, true) && !mStopLock.load(std::memory_order_acquire)) {
 		if (mpIOThread)
 			mpIOThread->Abort();
 
 		mProcessThread.Abort();
 
-		mbUserAbort = userAbort;
+		mbUserAbort.store(userAbort, std::memory_order_release);
 		mAudioPipe.Abort();
 		mpVideoPipe->abort();
 
@@ -2067,7 +2067,7 @@ bool Dubber::IsAborted() {
 }
 
 bool Dubber::isAbortedByUser() {
-	return mbUserAbort != 0;
+	return mbUserAbort.load(std::memory_order_acquire);
 }
 
 bool Dubber::IsPreviewing() {
@@ -2102,7 +2102,7 @@ void Dubber::SetBackground(bool background) {
 void Dubber::UpdateFrames() {
 	mProcessThread.UpdateFrames();
 
-	if (mLiveLockMessages < kLiveLockMessageLimit && !mStopLock) {
+	if (mLiveLockMessages < kLiveLockMessageLimit && !mStopLock.load(std::memory_order_acquire)) {
 		uint32 curTime = VDGetCurrentTick();
 
 		int iocount = mIOThreadCounter;

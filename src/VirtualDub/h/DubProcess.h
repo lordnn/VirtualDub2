@@ -58,7 +58,7 @@ public:
 	void PreInit();
 
 	void SetParent(IDubberInternal *pParent);
-	void SetAbortSignal(VDAtomicInt *pAbort);
+	void SetAbortSignal(std::atomic_bool *pAbort);
 	void SetStatusHandler(IDubStatusHandler *pStatusHandler);
 	void SetInputDisplay(IVDVideoDisplay *pVideoDisplay);
 	void SetOutputDisplay(IVDVideoDisplay *pVideoDisplay);
@@ -89,11 +89,11 @@ public:
 		return false;
 	}
 
-	uint32 GetActivityCounter() {
-		return mActivityCounter;
+	uint32 GetActivityCounter() const {
+		return mActivityCounter.load(std::memory_order_acquire);
 	}
 
-	const char *GetCurrentAction() {
+	const char *GetCurrentAction() const {
 		return mpCurrentAction;
 	}
 
@@ -109,59 +109,59 @@ protected:
 
 	bool WriteAudio(int stream, sint32 count);
 
-	void ThreadRun();
+	void ThreadRun() override;
 	void UpdateAudioDelay();
 	void UpdateAudioFormat();
 	void UpdateAudioStreamRate();
 
-	void OnVideoStreamEnded();
-	void OnFirstFrameWritten();
+	void OnVideoStreamEnded() override;
+	void OnFirstFrameWritten() override;
 
-	const DubOptions		*opt;
+	const DubOptions		*opt{};
 
-	VDStreamInterleaver		*mpInterleaver;
+	VDStreamInterleaver		*mpInterleaver{};
 	VDLoopThrottle			mLoopThrottle;
-	IDubberInternal			*mpParent;
+	IDubberInternal			*mpParent{};
 
 	// OUTPUT
-	IVDMediaOutput			*mpAVIOut;
-	IVDMediaOutputStream	*mpAudioOut;			// alias: AVIout->audioOut
-	IVDMediaOutputStream	*mpVideoOut;			// alias: AVIout->videoOut
-	IVDDubberOutputSystem	*mpOutputSystem;
+	IVDMediaOutput			*mpAVIOut{};
+	IVDMediaOutputStream	*mpAudioOut{};			// alias: AVIout->audioOut
+	IVDMediaOutputStream	*mpVideoOut{};			// alias: AVIout->videoOut
+	IVDDubberOutputSystem	*mpOutputSystem{};
 
 	// AUDIO SECTION
-	VDAudioPipeline			*mpAudioPipe;
-	AudioStreamL3Corrector	*mpAudioCorrector;
-	AudioStats	*mpAudioStats;
-	bool				mbAudioPresent;
-	bool				mbAudioEnded;
-	uint64				mAudioSamplesWritten;
+	VDAudioPipeline			*mpAudioPipe{};
+	AudioStreamL3Corrector	*mpAudioCorrector{};
+	AudioStats	*mpAudioStats{};
+	bool				mbAudioPresent{};
+	bool				mbAudioEnded{};
+	uint64				mAudioSamplesWritten{};
 	vdfastvector<char>	mAudioBuffer;
 
 	// VIDEO SECTION
-	AVIPipe					*mpVideoPipe;
-	bool				mbVideoEnded;
-	bool				mbVideoPushEnded;
+	AVIPipe					*mpVideoPipe{};
+	bool				mbVideoEnded{};
+	bool				mbVideoPushEnded{};
 
-	DubVideoStreamInfo	*mpVInfo;
-	IVDAsyncBlitter		*mpBlitter;
-	IDubStatusHandler	*mpStatusHandler;
+	DubVideoStreamInfo	*mpVInfo{};
+	IVDAsyncBlitter		*mpBlitter{};
+	IDubStatusHandler	*mpStatusHandler{};
 
 	typedef vdfastvector<IVDVideoSource *> VideoSources;
 	VideoSources		mVideoSources;
 
 	// PREVIEW
-	bool				mbPreview;
-	bool				mbFirstPacket;
+	bool				mbPreview{};
+	bool				mbFirstPacket{};
 
 	// ERROR HANDLING
 	MyError				mError;
-	bool				mbError;
-	bool				mbCompleted;
-	VDAtomicInt			*mpAbort;
+	bool				mbError{};
+	bool				mbCompleted{};
+	std::atomic_bool	*mpAbort{};
 
 	const char			*volatile mpCurrentAction;
-	VDAtomicInt			mActivityCounter;
+	std::atomic_uint32_t	mActivityCounter{};
 
 	VDDubPreviewClock	mPreviewClock;
 

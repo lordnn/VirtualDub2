@@ -65,32 +65,7 @@ namespace {
 
 VDDubProcessThread::VDDubProcessThread()
 	: VDThread("Processing")
-	, opt(NULL)
-	, mpInterleaver(NULL)
-	, mpParent(NULL)
-	, mpAVIOut(NULL)
-	, mpVideoOut(NULL)
-	, mpAudioOut(NULL)
-	, mpOutputSystem(NULL)
-	, mpAudioPipe(NULL)
-	, mpAudioCorrector(NULL)
-	, mpAudioStats(NULL)
-	, mbAudioPresent(false)
-	, mbAudioEnded(false)
-	, mAudioSamplesWritten(0)
-	, mpVideoPipe(NULL)
-	, mbVideoEnded(false)
-	, mbVideoPushEnded(false)
-	, mpVInfo(NULL)
-	, mpBlitter(NULL)
-	, mpStatusHandler(NULL)
-	, mbPreview(false)
-	, mbFirstPacket(false)
-	, mbError(false)
-	, mbCompleted(false)
-	, mpAbort(NULL)
 	, mpCurrentAction("starting up")
-	, mActivityCounter(0)
 {
 }
 
@@ -110,7 +85,7 @@ void VDDubProcessThread::SetParent(IDubberInternal *pParent) {
 	mpParent = pParent;
 }
 
-void VDDubProcessThread::SetAbortSignal(VDAtomicInt *pAbort) {
+void VDDubProcessThread::SetAbortSignal(std::atomic_bool *pAbort) {
 	mpAbort = pAbort;
 
 	mVideoProcessor.SetThreadSignals(&mpCurrentAction, &mLoopThrottle);
@@ -342,8 +317,8 @@ void VDDubProcessThread::ThreadRun() {
 			sint32 count;
 
 			if (!mLoopThrottle.Delay()) {
-				++mActivityCounter;
-				if (*mpAbort)
+				mActivityCounter.fetch_add(1, std::memory_order_release);
+				if (mpAbort->load(std::memory_order_acquire))
 					break;
 				continue;
 			}
@@ -363,7 +338,7 @@ void VDDubProcessThread::ThreadRun() {
 				pOutAI->GetNextPreferredStreamWrite(stream, count);
 			}
 
-			++mActivityCounter;
+			mActivityCounter.fetch_add(1, std::memory_order_release);
 
 			if (nextAction == VDStreamInterleaver::kActionFinish)
 				break;
@@ -394,7 +369,7 @@ void VDDubProcessThread::ThreadRun() {
 				}
 			}
 
-			if (*mpAbort)
+			if (mpAbort->load(std::memory_order_acquire))
 				break;
 
 			if (mbVideoEnded && mbAudioEnded)
@@ -519,7 +494,7 @@ bool VDDubProcessThread::WriteAudio(int stream, sint32 count) {
 			int pos = 0;
 
 			while(pos < sampleSize) {
-				if (*mpAbort)
+				if (mpAbort->load(std::memory_order_acquire))
 					return false;
 
 				tc = mpAudioPipe->ReadPartial(buf + pos, sampleSize - pos);
@@ -584,7 +559,7 @@ ended:
 		while(totalBytes < bytes) {
 			int tc = mpAudioPipe->ReadPartial(&mAudioBuffer[totalBytes], bytes-totalBytes);
 
-			if (*mpAbort)
+			if (mpAbort->load(std::memory_order_acquire))
 				return false;
 
 			if (!tc) {
