@@ -34,10 +34,10 @@ class AVIAudioOutputStreamRaw : public AVIOutputStream {
 public:
 	AVIAudioOutputStreamRaw(AVIOutputRawAudio *pParent);
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
 protected:
 	AVIOutputRawAudio *const mpParent;

@@ -30,20 +30,19 @@ class AVIVideoAPNGOutputStream : public AVIOutputStream
 {
 public:
 	AVIVideoAPNGOutputStream(FILE *pFile);
-	~AVIVideoAPNGOutputStream();
 
 	void init(int frameCount, int loopCount, int alpha, int grayscale, int rate, int scale, FILE * pFile);
 	void finalize();
-	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info);
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) {
+	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info) override;
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override {
 		IVDXOutputFile::PacketInfo packetInfo;
 		packetInfo.flags = flags;
 		packetInfo.samples = lSamples;
 		write(pBuffer,cbBuffer,packetInfo,0);
 	}
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
 private:
 	FILE			* mpFile;
@@ -53,7 +52,7 @@ private:
 	int				mGrayscale;
 	int				mRate;
 	int				mScale;
-	int				mCurFrame;
+	int				mCurFrame{};
 	uint32			w0, h0, x0, y0;
 	uint8			bop0;
 
@@ -61,7 +60,7 @@ private:
 	VDPixmapBuffer	mPreviousFrame;
 	VDPixmapBuffer	mPrePreviousFrame;
 	VDPixmapBuffer	mConvertBuffer;
-	png_structp		png_ptr;
+	png_structp		png_ptr{};
 	uint8			** row_pointers_preprev;
 	uint8			** row_pointers_prev;
 	uint8			** row_pointers_cur;
@@ -81,12 +80,6 @@ private:
 
 AVIVideoAPNGOutputStream::AVIVideoAPNGOutputStream(FILE *pFile)
 	: mpFile(pFile)
-	, png_ptr(NULL)
-	, mCurFrame(0)
-{
-}
-
-AVIVideoAPNGOutputStream::~AVIVideoAPNGOutputStream()
 {
 }
 

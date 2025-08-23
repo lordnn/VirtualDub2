@@ -34,14 +34,13 @@ extern uint32& VDPreferencesGetRenderOutputBufferSize();
 class AVIVideoGIFOutputStream : public AVIOutputStream {
 public:
 	AVIVideoGIFOutputStream(IVDFileAsync *pAsync);
-	~AVIVideoGIFOutputStream();
 
 	void init(int loopCount);
 	void finalize();
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
 private:
 	void FlushFrame();
@@ -70,9 +69,6 @@ AVIVideoGIFOutputStream::AVIVideoGIFOutputStream(IVDFileAsync *pAsync)
 	, mFrameCount(0)
 	, mPrevTimestamp(0)
 {
-}
-
-AVIVideoGIFOutputStream::~AVIVideoGIFOutputStream() {
 }
 
 void AVIVideoGIFOutputStream::init(int loopCount) {

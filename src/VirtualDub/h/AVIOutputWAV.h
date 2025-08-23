@@ -41,18 +41,18 @@ public:
 
 	void write(const void *pBuffer, uint32 cbBuffer);
 
-	bool		mbAutoWriteWAVE64;
+	bool		mbAutoWriteWAVE64{true};
 
 private:
 	void WriteHeader(bool initial);
 
-	vdautoptr<IVDFileAsync>	mpFileAsync;
-	bool		mbHeaderOpen;
-	bool		mbWriteWAVE64;
+	std::unique_ptr<IVDFileAsync>	mpFileAsync;
+	bool		mbHeaderOpen{};
+	bool		mbWriteWAVE64{};
 	bool		mbPipeMode;
-	uint64		mBytesWritten;
+	uint64		mBytesWritten{};
 	uint32		mHeaderSize;
-	sint32		mBufferSize;
+	sint32		mBufferSize{65536};
 };
 
 #endif

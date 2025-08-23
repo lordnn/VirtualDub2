@@ -353,21 +353,20 @@ private:
 
 public:
 	AVIVideoImageOutputStream(const wchar_t *pszPrefix, const wchar_t *pszSuffix, int iDigits, int start, int format, int quality);
-	~AVIVideoImageOutputStream();
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) {
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override {
 		IVDXOutputFile::PacketInfo packetInfo;
 		packetInfo.flags = flags;
 		packetInfo.samples = lSamples;
 		write(pBuffer,cbBuffer,packetInfo,0);
 	}
-	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info);
-	void WriteVideoImage(const VDPixmap *px);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer) {}
-	void partialWriteEnd() {}
+	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info) override;
+	void WriteVideoImage(const VDPixmap *px) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override {}
+	void partialWriteEnd() override {}
 
-	void *AsInterface(uint32 id) {
+	void *AsInterface(uint32 id) override {
 		if (id == IVDMediaOutputStream::kTypeID)
 			return static_cast<IVDMediaOutputStream *>(this);
 
@@ -404,9 +403,6 @@ AVIVideoImageOutputStream::AVIVideoImageOutputStream(const wchar_t *pszPrefix, c
 		mpTGAEncoder.reset(new TGAEncoder);
 		break;
 	}
-}
-
-AVIVideoImageOutputStream::~AVIVideoImageOutputStream() {
 }
 
 void AVIVideoImageOutputStream::WriteVideoImage(const VDPixmap *px) {

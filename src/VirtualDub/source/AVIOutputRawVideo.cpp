@@ -34,14 +34,14 @@ class AVIVideoOutputStreamRaw : public AVIOutputStream, public IVDVideoImageOutp
 public:
 	AVIVideoOutputStreamRaw(AVIOutputRawVideo *pParent, const VDAVIOutputRawVideoFormat& format, uint32 w, uint32 h);
 
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
-	void WriteVideoImage(const VDPixmap *px);
+	void WriteVideoImage(const VDPixmap *px) override;
 
 protected:
 	AVIOutputRawVideo *const mpParent;

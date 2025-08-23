@@ -132,12 +132,12 @@ class AVIOutputPluginStream : public AVIOutputStream {
 public:
 	AVIOutputPluginStream(AVIOutputPlugin *pParent, int nStream);
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* pxInfo);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
-	bool isAVIFile(){ return false; }
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* pxInfo) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
+	bool isAVIFile() override { return false; }
 	virtual void updateStreamInfo(const VDXStreamInfo& hdr) {
 		streamInfo = hdr;
 		mpParent->updateStreamInfo(mpParent->mStreams[mStream]);

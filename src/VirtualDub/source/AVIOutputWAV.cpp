@@ -63,10 +63,10 @@ class AVIAudioOutputStreamWAV : public AVIOutputStream {
 public:
 	AVIAudioOutputStreamWAV(AVIOutputWAV *pParent);
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
 protected:
 	AVIOutputWAV *const mpParent;
@@ -97,15 +97,9 @@ void AVIAudioOutputStreamWAV::partialWriteEnd() {
 //////////////////////////////////////////////////////////////////////
 
 AVIOutputWAV::AVIOutputWAV() {
-	mbHeaderOpen			= false;
-	mbAutoWriteWAVE64	= true;
-	mbWriteWAVE64		= false;
-	mBytesWritten		= 0;
-	mBufferSize			= 65536;
 }
 
-AVIOutputWAV::~AVIOutputWAV() {
-}
+AVIOutputWAV::~AVIOutputWAV() = default;
 
 IVDMediaOutputStream *AVIOutputWAV::createVideoStream() {
 	return NULL;
@@ -121,7 +115,7 @@ IVDMediaOutputStream *AVIOutputWAV::createAudioStream() {
 bool AVIOutputWAV::init(const wchar_t *pwszFile) {
 	if (!audioOut) return false;
 
-	mpFileAsync = VDCreateFileAsync();
+	mpFileAsync.reset(VDCreateFileAsync());
 	mpFileAsync->Open(pwszFile, 2, mBufferSize >> 1);
 
 	WriteHeader(true);
@@ -137,7 +131,7 @@ bool AVIOutputWAV::init(const wchar_t *pwszFile) {
 bool AVIOutputWAV::init(VDFileHandle h, bool pipeMode) {
 	if (!audioOut) return false;
 
-	mpFileAsync = VDCreateFileAsync();
+	mpFileAsync.reset(VDCreateFileAsync());
 	mpFileAsync->OpenPipe(h, 2, mBufferSize >> 1);
 
 	mbPipeMode = pipeMode;

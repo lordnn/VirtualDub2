@@ -242,9 +242,9 @@ private:
 	void		WriteSubIndexAVI2(struct _avisuperindex_entry *asie, const IndexEntry *avie2, int size, uint32 dwChunkId, uint32 dwSampleSize);
 public:
 	AVIOutputFile();
-	virtual ~AVIOutputFile();
+	~AVIOutputFile() override;
 
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
 	IVDMediaOutput *AsIMediaOutput() { return this; }
 
@@ -287,11 +287,11 @@ class AVIOutputFileStream : public AVIOutputStream {
 public:
 	AVIOutputFileStream(AVIOutputFile *pParent, int nStream);
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
-	bool isAVIFile(){ return true; }
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
+	bool isAVIFile() override { return true; }
 
 protected:
 	AVIOutputFile *const mpParent;

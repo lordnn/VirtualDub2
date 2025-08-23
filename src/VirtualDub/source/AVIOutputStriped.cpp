@@ -35,13 +35,13 @@ class AVIStripedAudioOutputStream : public AVIOutputStream {
 public:
 	AVIStripedAudioOutputStream(AVIOutputStriped *);
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) {
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override {
 		throw MyError("Partial writes are not supported for video streams.");
 	}
 
-	void partialWrite(const void *pBuffer, uint32 cbBuffer) {}
-	void partialWriteEnd() {}
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override {}
+	void partialWriteEnd() override {}
 
 protected:
 	AVIOutputStriped *const mpParent;

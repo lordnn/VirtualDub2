@@ -592,7 +592,7 @@ public:
 
 	int AddRef() { return VDUISpriteBasedControlW32::AddRef(); }
 	int Release() { return VDUISpriteBasedControlW32::Release(); }
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
 	void SetSpectralPaletteDefault();
 	void SetWaveformScale(int scale);

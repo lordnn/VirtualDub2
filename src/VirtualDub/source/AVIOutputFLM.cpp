@@ -64,21 +64,20 @@ namespace {
 class AVIVideoFLMOutputStream : public AVIOutputStream {
 public:
 	AVIVideoFLMOutputStream(IVDFileAsync *pAsync);
-	~AVIVideoFLMOutputStream();
 
 	void init();
 	void finalize();
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 
 private:
 	IVDFileAsync *mpAsync;
 	vdblock<char> mPackBuffer;
 	uint32			mFrameSize;
 	uint32			mExtraLeader;
-	uint32			mFrameCount;
+	uint32			mFrameCount{};
 
 	VDPixmapLayout	mSrcLayout;
 	VDPixmapLayout	mDstLayout;
@@ -86,11 +85,7 @@ private:
 
 AVIVideoFLMOutputStream::AVIVideoFLMOutputStream(IVDFileAsync *pAsync)
 	: mpAsync(pAsync)
-	, mFrameCount(0)
 {
-}
-
-AVIVideoFLMOutputStream::~AVIVideoFLMOutputStream() {
 }
 
 void AVIVideoFLMOutputStream::init() {

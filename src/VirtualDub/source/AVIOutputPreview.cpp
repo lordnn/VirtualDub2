@@ -34,15 +34,7 @@ const VDStringW& VDPreferencesGetAudioPlaybackDeviceKey();
 
 AVIAudioPreviewOutputStream::AVIAudioPreviewOutputStream()
 	: mpAudioOut(VDCreateAudioOutputWaveOutW32())
-	, mbInitialized(false)
-	, mbStarted(false)
-	, mbVBRMode(false)
-	, mTotalSamples(0)
-	, mTotalBytes(0)
-	, mBufferLevel(0)
-	, mLastPlayTime(0)
 	, mLastCPUTime(VDGetAccurateTick())
-	, mbFinished(false)
 {
 	VDRTProfiler *profiler = VDGetRTProfiler();
 	if (profiler) {
@@ -133,7 +125,7 @@ void AVIAudioPreviewOutputStream::partialWriteEnd() {
 }
 
 bool AVIAudioPreviewOutputStream::isSilent() {
-	return mpAudioOut == NULL || mpAudioOut->IsSilent();
+	return !mpAudioOut || mpAudioOut->IsSilent();
 }
 
 void AVIAudioPreviewOutputStream::start() {
@@ -146,8 +138,7 @@ void AVIAudioPreviewOutputStream::start() {
 	}
 
 	if (!mpAudioOut->Start()) {
-		delete mpAudioOut;
-		mpAudioOut = NULL;
+		mpAudioOut.reset();
 	}
 
 	mbStarted = true;
@@ -176,10 +167,7 @@ void AVIAudioPreviewOutputStream::finalize() {
 }
 
 double AVIAudioPreviewOutputStream::GetPosition() {
-	if (!mpAudioOut)
-		return -1;
-
-	return mpAudioOut->GetPositionTime();
+	return mpAudioOut ? mpAudioOut->GetPositionTime() : -1;
 }
 
 long AVIAudioPreviewOutputStream::getAvailable() {
@@ -198,13 +186,13 @@ bool AVIAudioPreviewOutputStream::isOverflow() {
 
 class AVIVideoPreviewOutputStream : public AVIOutputStream, public IVDVideoImageOutputStream {
 public:
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) {}
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) {}
-	void partialWrite(const void *pBuffer, uint32 cbBuffer) {}
-	void partialWriteEnd() {}
-	void WriteVideoImage(const VDPixmap *px) {}
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override {}
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override {}
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override {}
+	void partialWriteEnd() override {}
+	void WriteVideoImage(const VDPixmap *px) override {}
 };
 
 void *AVIVideoPreviewOutputStream::AsInterface(uint32 id) {

@@ -37,10 +37,10 @@ public:
 
 	void SetVBRMode(bool enable) { mbVBRMode = enable; }
 
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 lSamples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
 	void finish() override;
 	void finalize();
 	void flush() override;
@@ -61,18 +61,18 @@ private:
 	void initAudio();
 	void UpdatePlaybackTime(uint32 bytePos);
 
-	vdautoptr<IVDAudioOutput> mpAudioOut;
-	bool mbInitialized;
-	bool mbStarted;
-	bool mbVBRMode;
+	std::unique_ptr<IVDAudioOutput> mpAudioOut;
+	bool mbInitialized{};
+	bool mbStarted{};
+	bool mbVBRMode{};
 
-	sint64	mTotalBytes;
-	sint64	mTotalSamples;
-	uint32	mBufferLevel;
+	sint64	mTotalBytes{};
+	sint64	mTotalSamples{};
+	uint32	mBufferLevel{};
 
-	uint32	mLastPlayTime;
+	uint32	mLastPlayTime{};
 	uint32	mLastCPUTime;
-	VDAtomicInt mbFinished;
+	VDAtomicInt mbFinished{};
 
 	VDCriticalSection	mLock;
 };

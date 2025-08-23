@@ -55,7 +55,7 @@ public:
 	void Read();
 
 protected:
-	void ThreadRun();
+	void ThreadRun() override;
 	void ClosePipe();
 	void FlushBuffer();
 
@@ -640,28 +640,28 @@ class VDMediaOutputStreamProxy : public IVDMediaOutputStream, public IVDVideoIma
 public:
 	VDMediaOutputStreamProxy(IVDMediaOutputStream *os);
 
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
-	virtual void *	getFormat();
-	virtual int		getFormatLen();
-	virtual void	setFormat(const void *pFormat, int len);
+	void *	getFormat() override;
+	int		getFormatLen() override;
+	void	setFormat(const void *pFormat, int len) override;
 
-	virtual const VDXStreamInfo& getStreamInfo();
-	virtual void	setStreamInfo(const VDXStreamInfo& hdr);
-	virtual void	updateStreamInfo(const VDXStreamInfo& hdr);
+	const VDXStreamInfo& getStreamInfo() override;
+	void	setStreamInfo(const VDXStreamInfo& hdr) override;
+	void	updateStreamInfo(const VDXStreamInfo& hdr) override;
 
-	virtual void	write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	virtual void	write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info);
+	void	write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void	write(const void *pBuffer, uint32 cbBuffer, IVDXOutputFile::PacketInfo& packetInfo, FilterModPixmapInfo* info) override;
 
-	virtual void	partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	virtual void	partialWrite(const void *pBuffer, uint32 cbBuffer);
-	virtual void	partialWriteEnd();
+	void	partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void	partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void	partialWriteEnd() override;
 
-	virtual void	flush();
-	virtual void	finish();
+	void	flush() override;
+	void	finish() override;
 
 public:
-	virtual void WriteVideoImage(const VDPixmap *px);
+	void WriteVideoImage(const VDPixmap *px) override;
 
 protected:
 	virtual void TranslateError(const MyError& e);
