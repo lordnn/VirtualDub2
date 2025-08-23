@@ -2,6 +2,7 @@
 #include <vd2/system/thread.h>
 #include <vd2/system/vdalloc.h>
 #include "test.h"
+#include <memory>
 
 class ThreadLog {
 public:
@@ -107,25 +108,25 @@ static bool RunSemaphoreTest() {
 	for(int phase=0; phase<3; ++phase) {
 		SemaphoreTestThread threads[100];
 		VDSemaphore sema(0);
-		vdautoptr<ThreadLog> log(new ThreadLog);
+		std::unique_ptr<ThreadLog> log(new ThreadLog);
 
 
 		switch(phase) {
 			case 0:
 				for(int i=0; i<100; ++i) {
-					threads[i].Init(log, &sema, (i&1) != 0);
+					threads[i].Init(log.get(), &sema, (i&1) != 0);
 				}
 				break;
 
 			case 1:
 				for(int i=0; i<100; ++i) {
-					threads[i].Init(log, &sema, (i&1) ? 2 : 0);
+					threads[i].Init(log.get(), &sema, (i&1) ? 2 : 0);
 				}
 				break;
 
 			case 2:
 				for(int i=0; i<100; ++i) {
-					threads[i].Init(log, &sema, (i&1) ? 3 : 0);
+					threads[i].Init(log.get(), &sema, (i&1) ? 3 : 0);
 				}
 				break;
 		}

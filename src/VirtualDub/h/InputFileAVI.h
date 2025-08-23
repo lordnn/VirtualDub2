@@ -26,6 +26,7 @@
 
 #include "InputFile.h"
 
+class IAVIReadHandler;
 class InputFileAVI;
 
 class VDAVIStreamSource : public vdlist_node {

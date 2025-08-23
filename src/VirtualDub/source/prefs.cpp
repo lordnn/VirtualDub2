@@ -1013,16 +1013,16 @@ void VDSavePreferences(VDPreferences2& prefs) {
 
 	VDRegistryAppKey baseKey(reg);
 
-	baseKey.setInt ("PreviewPriority", g_prefs2.iPreviewPriority);
-	baseKey.setInt ("DubPriority",     g_prefs2.iDubPriority);
-	baseKey.setBool("AttachExtension", g_prefs2.fAttachExtension);
+	baseKey.setInt ("PreviewPriority", prefs.iPreviewPriority);
+	baseKey.setInt ("DubPriority",     prefs.iDubPriority);
+	baseKey.setBool("AttachExtension", prefs.fAttachExtension);
 
-	baseKey.setInt("SceneCutThreshold",  g_prefs2.iSceneCutThreshold);
-	baseKey.setInt("SceneFadeThreshold", g_prefs2.iSceneFadeThreshold);
+	baseKey.setInt("SceneCutThreshold",  prefs.iSceneCutThreshold);
+	baseKey.setInt("SceneFadeThreshold", prefs.iSceneFadeThreshold);
 
-	baseKey.setInt ("Display",         g_prefs2.iDisplay);
-	baseKey.setBool("AVIRestrict1Gb",  g_prefs2.fAVIRestrict1Gb);
-	baseKey.setBool("NoCorrectLayer3", g_prefs2.fNoCorrectLayer3);
+	baseKey.setInt ("Display",         prefs.iDisplay);
+	baseKey.setBool("AVIRestrict1Gb",  prefs.fAVIRestrict1Gb);
+	baseKey.setBool("NoCorrectLayer3", prefs.fNoCorrectLayer3);
 
 	VDRegistryAppKey key(reg, "Preferences");
 

@@ -21,7 +21,6 @@
 #include <vd2/Riza/audiocodec.h>
 #include "DubSource.h"
 
-class IAVIReadHandler;
 class IAVIReadStream;
 
 class AudioSource : public DubSource {

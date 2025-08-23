@@ -82,7 +82,7 @@ public:
 	bool ServiceRequests(bool fWait) override;
 
 	VDSignal *getFlushCompleteSignal() override {
-		return mRequests ? &mEventAbort : NULL;
+		return mRequests ? &mEventAbort : nullptr;
 	}
 
 private:
@@ -150,13 +150,13 @@ IVDAsyncBlitter *VDCreateAsyncBlitter(int maxRequests) {
 
 VDAsyncBlitter::VDAsyncBlitter() : VDThread("VDAsyncBlitter") {
 	max_requests		= 0;
-	mRequests			= NULL;
+	mRequests			= nullptr;
 	dwLockedBuffers		= 0;
 	fAbort				= false;
 	fFlush				= false;
 	fStop				= false;
 	fPulsed				= false;
-	mpPulseCallback		= NULL;
+	mpPulseCallback		= nullptr;
 	dwPulseFrame		= 0;
 	dwDrawFrame			= 0;
 
@@ -173,7 +173,7 @@ VDAsyncBlitter::VDAsyncBlitter(int maxreq) : VDThread("VDAsyncBlitter") {
 	fFlush				= false;
 	fStop				= false;
 	fPulsed				= false;
-	mpPulseCallback		= NULL;
+	mpPulseCallback		= nullptr;
 	dwPulseFrame		= 0;
 	dwDrawFrame			= 0;
 

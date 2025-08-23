@@ -388,9 +388,9 @@ int VDRenderSetVideoSourceInputFormat(IVDVideoSource *vsrc, VDPixmapFormatEx for
 class Dubber : public IDubber, public IDubberInternal {
 private:
 	MyError				err;
-	bool				fError;
+	bool				fError{};
 
-	VDAtomicInt			mStopLock;
+	VDAtomicInt			mStopLock{};
 
 	DubOptions			mOptions;
 
@@ -402,7 +402,7 @@ private:
 
 	vdrefptr<VDFilterFrameVideoSource>	mpVideoFrameSource;
 
-	IVDDubberOutputSystem	*mpOutputSystem;
+	IVDDubberOutputSystem	*mpOutputSystem{};
 	COMPVARS2			*compVars;
 
 	DubAudioStreamInfo	aInfo;
@@ -411,43 +411,43 @@ private:
 	bool				mbDoVideo;
 	bool				mbDoAudio;
 	bool				fPreview;
-	bool				mbCompleted;
-	bool				mbBackground;
-	VDAtomicInt			mbAbort;
-	VDAtomicInt			mbUserAbort;
-	bool				fADecompressionOk;
-	bool				fVDecompressionOk;
+	bool				mbCompleted{};
+	bool				mbBackground{};
+	VDAtomicInt			mbAbort{};
+	VDAtomicInt			mbUserAbort{};
+	bool				fADecompressionOk{};
+	bool				fVDecompressionOk{};
 
-	int					mLiveLockMessages;
+	int					mLiveLockMessages{};
 
-	VDDubIOThread		*mpIOThread;
-	VDDubIOThread		*mpIODirect;
+	VDDubIOThread		*mpIOThread{};
+	VDDubIOThread		*mpIODirect{};
 	VDDubProcessThread	mProcessThread;
-	VDAtomicInt			mIOThreadCounter;
+	VDAtomicInt			mIOThreadCounter{};
 
-	vdautoptr<IVDVideoCompressor>	mpVideoCompressor;
+	std::unique_ptr<IVDVideoCompressor>	mpVideoCompressor;
 
-	AVIPipe *			mpVideoPipe;
+	AVIPipe *			mpVideoPipe{};
 	VDAudioPipeline		mAudioPipe;
 
-	VDDubFrameRequestQueue *mpVideoRequestQueue;
+	VDDubFrameRequestQueue *mpVideoRequestQueue{};
 
-	IVDVideoDisplay *	mpInputDisplay;
-	IVDVideoDisplay *	mpOutputDisplay;
+	IVDVideoDisplay *	mpInputDisplay{};
+	IVDVideoDisplay *	mpOutputDisplay{};
 	bool				mbInputDisplayInitialized;
 
 	vdstructex<VDAVIBitmapInfoHeader>	mpCompressorVideoFormat;
 
 	std::vector<AudioStream *>	mAudioStreams;
-	AudioStream			*audioStream;
-	AudioStream			*audioStatusStream;
-	AudioCompressor *audioCompressor;
-	AudioStreamL3Corrector	*audioCorrector;
-	AudioStats	*audioStats;
-	vdautoptr<VDAudioFilterGraph> mpAudioFilterGraph;
+	AudioStream			*audioStream{};
+	AudioStream			*audioStatusStream{};
+	AudioCompressor *audioCompressor{};
+	AudioStreamL3Corrector	*audioCorrector{};
+	AudioStats	*audioStats{};
+	std::unique_ptr<VDAudioFilterGraph> mpAudioFilterGraph;
 
-	const FrameSubset		*inputSubsetActive;
-	FrameSubset				*inputSubsetAlloc;
+	const FrameSubset		*inputSubsetActive{};
+	FrameSubset				*inputSubsetAlloc{};
 
 	vdstructex<WAVEFORMATEX> mAudioCompressionFormat;
 	VDStringA			mAudioCompressionFormatHint;
@@ -455,7 +455,7 @@ private:
 
 	VDPixmapLayout		mVideoFilterOutputPixmapLayout;
 
-	IDubStatusHandler	*pStatusHandler;
+	IDubStatusHandler	*pStatusHandler{};
 
 	long				lVideoSizeEstimate;
 
@@ -465,10 +465,10 @@ private:
 
 	///////
 
-	int					mLastProcessingThreadCounter;
-	int					mProcessingThreadFailCount;
-	int					mLastIOThreadCounter;
-	int					mIOThreadFailCount;
+	int					mLastProcessingThreadCounter{};
+	int					mProcessingThreadFailCount{};
+	int					mLastIOThreadCounter{};
+	int					mIOThreadFailCount{};
 
 	///////
 
@@ -476,12 +476,12 @@ private:
 
 public:
 	Dubber(DubOptions *);
-	~Dubber();
+	~Dubber() override;
 
-	void SetAudioCompression(const VDWaveFormat *wf, uint32 cb, const char *pShortNameHint, vdblock<char>& config);
-	void SetInputDisplay(IVDVideoDisplay *);
-	void SetOutputDisplay(IVDVideoDisplay *);
-	void SetAudioFilterGraph(const VDAudioFilterGraph& graph);
+	void SetAudioCompression(const VDWaveFormat *wf, uint32 cb, const char *pShortNameHint, vdblock<char>& config) override;
+	void SetInputDisplay(IVDVideoDisplay *) override;
+	void SetOutputDisplay(IVDVideoDisplay *) override;
+	void SetAudioFilterGraph(const VDAudioFilterGraph& graph) override;
 
 	void InitAudioConversionChain();
 	void InitOutputFile();
@@ -490,33 +490,33 @@ public:
 	bool NegotiateFastFormat(const BITMAPINFOHEADER& bih);
 	bool NegotiateFastFormat(int format);
 	void InitSelectInputFormat();
-	void Init(IVDVideoSource *const *pVideoSources, uint32 nVideoSources, AudioSource *const *pAudioSources, uint32 nAudioSources, IVDDubberOutputSystem *outsys, void *videoCompVars, const FrameSubset *, const VDFraction& frameRateTimeline);
-	void InitAudio(AudioSource *const *pAudioSources, uint32 nAudioSources);
-	AudioCompressor* GetAudioCompressor(){ return audioCompressor; }
-	AudioStream* GetAudioBeforeCompressor(){ return audioStatusStream; }
-	void CheckAudioCodec(const char* format);
-	void Go(int iPriority = 0);
-	void Stop();
+	void Init(IVDVideoSource *const *pVideoSources, uint32 nVideoSources, AudioSource *const *pAudioSources, uint32 nAudioSources, IVDDubberOutputSystem *outsys, void *videoCompVars, const FrameSubset *, const VDFraction& frameRateTimeline) override;
+	void InitAudio(AudioSource *const *pAudioSources, uint32 nAudioSources) override;
+	AudioCompressor* GetAudioCompressor() override { return audioCompressor; }
+	AudioStream* GetAudioBeforeCompressor() override { return audioStatusStream; }
+	void CheckAudioCodec(const char* format) override;
+	void Go(int iPriority = 0) override;
+	void Stop() override;
 
-	void InternalSignalStop();
-	void Abort(bool userAbort);
+	void InternalSignalStop() override;
+	void Abort(bool userAbort) override;
 	void ForceAbort();
-	bool isRunning();
-	bool IsAborted();
-	bool isAbortedByUser();
-	bool IsPreviewing();
-	bool IsBackground();
+	bool isRunning() override;
+	bool IsAborted() override;
+	bool isAbortedByUser() override;
+	bool IsPreviewing() override;
+	bool IsBackground() override;
 
-	void SetStatusHandler(IDubStatusHandler *pdsh);
-	void SetPriority(int index);
-	void SetBackground(bool background);
-	void UpdateFrames();
-	void SetThrottleFactor(float throttleFactor);
-	void GetPerfStatus(VDDubPerfStatus& status);
+	void SetStatusHandler(IDubStatusHandler *pdsh) override;
+	void SetPriority(int index) override;
+	void SetBackground(bool background) override;
+	void UpdateFrames() override;
+	void SetThrottleFactor(float throttleFactor) override;
+	void GetPerfStatus(VDDubPerfStatus& status) override;
 
-	void DumpStatus(VDTextOutputStream& os);
+	void DumpStatus(VDTextOutputStream& os) override;
 
-	VDEvent<IDubber, bool>& Stopped() { return mStoppedEvent; }
+	VDEvent<IDubber, bool>& Stopped() override { return mStoppedEvent; }
 };
 
 
@@ -530,52 +530,14 @@ IDubber *CreateDubber(DubOptions *xopt) {
 }
 
 Dubber::Dubber(DubOptions *xopt)
-	: mpIOThread(0)
-	, mpIODirect(0)
-	, mIOThreadCounter(0)
-	, mpAudioFilterGraph(NULL)
-	, mStopLock(0)
-	, mpVideoPipe(NULL)
-	, mpVideoRequestQueue(NULL)
-	, mLastProcessingThreadCounter(0)
-	, mProcessingThreadFailCount(0)
-	, mLastIOThreadCounter(0)
-	, mIOThreadFailCount(0)
-	, mbBackground(false)
 {
 	mOptions			= *xopt;
 
 	// clear the workin' variables...
 
-	fError				= false;
-
-	mbAbort				= false;
-	mbUserAbort			= false;
-
-	pStatusHandler		= NULL;
-	mpOutputSystem = 0;
-
-	fADecompressionOk	= false;
-	fVDecompressionOk	= false;
-
-	mpInputDisplay		= NULL;
-	mpOutputDisplay		= NULL;
 	vInfo.total_size	= 0;
 	aInfo.total_size	= 0;
 	vInfo.fAudioOnly	= false;
-
-	audioStream			= NULL;
-	audioStatusStream	= NULL;
-	audioCompressor		= NULL;
-	audioCorrector		= NULL;
-	audioStats		= NULL;
-
-	inputSubsetActive	= NULL;
-	inputSubsetAlloc	= NULL;
-
-	mbCompleted			= false;
-
-	mLiveLockMessages = 0;
 }
 
 Dubber::~Dubber() {
@@ -613,7 +575,7 @@ void Dubber::SetOutputDisplay(IVDVideoDisplay *pDisplay) {
 /////////////
 
 void Dubber::SetAudioFilterGraph(const VDAudioFilterGraph& graph) {
-	mpAudioFilterGraph = new VDAudioFilterGraph(graph);
+	mpAudioFilterGraph.reset(new VDAudioFilterGraph(graph));
 }
 
 void VDConvertSelectionTimesToFrames(const DubOptions& opt, const FrameSubset& subset, const VDFraction& subsetRate, VDPosition& startFrame, VDPosition& endFrame) {
@@ -886,7 +848,7 @@ void Dubber::InitAudioConversionChain() {
 		AudioSource *asrc = mAudioSources[i];
 
 		if (bUseAudioFilterGraph) {
-			audioStream = new_nothrow AudioFilterSystemStream(*mpAudioFilterGraph, aInfo.start_us);
+			audioStream = new_nothrow AudioFilterSystemStream(*mpAudioFilterGraph.get(), aInfo.start_us);
 			if (!audioStream)
 				throw MyMemoryError();
 
@@ -1170,7 +1132,7 @@ void Dubber::InitOutputFile() {
 
 		MakeOutputFormat make;
 		make.init(mOptions, vSrc);
-		make.initComp(mpOutputSystem, mpVideoCompressor);
+		make.initComp(mpOutputSystem, mpVideoCompressor.get());
 		make.vc_fccHandler = fourcc_toupper(hdr.fccHandler);
 		make.combine();
 		make.combineComp();
@@ -1595,7 +1557,7 @@ void Dubber::Init(IVDVideoSource *const *pVideoSources, uint32 nVideoSources, Au
 	compVars			= (COMPVARS2 *)videoCompVars;
 
 	if (pOutputSystem->IsVideoCompressionEnabled() && pOutputSystem->AcceptsVideo() && mOptions.video.mode>DubVideoOptions::M_NONE && compVars && (compVars->dwFlags & ICMF_COMPVARS_VALID) && compVars->driver)
-		mpVideoCompressor = VDCreateVideoCompressorVCM(compVars->driver, compVars->lDataRate*1024, compVars->lQ, compVars->lKey, false);
+		mpVideoCompressor.reset(VDCreateVideoCompressorVCM(compVars->driver, compVars->lDataRate*1024, compVars->lQ, compVars->lKey, false));
 
 	if (!(inputSubsetActive = inputSubsetAlloc = new_nothrow FrameSubset(*pfs)))
 		throw MyMemoryError();
@@ -1607,11 +1569,11 @@ void Dubber::Init(IVDVideoSource *const *pVideoSources, uint32 nVideoSources, Au
 	// check the mode; if we're using DirectStreamCopy mode, we'll need to
 	// align the subset to keyframe boundaries!
 	if (!mVideoSources.empty() && mOptions.video.mode == DubVideoOptions::M_NONE) {
-		vdautoptr<FrameSubset> newSubset(new_nothrow FrameSubset());
+		std::unique_ptr<FrameSubset> newSubset(new_nothrow FrameSubset());
 		if (!newSubset)
 			throw MyMemoryError();
 
-		VDTranslateSubsetDirectMode(*newSubset, *inputSubsetActive, mVideoSources.data(), selectionStartFrame, selectionEndFrame);
+		VDTranslateSubsetDirectMode(*newSubset.get(), *inputSubsetActive, mVideoSources.data(), selectionStartFrame, selectionEndFrame);
 
 		delete inputSubsetAlloc;
 		inputSubsetAlloc = newSubset.release();
@@ -1657,7 +1619,7 @@ void Dubber::Init(IVDVideoSource *const *pVideoSources, uint32 nVideoSources, Au
 
 		MakeOutputFormat make;
 		make.init(mOptions, vSrc);
-		make.initComp(pOutputSystem, mpVideoCompressor);
+		make.initComp(pOutputSystem, mpVideoCompressor.get());
 		make.combine();
 		int outputFormat = VDPixmapFormatNormalize(make.out);
 		const VDPixmapLayout& output = filters.GetOutputLayout();
@@ -1862,7 +1824,7 @@ void Dubber::Go(int iPriority) {
 	if (mbDoVideo) {
 		mProcessThread.SetInputDisplay(mpInputDisplay);
 		mProcessThread.SetOutputDisplay(mpOutputDisplay);
-		mProcessThread.SetVideoCompressor(mpVideoCompressor, mOptions.video.mMaxVideoCompressionThreads);
+		mProcessThread.SetVideoCompressor(mpVideoCompressor.get(), mOptions.video.mMaxVideoCompressionThreads);
 		mProcessThread.SetVideoOutput(mVideoFilterOutputPixmapLayout, mOptions.video.mode);
 	}
 

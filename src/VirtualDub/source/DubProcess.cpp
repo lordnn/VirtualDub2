@@ -263,7 +263,7 @@ void VDDubProcessThread::UpdateFrames() {
 }
 
 VDSignal *VDDubProcessThread::GetBlitterSignal() {
-	return mpBlitter ? mpBlitter->getFlushCompleteSignal() : NULL;
+	return mpBlitter ? mpBlitter->getFlushCompleteSignal() : nullptr;
 }
 
 void VDDubProcessThread::SetThrottle(float f) {

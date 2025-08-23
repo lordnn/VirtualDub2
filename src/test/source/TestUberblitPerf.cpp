@@ -134,7 +134,7 @@ DEFINE_TEST_NONAUTO(UberblitPerf) {
 					bltTime = t1;
 			}
 
-			vdautoptr<IVDPixmapBlitter> blitter(VDPixmapCreateBlitter(dstPixmap, srcPixmap));
+			std::unique_ptr<IVDPixmapBlitter> blitter(VDPixmapCreateBlitter(dstPixmap, srcPixmap));
 
 			uint64 uberTime = (uint64)(sint64)-1;
 //			for(;;)

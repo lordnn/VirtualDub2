@@ -1,7 +1,6 @@
 #include "test.h"
 #include <vd2/system/vdalloc.h>
 #include <vd2/Kasumi/pixel.h>
-#include <vd2/Kasumi/pixmap.h>
 #include <vd2/Kasumi/pixmapops.h>
 #include <vd2/Kasumi/pixmaputils.h>
 #include "../../Kasumi/h/uberblit.h"
@@ -285,7 +284,7 @@ DEFINE_TEST(Uberblit) {
 	int src_end = nsVDPixmap::kPixFormat_Max_Standard-1;
 	int dst_start = nsVDPixmap::kPixFormat_XRGB1555;
 	int dst_end = nsVDPixmap::kPixFormat_Max_Standard-1;
-	IVDPixmapExtraGen* extraDst = 0;
+	IVDPixmapExtraGen* extraDst{};
 	#if 0
 	ExtraGen_YUV_Normalize* normalize = new ExtraGen_YUV_Normalize;
 	normalize->max_value = 1020;
@@ -303,7 +302,7 @@ DEFINE_TEST(Uberblit) {
 
 		VDPixmapBuffer src[kColorCount];
 		src[0].init(size, size, srcformat);
-		vdautoptr<IVDPixmapBlitter> blit1(VDPixmapCreateBlitter(src[0], ref[0]));
+		std::unique_ptr<IVDPixmapBlitter> blit1(VDPixmapCreateBlitter(src[0], ref[0]));
 
 		const int maxsrctest = VDPixmapFormatGray(srcformat) ? 2 : kColorCount;
 
@@ -321,10 +320,10 @@ DEFINE_TEST(Uberblit) {
 
 			// convert src to dst
 			VDPixmapBuffer dst(size, size, dstformat);
-			vdautoptr<IVDPixmapBlitter> blit2(VDPixmapCreateBlitter(dst, src[0], extraDst));
+			std::unique_ptr<IVDPixmapBlitter> blit2(VDPixmapCreateBlitter(dst, src[0], extraDst));
 
 			// convert dst to rgb32
-			vdautoptr<IVDPixmapBlitter> blit3(VDPixmapCreateBlitter(chk, dst));
+			std::unique_ptr<IVDPixmapBlitter> blit3(VDPixmapCreateBlitter(chk, dst));
 
 			for(int v=kColorCount-maxtest; v<kColorCount; ++v) {
 				blit2->Blit(dst, src[v]);

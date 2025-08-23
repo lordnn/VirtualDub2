@@ -59,21 +59,21 @@ public:
 	VDDubberOutputSystem();
 	~VDDubberOutputSystem();
 
-	virtual void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat);
-	virtual void SetVideoImageLayout(const VDXStreamInfo& si, const VDPixmapLayout& layout);
-	virtual void SetAudio(const VDXStreamInfo& si, const void *pFormat, int cbFormat, bool bInterleaved, bool vbr);
-	virtual bool AcceptsVideo() { return false; }
-	virtual bool AcceptsAudio() { return false; }
-	virtual bool IsRealTime() { return false; }
-	virtual bool IsVideoImageOutputEnabled() { return false; }
-	virtual bool IsVideoImageOutputRequired() { return false; }
-	virtual bool AreNullFramesAllowed() { return false; }
-	virtual bool IsVideoCompressionEnabled() { return false; }
-	virtual int GetVideoOutputFormatOverride(int last_format) { return 0; }
+	void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat) override;
+	void SetVideoImageLayout(const VDXStreamInfo& si, const VDPixmapLayout& layout) override;
+	void SetAudio(const VDXStreamInfo& si, const void *pFormat, int cbFormat, bool bInterleaved, bool vbr) override;
+	bool AcceptsVideo() override { return false; }
+	bool AcceptsAudio() override { return false; }
+	bool IsRealTime() override { return false; }
+	bool IsVideoImageOutputEnabled() override { return false; }
+	bool IsVideoImageOutputRequired() override { return false; }
+	bool AreNullFramesAllowed() override { return false; }
+	bool IsVideoCompressionEnabled() override { return false; }
+	int GetVideoOutputFormatOverride(int last_format) override { return 0; }
 
-	virtual bool IsCompressedAudioAllowed() { return true; }
-	virtual bool GetInterleavingOverride(DubAudioOptions& opt) { return false; }
-	virtual bool IsNull() { return false; }
+	bool IsCompressedAudioAllowed() override { return true; }
+	bool GetInterleavingOverride(DubAudioOptions& opt) override { return false; }
+	bool IsNull() override { return false; }
 
 protected:
 	VDXStreamInfo			mVideoStreamInfo;
@@ -99,14 +99,14 @@ public:
 	void SetFilename(const wchar_t *pszFilename);
 	void SetFilenamePattern(const wchar_t *pszSegmentPrefix, const wchar_t *pszExt, int nMinimumDigits);
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat);
-	bool AcceptsVideo();
-	bool AcceptsAudio();
-	bool AreNullFramesAllowed() { return true; }
-	bool IsVideoCompressionEnabled() { return true; }
-	const char* GetFormatName(){ return "avi"; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat) override;
+	bool AcceptsVideo() override;
+	bool AcceptsAudio() override;
+	bool AreNullFramesAllowed() override { return true; }
+	bool IsVideoCompressionEnabled() override { return true; }
+	const char* GetFormatName() override { return "avi"; }
 
 private:
 	VDStringW	mSegmentBaseName;
@@ -130,13 +130,13 @@ public:
 
 	void Set1GBLimit(bool bUse1GBLimit);
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	bool AcceptsAudio();
-	bool AreNullFramesAllowed() { return true; }
-	bool IsVideoCompressionEnabled() { return true; }
-	const char* GetFormatName(){ return "avi"; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	bool AcceptsAudio() override;
+	bool AreNullFramesAllowed() override { return true; }
+	bool IsVideoCompressionEnabled() override { return true; }
+	const char* GetFormatName() override { return "avi"; }
 
 private:
 	bool		mbUse1GBLimit;
@@ -150,10 +150,10 @@ public:
 	~VDAVIOutputWAVSystem();
 
 	void SetBuffer(int size);
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsAudio();
-	const char* GetFormatName(){ return "wav"; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsAudio() override;
+	const char* GetFormatName() override { return "wav"; }
 
 private:
 	VDStringW	mFilename;
@@ -168,20 +168,20 @@ public:
 	VDAVIOutputPluginSystem(const wchar_t *pszFilename);
 	~VDAVIOutputPluginSystem();
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo() { return !fAudioOnly; }
-	bool AcceptsAudio() { return true; }
-	bool IsVideoCompressionEnabled() { return true; }
-	bool AreNullFramesAllowed() { return true; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override { return !fAudioOnly; }
+	bool AcceptsAudio() override { return true; }
+	bool IsVideoCompressionEnabled() override { return true; }
+	bool AreNullFramesAllowed() override { return true; }
 	bool GetInterleavingOverride(DubAudioOptions& opt);
 	void SetTextInfo(const std::list<std::pair<uint32, VDStringA> >& info);
 	void SetDriver(IVDOutputDriver* driver, const char* format) {
 		this->driver = driver;
 		this->format = format;
 	}
-	bool GetStreamControl(VDXStreamControl& sc);
-	const char* GetFormatName();
+	bool GetStreamControl(VDXStreamControl& sc) override;
+	const char* GetFormatName() override;
 
 private:
 	VDStringW	mFilename;
@@ -197,11 +197,11 @@ public:
 	~VDAVIOutputRawSystem();
 
 	void SetBuffer(int size);
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsAudio();
-	bool AreNullFramesAllowed() { return true; }
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsAudio() override;
+	bool AreNullFramesAllowed() override { return true; }
+	const char* GetFormatName() override { return nullptr; }
 
 private:
 	VDStringW	mFilename;
@@ -223,13 +223,13 @@ public:
 	~VDAVIOutputRawVideoSystem();
 
 	void SetBuffer(int size);
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	bool IsVideoImageOutputEnabled() { return true; }
-	bool IsVideoImageOutputRequired() { return true; }
-	int GetVideoOutputFormatOverride(int last_format);
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	bool IsVideoImageOutputEnabled() override { return true; }
+	bool IsVideoImageOutputRequired() override { return true; }
+	int GetVideoOutputFormatOverride(int last_format) override;
+	const char* GetFormatName() override { return nullptr; }
 
 private:
 	VDStringW	mFilename;
@@ -246,15 +246,15 @@ public:
 
 	void SetOpt(DubOptions& opt);
 	void SetBuffer(int size);
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	bool AcceptsAudio();
-	bool IsVideoImageOutputEnabled() { return true; }
-	bool IsVideoImageOutputRequired() { return true; }
-	int GetVideoOutputFormatOverride(int last_format);
-	bool IsCompressedAudioAllowed();
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	bool AcceptsAudio() override;
+	bool IsVideoImageOutputEnabled() override { return true; }
+	bool IsVideoImageOutputRequired() override { return true; }
+	int GetVideoOutputFormatOverride(int last_format) override;
+	bool IsCompressedAudioAllowed() override;
+	const char* GetFormatName() override { return nullptr; }
 
 private:
 	DubOptions dubOpt;
@@ -276,14 +276,14 @@ public:
 
 	void SetFilenamePattern(const wchar_t *pszSegmentPrefix, const wchar_t *pszSegmentSuffix, int nMinimumDigits, int startDigit);
 	void SetFormat(int format, int quality);
-	bool IsVideoImageOutputEnabled();
-	bool IsVideoImageOutputRequired();
-	int GetVideoOutputFormatOverride(int last_format);
+	bool IsVideoImageOutputEnabled() override;
+	bool IsVideoImageOutputRequired() override;
+	int GetVideoOutputFormatOverride(int last_format) override;
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	const char* GetFormatName() override { return nullptr; }
 
 private:
 	VDStringW	mSegmentPrefix;
@@ -299,10 +299,10 @@ public:
 	VDAVIOutputFilmstripSystem(const wchar_t *filename);
 	~VDAVIOutputFilmstripSystem();
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	const char* GetFormatName() override { return nullptr; }
 
 private:
 	VDStringW	mFilename;
@@ -313,12 +313,12 @@ public:
 	VDAVIOutputGIFSystem(const wchar_t *filename);
 	~VDAVIOutputGIFSystem();
 
-	int GetVideoOutputFormatOverride(int last_format);
+	int GetVideoOutputFormatOverride(int last_format) override;
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	const char* GetFormatName(){ return "gif"; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	const char* GetFormatName() override { return "gif"; }
 
 	void SetLoopCount(int loopCount) { mLoopCount = loopCount; }
 
@@ -332,12 +332,12 @@ public:
 	VDAVIOutputAPNGSystem(const wchar_t *filename);
 	~VDAVIOutputAPNGSystem();
 
-	int GetVideoOutputFormatOverride(int last_format);
+	int GetVideoOutputFormatOverride(int last_format) override;
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	const char* GetFormatName(){ return "apng"; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	const char* GetFormatName() override { return "apng"; }
 
 	void SetLoopCount(int loopCount) { mLoopCount = loopCount; }
 	void SetAlpha(int alpha) { mAlpha = alpha; }
@@ -355,16 +355,16 @@ public:
 	VDAVIOutputPreviewSystem();
 	~VDAVIOutputPreviewSystem();
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	bool AcceptsAudio();
-	bool IsRealTime() { return true; }
-	bool IsVideoImageOutputEnabled() { return true; }
-	bool IsVideoImageOutputRequired() { return true; }
-	bool AreNullFramesAllowed() { return true; }
-	bool IsVideoCompressionEnabled() { return false; }
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	bool AcceptsAudio() override;
+	bool IsRealTime() override { return true; }
+	bool IsVideoImageOutputEnabled() override { return true; }
+	bool IsVideoImageOutputRequired() override { return true; }
+	bool AreNullFramesAllowed() override { return true; }
+	bool IsVideoCompressionEnabled() override { return false; }
+	const char* GetFormatName() override { return nullptr; }
 };
 
 class VDAVIOutputNullVideoSystem : public VDDubberOutputSystem {
@@ -372,13 +372,13 @@ public:
 	VDAVIOutputNullVideoSystem();
 	~VDAVIOutputNullVideoSystem();
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	bool AcceptsVideo();
-	bool AreNullFramesAllowed() { return true; }
-	bool IsVideoCompressionEnabled() { return true; }
-	bool IsNull() { return true; }
-	const char* GetFormatName(){ return 0; }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	bool AcceptsVideo() override;
+	bool AreNullFramesAllowed() override { return true; }
+	bool IsVideoCompressionEnabled() override { return true; }
+	bool IsNull() override { return true; }
+	const char* GetFormatName() override { return nullptr; }
 };
 
 class VDAVIOutputSegmentedSystem : public VDDubberOutputSystem {
@@ -386,15 +386,15 @@ public:
 	VDAVIOutputSegmentedSystem(IVDDubberOutputSystem *pChildSystem, bool intervalIsSeconds, double interval, double preloadInSeconds, sint64 max_bytes, sint64 max_frames);
 	~VDAVIOutputSegmentedSystem();
 
-	IVDMediaOutput *CreateSegment();
-	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize);
-	void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat);
-	void SetAudio(const VDXStreamInfo& si, const void *pFormat, int cbFormat, bool bInterleaved, bool vbr);
-	bool AcceptsVideo();
-	bool AcceptsAudio();
-	bool AreNullFramesAllowed();
-	bool IsVideoCompressionEnabled();
-	const char* GetFormatName(){ return mpChildSystem->GetFormatName(); }
+	IVDMediaOutput *CreateSegment() override;
+	void CloseSegment(IVDMediaOutput *pSegment, bool bLast, bool finalize) override;
+	void SetVideo(const VDXStreamInfo& si, const void *pFormat, int cbFormat) override;
+	void SetAudio(const VDXStreamInfo& si, const void *pFormat, int cbFormat, bool bInterleaved, bool vbr) override;
+	bool AcceptsVideo() override;
+	bool AcceptsAudio() override;
+	bool AreNullFramesAllowed() override;
+	bool IsVideoCompressionEnabled() override;
+	const char* GetFormatName() override { return mpChildSystem->GetFormatName(); }
 
 private:
 	IVDDubberOutputSystem *mpChildSystem;

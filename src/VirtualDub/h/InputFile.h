@@ -30,7 +30,6 @@
 #include <vd2/system/VDString.h>
 
 class AVIStripeSystem;
-class IAVIReadHandler;
 class IAVIReadStream;
 class AudioSource;
 class IVDVideoSource;
