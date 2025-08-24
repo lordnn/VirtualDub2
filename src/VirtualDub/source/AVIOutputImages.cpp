@@ -563,9 +563,8 @@ void AVIOutputImages::WriteSingleImage(const wchar_t *name, int format, int q, V
 
 		VDPixmapBuffer buf;
 		buf.init(px->w,px->h,temp_format);
-		IVDPixmapBlitter* blt = VDPixmapCreateBlitter(buf,*px);
+		std::unique_ptr<IVDPixmapBlitter> blt{ VDPixmapCreateBlitter(buf,*px) };
 		blt->Blit(buf,*px);
-		delete blt;
 		stream.WriteVideoImage(&buf);
 		return;
 	}
@@ -583,9 +582,8 @@ void AVIOutputImages::WriteSingleImage(const wchar_t *name, int format, int q, V
 
 	VDPixmapBuffer buf;
 	buf.init(layout,0);
-	IVDPixmapBlitter* blt = VDPixmapCreateBlitter(buf,*px);
+	std::unique_ptr<IVDPixmapBlitter> blt{ VDPixmapCreateBlitter(buf,*px) };
 	blt->Blit(buf,*px);
-	delete blt;
 
 	stream.setFormat(outputFormat.data(),outputFormat.size());
 	IVDXOutputFile::PacketInfo packetInfo;

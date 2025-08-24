@@ -420,7 +420,7 @@ public:
 	int mInputFormatVariant;
 	VDPixmapLayout			mInputLayout;
 	VDPixmapLayout			mOutputLayout;
-	vdautoptr<IVDPixmapBlitter>	mpOutputBlitter;
+	std::unique_ptr<IVDPixmapBlitter>	mpOutputBlitter;
 	VDPixmapBuffer repack_buffer;
 	VDPixmapLayout driverLayout;
 	VDPixmapLayout vfwLayout;
@@ -3451,7 +3451,7 @@ bool VDCaptureData::VideoCallback(const void *data, uint32 size, sint64 timestam
 		}
 
 		if (mpOutputBlitter) {
-			VDPROFILEBEGINEX3("V-BlitOut",0,0,mpOutputBlitter->profiler_comment.c_str());
+			VDPROFILEBEGINEX3("V-BlitOut",0 ,0, mpOutputBlitter->profiler_comment.c_str());
 			mpOutputBlitter->Blit(repack_buffer, px);
 			VDPROFILEEND();
 
@@ -3542,7 +3542,7 @@ bool VDCaptureData::VideoCallback(const void *data, uint32 size, sint64 timestam
 
 void VDCaptureData::createOutputBlitter(bool flush) {
 	repack_buffer.clear();
-	mpOutputBlitter = 0;
+	mpOutputBlitter.reset();
 	mbDoConversion = false;
 
 	VDPixmap pxsrc(VDPixmapFromLayout(mOutputLayout, 0));
@@ -3561,7 +3561,7 @@ void VDCaptureData::createOutputBlitter(bool flush) {
 			}
 		}
 
-		IVDPixmapExtraGen* extraDst = VDPixmapCreateNormalizer(fmt, out_info);
+		std::unique_ptr<IVDPixmapExtraGen> extraDst{ VDPixmapCreateNormalizer(fmt, out_info) };
 		if (pxsrc.format!=fmt.format || extraDst || flush) {
 			// only forcing alignment with conversion on
 			VDPixmapCreateLinearLayout(driverLayout,driverLayout.format,driverLayout.w,driverLayout.h,16);
@@ -3569,8 +3569,7 @@ void VDCaptureData::createOutputBlitter(bool flush) {
 			repack_buffer.format = fmt.format;
 			repack_buffer.info.colorSpaceMode = fmt.colorSpaceMode;
 			repack_buffer.info.colorRangeMode = fmt.colorRangeMode;
-			mpOutputBlitter = VDPixmapCreateBlitter(repack_buffer, pxsrc, extraDst);
-			delete extraDst;
+			mpOutputBlitter.reset(VDPixmapCreateBlitter(repack_buffer, pxsrc, extraDst.get()));
 			mbDoConversion = true;
 		}
 
@@ -3596,14 +3595,13 @@ void VDCaptureData::createOutputBlitter(bool flush) {
 			}
 		}
 
-		IVDPixmapExtraGen* extraDst = VDPixmapCreateNormalizer(fmt, out_info, useAlpha);
+		std::unique_ptr<IVDPixmapExtraGen> extraDst{ VDPixmapCreateNormalizer(fmt, out_info, useAlpha) };
 		if (pxsrc.format!=fmt.format || extraDst || flush) {
 			repack_buffer.init(vfwLayout);
 			repack_buffer.format = fmt.format;
 			repack_buffer.info.colorSpaceMode = fmt.colorSpaceMode;
 			repack_buffer.info.colorRangeMode = fmt.colorRangeMode;
-			mpOutputBlitter = VDPixmapCreateBlitter(repack_buffer, pxsrc, extraDst);
-			delete extraDst;
+			mpOutputBlitter.reset(VDPixmapCreateBlitter(repack_buffer, pxsrc, extraDst.get()));
 			mbDoConversion = true;
 		}
 	}

@@ -241,9 +241,9 @@ protected:
 public:
 	static bool		sbEnableDX;
 	static bool		sbEnableDXOverlay;
-	static bool		sbEnableD3D;
-	static bool		sbEnableD3DFX;
-	static bool		sbEnable3D;
+	static bool		sbEnableD3D9;
+	static bool		sbEnableD3D9FX;
+	static bool		sbEnableD3D11;
 	static bool		sbEnableOGL;
 	static bool		sbEnableTS;
 	static bool		sbEnableDebugInfo;
@@ -259,9 +259,9 @@ public:
 ATOM									VDVideoDisplayWindow::sChildWindowClass;
 bool VDVideoDisplayWindow::sbEnableDX = true;
 bool VDVideoDisplayWindow::sbEnableDXOverlay = true;
-bool VDVideoDisplayWindow::sbEnableD3D;
-bool VDVideoDisplayWindow::sbEnableD3DFX;
-bool VDVideoDisplayWindow::sbEnable3D;
+bool VDVideoDisplayWindow::sbEnableD3D9;
+bool VDVideoDisplayWindow::sbEnableD3D9FX;
+bool VDVideoDisplayWindow::sbEnableD3D11;
 bool VDVideoDisplayWindow::sbEnableOGL;
 bool VDVideoDisplayWindow::sbEnableTS;
 bool VDVideoDisplayWindow::sbEnableDebugInfo;
@@ -298,11 +298,11 @@ void VDVideoDisplaySetTermServ3DEnabled(bool enable) {
 	VDVideoDisplayWindow::sbEnableTS3D = enable;
 }
 
-void VDVideoDisplaySetFeatures(bool enableDirectX, bool enableDirectXOverlay, bool enableTermServ, bool enableOpenGL, bool enableDirect3D, bool enableDirect3DFX, bool enableHighPrecision) {
+void VDVideoDisplaySetFeatures(bool enableDirectX, bool enableDirectXOverlay, bool enableTermServ, bool enableOpenGL, bool enableDirectD3D9, bool enableDirectD3D9FX, bool enableHighPrecision) {
 	VDVideoDisplayWindow::sbEnableDX = enableDirectX;
 	VDVideoDisplayWindow::sbEnableDXOverlay = enableDirectXOverlay;
-	VDVideoDisplayWindow::sbEnableD3D = enableDirect3D;
-	VDVideoDisplayWindow::sbEnableD3DFX = enableDirect3DFX;
+	VDVideoDisplayWindow::sbEnableD3D9 = enableDirectD3D9;
+	VDVideoDisplayWindow::sbEnableD3D9FX = enableDirectD3D9FX;
 	VDVideoDisplayWindow::sbEnableOGL = enableOpenGL;
 	VDVideoDisplayWindow::sbEnableTS = enableTermServ;
 	VDVideoDisplayWindow::sbEnableHighPrecision = enableHighPrecision;
@@ -312,8 +312,8 @@ void VDVideoDisplaySetD3D9ExEnabled(bool enable) {
 	VDVideoDisplayWindow::sbEnableD3D9Ex = enable;
 }
 
-void VDVideoDisplaySet3DEnabled(bool enable) {
-	VDVideoDisplayWindow::sbEnable3D = enable;
+void VDVideoDisplaySetD3D11Enabled(bool enable) {
+	VDVideoDisplayWindow::sbEnableD3D11 = enable;
 }
 
 void VDVideoDisplaySetDDrawEnabled(bool enable) {
@@ -1173,7 +1173,7 @@ bool VDVideoDisplayWindow::SyncInit(bool bAutoRefresh, bool bAllowNonpersistentS
 			if (mAccelMode != kAccelOnlyInForeground || !mSource.bAllowConversion || bIsForeground) {
 				// The 3D drivers don't currently support subrects.
 				if (sbEnableDX) {
-					if (!mbUseSubrect && sbEnable3D && (sbEnableTS3D || !isTermServ)) {
+					if (!mbUseSubrect && sbEnableD3D11 && (sbEnableTS3D || !isTermServ)) {
 						mpMiniDriver = VDCreateDisplayDriver3D();
 						if (InitMiniDriver())
 							break;
@@ -1188,8 +1188,8 @@ bool VDVideoDisplayWindow::SyncInit(bool bAutoRefresh, bool bAllowNonpersistentS
 					}
 
 					if (sbEnableSecondaryMonitorDX || sbEnableMonitorSwitchingDX || !(CheckForMonitorChange(), IsOnSecondaryMonitor())) {
-						if (!mbUseSubrect && sbEnableD3D && (sbEnableTS3D || !isTermServ)) {
-							if (sbEnableD3DFX)
+						if (!mbUseSubrect && sbEnableD3D9 && (sbEnableTS3D || !isTermServ)) {
+							if (sbEnableD3D9FX)
 								mpMiniDriver = VDCreateVideoDisplayMinidriverD3DFX(!sbEnableSecondaryMonitorDX || sbEnableMonitorSwitchingDX);
 							else
 								mpMiniDriver = VDCreateVideoDisplayMinidriverDX9(!sbEnableSecondaryMonitorDX || sbEnableMonitorSwitchingDX, sbEnableD3D9Ex);

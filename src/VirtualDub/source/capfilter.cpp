@@ -653,7 +653,7 @@ protected:
 	typedef vdfastvector<VDFilterFrameBuffer *> FrameQueue;
 	FrameQueue mFrameQueue;
 
-	vdautoptr<IVDPixmapBlitter> mpBlitter;
+	std::unique_ptr<IVDPixmapBlitter> mpBlitter;
 };
 
 VDCaptureFilterChainFrameSource::VDCaptureFilterChainFrameSource() {
@@ -690,7 +690,7 @@ void VDCaptureFilterChainFrameSource::Shutdown() {
 		mFrameQueue.pop_back();
 	}
 
-	mpBlitter = NULL;
+	mpBlitter.reset();
 }
 
 void VDCaptureFilterChainFrameSource::Push(const VDPixmap& px) {
@@ -710,7 +710,7 @@ void VDCaptureFilterChainFrameSource::Push(const VDPixmap& px) {
 	const VDPixmap pxdst(VDPixmapFromLayout(mLayout, buf->LockWrite()));
 
 	if (!mpBlitter)
-		mpBlitter = VDPixmapCreateBlitter(pxdst, px);
+		mpBlitter.reset(VDPixmapCreateBlitter(pxdst, px));
 
 	mpBlitter->Blit(pxdst, px);
 	buf->info = pxdst.info;

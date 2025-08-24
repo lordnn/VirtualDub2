@@ -1108,7 +1108,7 @@ VDDubVideoProcessor::VideoWriteResult VDDubVideoProcessor::ReadVideoFrame(const 
 
 	const VDPixmap& pxsrc = vsrc->getTargetFormat();
 	if (!mpOutputBlitter)
-		mpOutputBlitter = VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc);
+		mpOutputBlitter.reset(VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc));
 
 	VDPROFILEBEGINEX3("V-BlitOut",0,0,mpOutputBlitter->profiler_comment.c_str());
 	mpOutputBlitter->Blit(pBuffer->mPixmap, pxsrc);
@@ -1225,14 +1225,13 @@ VDDubVideoProcessor::VideoWriteResult VDDubVideoProcessor::ProcessVideoFrame() {
 			}
 		}
 
-		IVDPixmapExtraGen* extraDst = VDPixmapCreateNormalizer(pBuffer->mPixmap.format, out_info);
-		mpOutputBlitter = VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc, extraDst);
-		delete extraDst;
+		std::unique_ptr<IVDPixmapExtraGen> extraDst{ VDPixmapCreateNormalizer(pBuffer->mPixmap.format, out_info) };
+		mpOutputBlitter.reset(VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc, extraDst.get()));
 	} else if(!mpOutputBlitter) {
-		mpOutputBlitter = VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc);
+		mpOutputBlitter.reset(VDPixmapCreateBlitter(pBuffer->mPixmap, pxsrc));
 	}
 
-	VDPROFILEBEGINEX3("V-BlitOut",(uint32)nextOutputFrame.mTimelineFrame,0,mpOutputBlitter->profiler_comment.c_str());
+	VDPROFILEBEGINEX3("V-BlitOut",(uint32)nextOutputFrame.mTimelineFrame, 0, mpOutputBlitter->profiler_comment.c_str());
 	mpOutputBlitter->Blit(pBuffer->mPixmap, pxsrc);
 	buf->Unlock();
 	VDPROFILEEND();

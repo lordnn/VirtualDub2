@@ -202,7 +202,7 @@ protected:
 	bool mbFilterStageThrottled;
 
 	// video output conversion
-	vdautoptr<IVDPixmapBlitter>	mpOutputBlitter;
+	std::unique_ptr<IVDPixmapBlitter>	mpOutputBlitter;
 	VDPixmapBuffer repack_buffer;
 
 	// video compression

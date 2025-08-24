@@ -267,7 +267,7 @@ namespace {
 		{ ID_FILE_SAVECOMPATIBLEAVI,	"File.SaveCompatibleAVI" },
 		{ ID_FILE_SAVEIMAGESEQ,			"File.SaveImageSequence" },
 		{ ID_FILE_SAVEIMAGE,			"File.SaveImage" },
-		{ ID_FILE_SAVEIMAGE2,			"File.SaveNextImage" },
+		{ ID_FILE_SAVEIMAGE2,			"File.SaveImageSkipDialog" },
 		{ ID_FILE_SAVESEGMENTEDAVI,		"File.SaveSegmentedAVI" },
 		{ ID_FILE_SAVEFILMSTRIP,		"File.SaveFilmstrip" },
 		{ ID_FILE_SAVEANIMATEDGIF,		"File.SaveAnimatedGIF" },

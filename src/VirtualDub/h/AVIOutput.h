@@ -84,7 +84,7 @@ public:
 
 	void *AsInterface(uint32 id) override;
 
-	virtual void setFormat(const void *pFormat, int len) {
+	void setFormat(const void *pFormat, int len) override {
 		mFormat.resize(len);
 		memcpy(mFormat.data(), pFormat, len);
 	}

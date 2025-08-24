@@ -144,22 +144,22 @@ protected:
 
 	static LRESULT CALLBACK StaticMessageWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	HWND	mhwnd;
-	HWND	mhwndParent;
-	HWND	mhwndMessages;
-	IVDCaptureDriverCallback	*mpCB;
-	bool	mbAudioCaptureEnabled;
-	bool	mbAudioAnalysisEnabled;
-	bool	mbCapturing;
-	VDAtomicInt	mDisplayMode;
+	HWND	mhwnd{};
+	HWND	mhwndParent{};
+	HWND	mhwndMessages{};
+	IVDCaptureDriverCallback	*mpCB{};
+	bool	mbAudioCaptureEnabled{true};
+	bool	mbAudioAnalysisEnabled{};
+	bool	mbCapturing{};
+	VDAtomicInt	mDisplayMode{kDisplayNone};
 
 	vdrefptr<InputFile>	mpInputFile;
-	vdrefptr<IVDVideoSource> mpVideo;
-	vdrefptr<AudioSource> mpAudio;
+	vdrefptr<IVDVideoSource> mpVideo{};
+	vdrefptr<AudioSource> mpAudio{};
 	VDPosition		mAudioPos;
-	VDPosition		mLastDisplayedVideoFrame;
+	VDPosition		mLastDisplayedVideoFrame{-1};
 
-	IVDVideoDisplay	*mpDisplay;
+	IVDVideoDisplay	*mpDisplay{};
 
 	VDCallbackTimer	mFrameTimer;
 	VDPosition		mFrame;
@@ -168,8 +168,8 @@ protected:
 	VDTime			mCaptureStart;
 	VDPosition		mLastCapturedFrame;
 
-	vdautoptr<IVDAudioOutput>	mpAudioOutput;
-	UINT			mAudioTimer;
+	std::unique_ptr<IVDAudioOutput>	mpAudioOutput;
+	UINT			mAudioTimer{};
 	uint32			mAudioSampleSize;
 	uint32			mAudioSampleRate;
 	uint32			mAudioClientPosition;
@@ -185,20 +185,7 @@ protected:
 ATOM VDCaptureDriverEmulation::sMsgWndClass = NULL;
 
 VDCaptureDriverEmulation::VDCaptureDriverEmulation()
-	: mhwnd(NULL)
-	, mhwndParent(NULL)
-	, mhwndMessages(NULL)
-	, mpCB(NULL)
-	, mbAudioCaptureEnabled(true)
-	, mbAudioAnalysisEnabled(false)
-	, mbCapturing(false)
-	, mDisplayMode(kDisplayNone)
-	, mLastDisplayedVideoFrame(-1)
-	, mpVideo(NULL)
-	, mpAudio(NULL)
-	, mpDisplay(NULL)
-	, mpAudioOutput(VDCreateAudioOutputWaveOutW32())
-	, mAudioTimer(0)
+	: mpAudioOutput(VDCreateAudioOutputWaveOutW32())
 {
 }
 

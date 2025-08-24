@@ -253,14 +253,14 @@ class VDAVIOutputSegmentedVideoStream : public VDAVIOutputSegmentedStream {
 public:
 	VDAVIOutputSegmentedVideoStream(VDAVIOutputSegmented *pParent);
 
-	bool IsEnded() { return mbEnded; }
-	void CloseSegmentStream();
-	void OpenSegmentStream(IVDMediaOutputStream *pOutput);
-	bool GetNextPendingRun(uint32& samples, uint32& bytes, VDTime& endTime);
-	bool GetPendingInfo(VDTime endTime, uint32& samples, uint32& bytes);
+	bool IsEnded() override { return mbEnded; }
+	void CloseSegmentStream() override;
+	void OpenSegmentStream(IVDMediaOutputStream *pOutput) override;
+	bool GetNextPendingRun(uint32& samples, uint32& bytes, VDTime& endTime) override;
+	bool GetPendingInfo(VDTime endTime, uint32& samples, uint32& bytes) override;
 	VDTime GetPendingLevel();
-	void ScheduleSamples(uint32 samples);
-	FlushResult Flush(uint32 samples, bool force);
+	void ScheduleSamples(uint32 samples) override;
+	FlushResult Flush(uint32 samples, bool force) override;
 
 	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
 	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
@@ -288,22 +288,17 @@ protected:
 		Run() : mSize(0), mbClosed(false) {}
 	};
 
-	bool mbEnded;
-	VDPosition mSamplesWritten;
-	uint32 mExtraSamples;
-	uint32 mScheduledSamples;
-	uint32 mBufferedSamples;
+	bool mbEnded{};
+	VDPosition mSamplesWritten{};
+	uint32 mExtraSamples{};
+	uint32 mScheduledSamples{};
+	uint32 mBufferedSamples{};
 	std::list<Run> mClearedRuns;
 	std::list<Run> mPendingRuns;
 };
 
 VDAVIOutputSegmentedVideoStream::VDAVIOutputSegmentedVideoStream(VDAVIOutputSegmented *pParent)
 	: mpParent(pParent)
-	, mbEnded(false)
-	, mSamplesWritten(0)
-	, mExtraSamples(0)
-	, mScheduledSamples(0)
-	, mBufferedSamples(0)
 {
 }
 
@@ -472,22 +467,22 @@ class VDAVIOutputSegmentedAudioStream : public VDAVIOutputSegmentedStream {
 public:
 	VDAVIOutputSegmentedAudioStream(VDAVIOutputSegmented *pParent);
 
-	bool IsEnded() { return mbEnded; }
-	void CloseSegmentStream();
-	void OpenSegmentStream(IVDMediaOutputStream *pOutput);
-	bool GetNextPendingRun(uint32& samples, uint32& bytes, VDTime& endTime);
-	bool GetPendingInfo(VDTime endTime, uint32& samples, uint32& bytes);
+	bool IsEnded() override { return mbEnded; }
+	void CloseSegmentStream() override;
+	void OpenSegmentStream(IVDMediaOutputStream *pOutput) override;
+	bool GetNextPendingRun(uint32& samples, uint32& bytes, VDTime& endTime) override;
+	bool GetPendingInfo(VDTime endTime, uint32& samples, uint32& bytes) override;
 	VDTime GetPendingLevel();
-	void ScheduleSamples(uint32 samples);
-	FlushResult Flush(uint32 samples, bool force);
+	void ScheduleSamples(uint32 samples) override;
+	FlushResult Flush(uint32 samples, bool force) override;
 	void EstimateFitSamples(sint64 bytesToFit, uint32& samples, uint32& bytes, bool forceSample);
 
-	void setFormat(const void *pFormat, int len);
-	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples);
-	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples);
-	void partialWrite(const void *pBuffer, uint32 cbBuffer);
-	void partialWriteEnd();
-	void finish();
+	void setFormat(const void *pFormat, int len) override;
+	void write(uint32 flags, const void *pBuffer, uint32 cbBuffer, uint32 samples) override;
+	void partialWriteBegin(uint32 flags, uint32 bytes, uint32 samples) override;
+	void partialWrite(const void *pBuffer, uint32 cbBuffer) override;
+	void partialWriteEnd() override;
+	void finish() override;
 
 protected:
 	uint64 RemoveSamples(uint32& samples, uint32 vbrSizeThreshold);
@@ -497,13 +492,13 @@ protected:
 	VDAVIOutputSegmented *const mpParent;
 	IVDMediaOutputStream *mpOutputStream;
 
-	bool	mbEnded;
-	uint32	mBlockSize;
-	uint32	mBufferedSamples;
-	uint32	mScheduledSamples;
-	uint32	mExtraSamples;
-	VDPosition	mTotalBufferedSamples;
-	VDPosition	mTotalScheduledSamples;
+	bool	mbEnded{};
+	uint32	mBlockSize{};
+	uint32	mBufferedSamples{};
+	uint32	mScheduledSamples{};
+	uint32	mExtraSamples{};
+	VDPosition	mTotalBufferedSamples{};
+	VDPosition	mTotalScheduledSamples{};
 	VDChunkedBuffer	mBuffer;
 
 	struct ChunkEntry {
@@ -518,13 +513,6 @@ protected:
 
 VDAVIOutputSegmentedAudioStream::VDAVIOutputSegmentedAudioStream(VDAVIOutputSegmented *pParent)
 	: mpParent(pParent)
-	, mbEnded(false)
-	, mBlockSize(0)
-	, mBufferedSamples(0)
-	, mScheduledSamples(0)
-	, mExtraSamples(0)
-	, mTotalBufferedSamples(0)
-	, mTotalScheduledSamples(0)
 {
 }
 
