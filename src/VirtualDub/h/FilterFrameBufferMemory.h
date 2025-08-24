@@ -34,16 +34,16 @@ public:
 	VDFilterFrameBufferMemory();
 
 	void Init(uint32 size);
-	void Shutdown();
+	void Shutdown() override;
 
-	void *LockWrite() { return mpBuffer; }
-	const void *LockRead() const { return mpBuffer; }
-	void Unlock() {}
+	void *LockWrite() override { return mpBuffer; }
+	const void *LockRead() const override { return mpBuffer; }
+	void Unlock() override {}
 
-	uint32 GetSize() const { return mBufferSize; }
+	uint32 GetSize() const  override{ return mBufferSize; }
 
 protected:
-	~VDFilterFrameBufferMemory();
+	~VDFilterFrameBufferMemory() override;
 
 	void *mpBuffer;
 	uint32 mBufferSize;

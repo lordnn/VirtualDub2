@@ -71,7 +71,7 @@ inline uint32 vdpoly_id_from_ptr(T *p) {
 /// 
 template<class T>
 T vdpoly_cast(IVDUnknown *pUnk) {
-	return pUnk ? (T)pUnk->AsInterface(vdpoly_id_from_ptr(T(NULL))) : NULL;
+	return pUnk ? (T)pUnk->AsInterface(vdpoly_id_from_ptr(T(nullptr))) : nullptr;
 }
 
 #endif

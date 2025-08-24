@@ -10,15 +10,15 @@ class VDUIHotKeyExControlW32 : public vdrefcounted<IVDUIHotKeyExControl> {
 	VDUIHotKeyExControlW32& operator=(const VDUIHotKeyExControlW32&);
 public:
 	VDUIHotKeyExControlW32(HWND hwnd);
-	~VDUIHotKeyExControlW32();
+	~VDUIHotKeyExControlW32() override;
 
-	void *AsInterface(uint32 iid);
+	void *AsInterface(uint32 iid) override;
 
-	void GetAccelerator(VDUIAccelerator& accel);
-	void SetAccelerator(const VDUIAccelerator& accel);
-	void Clear();
+	void GetAccelerator(VDUIAccelerator& accel) override;
+	void SetAccelerator(const VDUIAccelerator& accel) override;
+	void Clear() override;
 
-	VDEvent<IVDUIHotKeyExControl, VDUIAccelerator>& OnChange() {
+	VDEvent<IVDUIHotKeyExControl, VDUIAccelerator>& OnChange() override {
 		return mEventOnChange;
 	}
 

@@ -49,7 +49,7 @@ protected:
 	VDPixmap mOutputPixmap;
 
 	const VDAVIOutputRawVideoFormat& mFormat;
-	vdautoptr<IVDPixmapBlitter> mpBlitter;
+	std::unique_ptr<IVDPixmapBlitter> mpBlitter;
 };
 
 AVIVideoOutputStreamRaw::AVIVideoOutputStreamRaw(AVIOutputRawVideo *pParent, const VDAVIOutputRawVideoFormat& format, uint32 w, uint32 h)
@@ -98,9 +98,8 @@ void AVIVideoOutputStreamRaw::WriteVideoImage(const VDPixmap *px) {
 	if (!mpBlitter) {
 		FilterModPixmapInfo out_info;
 		VDSetPixmapInfoForBitmap(out_info, px->format);
-		IVDPixmapExtraGen* extraDst = VDPixmapCreateNormalizer(px->format, out_info);
-		mpBlitter = VDPixmapCreateBlitter(mOutputPixmap, *px, extraDst);
-		delete extraDst;
+		std::unique_ptr<IVDPixmapExtraGen> extraDst{ VDPixmapCreateNormalizer(px->format, out_info) };
+		mpBlitter.reset(VDPixmapCreateBlitter(mOutputPixmap, *px, extraDst.get()));
 		if (!mpBlitter)
 			throw MyMemoryError();
 	}

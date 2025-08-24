@@ -38,10 +38,10 @@ public:
 
 	VDFilterFrameBufferAccel();
 
-	void *AsInterface(uint32 iid);
+	void *AsInterface(uint32 iid) override;
 
 	void Init(VDFilterAccelEngine *accelEngine, uint32 width, uint32 height, uint32 borderWidth, uint32 borderHeight);
-	void Shutdown();
+	void Shutdown() override;
 
 	uint32 GetWidth() const { return mWidth; }
 	uint32 GetHeight() const { return mHeight; }
@@ -51,11 +51,11 @@ public:
 	IVDTTexture2D *GetTexture() const { return mpTexture; }
 	void SetTexture(IVDTTexture2D *tex);
 
-	void *LockWrite();
-	const void *LockRead() const;
-	void Unlock();
+	void *LockWrite() override;
+	const void *LockRead() const override;
+	void Unlock() override;
 
-	uint32 GetSize() const;
+	uint32 GetSize() const override;
 
 public:
 	void Decommit();

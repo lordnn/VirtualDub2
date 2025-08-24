@@ -940,14 +940,14 @@ void VDAudioFilterSystem::SetScheduler(VDScheduler *pIOScheduler, VDScheduler *p
 }
 
 IVDAudioFilterInstance *VDAudioFilterSystem::Create(VDPluginDescription *pDesc) {
-	vdautoptr<VDAudioFilterInstance> pFilter(new VDAudioFilterInstance(pDesc));
+	std::unique_ptr<VDAudioFilterInstance> pFilter{ new VDAudioFilterInstance(pDesc) };
 
-	mFilters.push_back(pFilter);
+	mFilters.push_back(pFilter.get());
 
 	if (pFilter->IsSerializedIOOnly())
-		mpIOScheduler->Add(pFilter);
+		mpIOScheduler->Add(pFilter.get());
 	else
-		mpFastScheduler->Add(pFilter);
+		mpFastScheduler->Add(pFilter.get());
 
 	return pFilter.release();
 }

@@ -707,9 +707,9 @@ public:
 };
 
 bool VDShowCapturePreferencesDialog(VDGUIHandle h, VDCapturePreferences& prefs) {
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(h));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(h) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(2000, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(2000, peer.get());
 	VDCapturePreferences temp(prefs);
 	VDDialogCapturePreferences prefDlg(temp);
 
@@ -839,9 +839,9 @@ public:
 };
 
 int VDShowCaptureRawAudioFormatDialog(VDGUIHandle h, const std::list<vdstructex<VDWaveFormat> >& formats, int sel) {
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(h));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(h) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(2100, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(2100, peer.get());
 	VDDialogCaptureRawAudioFormat prefDlg(formats, sel);
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);
@@ -1226,9 +1226,9 @@ public:
 };
 
 bool VDShowCaptureTimingDialog(VDGUIHandle h, VDCaptureTimingSetup& timing) {
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(h));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(h) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(2101, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(2101, peer.get());
 	VDDialogTimingOptions prefDlg(timing);
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);
@@ -1283,9 +1283,9 @@ public:
 };
 
 bool VDShowCaptureDeviceOptionsDialog(VDGUIHandle h, uint32& opts) {
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(h));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(h) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(2102, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(2102, peer.get());
 	VDDialogCaptureDeviceOptions prefDlg(opts);
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);

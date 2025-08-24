@@ -2773,7 +2773,7 @@ void VDProject::RunOperation(IVDDubberOutputSystem *pOutputSystem, VideoOperatio
 	MyError prop_err;
 	DubOptions *opts;
 
-	vdautoptr<VDAVIOutputSegmentedSystem> segmentedOutput;
+	std::unique_ptr<VDAVIOutputSegmentedSystem> segmentedOutput;
 
 	{
 		const wchar_t *pOpType = pOutputSystem->IsRealTime() ? L"preview" : L"dub";
@@ -2863,8 +2863,8 @@ void VDProject::RunOperation(IVDDubberOutputSystem *pOutputSystem, VideoOperatio
 				lSpillFrameThreshold = (opts->video.mSelectionEnd.mOffset - opts->video.mSelectionStart.mOffset + op.lSegmentCount-1)/op.lSegmentCount;
 			if (op.lSpillFrameThreshold && op.lSpillFrameThreshold<lSpillFrameThreshold)
 				lSpillFrameThreshold = op.lSpillFrameThreshold;
-			segmentedOutput = new VDAVIOutputSegmentedSystem(pOutputSystem, opts->audio.is_ms, opts->audio.is_ms ? opts->audio.interval * 0.001 : opts->audio.interval, (double)opts->audio.preload / 500.0, (sint64)op.lSpillThreshold << 20, lSpillFrameThreshold);
-			g_dubber->Init(&vsrc, 1, &asrc, asrc ? 1 : 0, segmentedOutput, comp, &mTimeline.GetSubset(), mVideoTimelineFrameRate);
+			segmentedOutput.reset(new VDAVIOutputSegmentedSystem(pOutputSystem, opts->audio.is_ms, opts->audio.is_ms ? opts->audio.interval * 0.001 : opts->audio.interval, (double)opts->audio.preload / 500.0, (sint64)op.lSpillThreshold << 20, lSpillFrameThreshold));
+			g_dubber->Init(&vsrc, 1, &asrc, asrc ? 1 : 0, segmentedOutput.get(), comp, &mTimeline.GetSubset(), mVideoTimelineFrameRate);
 		} else {
 			g_dubber->Init(&vsrc, 1, &asrc, asrc ? 1 : 0, pOutputSystem, comp, &mTimeline.GetSubset(), mVideoTimelineFrameRate);
 		}

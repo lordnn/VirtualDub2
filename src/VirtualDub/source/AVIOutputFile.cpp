@@ -122,7 +122,7 @@ private:
 		kDefaultSubIndexEntries			= 8192			// Maximum number of OpenDML second-level entries -- the AVI file can never contain more than the product of these values in sample chunks.
 	};
 
-	vdautoptr<IVDFileAsync>	mpFileAsync;
+	std::unique_ptr<IVDFileAsync>	mpFileAsync;
 	sint64		mFilePosition;
 	uint32		mAVIXLevel;
 
@@ -877,7 +877,7 @@ void AVIOutputFile::FastWrite(const void *data, int len) {
 }
 
 void AVIOutputFile::FileOpen(const wchar_t *pwszFile, bool bCaching, uint32 nBufferSize, uint32 nChunkSize) {
-	mpFileAsync = VDCreateFileAsync();
+	mpFileAsync.reset(VDCreateFileAsync());
 	mpFileAsync->SetPreemptiveExtend(true);
 	mpFileAsync->Open(pwszFile, mBufferSize / mChunkSize, mChunkSize);
 	mFilePosition = 0;

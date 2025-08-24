@@ -127,7 +127,7 @@ void VDTestPixmaps() {
 
 	VDPixmapTextureMipmapChain mipchain(sprite);
 
-	vdautoptr<IVDPixmapResampler> pResampler(VDCreatePixmapResampler());
+	std::unique_ptr<IVDPixmapResampler> pResampler{ VDCreatePixmapResampler() };
 
 	while(pump()) {
 		int x1 = p1.xposf();

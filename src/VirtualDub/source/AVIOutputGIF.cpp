@@ -914,15 +914,14 @@ public:
 	void finalize();
 
 protected:
-	vdautoptr<IVDFileAsync> mpAsync;
-	int mLoopCount;
+	std::unique_ptr<IVDFileAsync> mpAsync;
+	int mLoopCount{};
 };
 
 IVDAVIOutputGIF *VDCreateAVIOutputGIF() { return new AVIOutputGIF; }
 
 AVIOutputGIF::AVIOutputGIF()
-	: mpAsync(VDCreateFileAsync())
-	, mLoopCount(0)
+	: mpAsync{ VDCreateFileAsync() }
 {
 }
 
@@ -932,7 +931,7 @@ AVIOutput *VDGetAVIOutputGIF() {
 
 IVDMediaOutputStream *AVIOutputGIF::createVideoStream() {
 	VDASSERT(!videoOut);
-	if (!(videoOut = new_nothrow AVIVideoGIFOutputStream(mpAsync)))
+	if (!(videoOut = new_nothrow AVIVideoGIFOutputStream(mpAsync.get())))
 		throw MyMemoryError();
 	return videoOut;
 }

@@ -490,72 +490,72 @@ protected:
 	static INT_PTR CALLBACK StaticPanelDlgProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	INT_PTR PanelDlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
 
-	VDGUIHandle			mhwnd;
-	IVDCaptureProject	*mpProject;
+	VDGUIHandle			mhwnd{};
+	IVDCaptureProject	*mpProject{};
 	LRESULT (VDCaptureProjectUI::*mpWndProc)(UINT, WPARAM, LPARAM);
 
 	HWND	mhwndStatus;
 	WNDPROC	mStatusWndProc;
 	HWND	mhwndPanel;
-	HMENU	mhMenuCapture;
-	HMENU	mhMenuAuxCapture;
+	HMENU	mhMenuCapture{};
+	HMENU	mhMenuAuxCapture{};
 	HACCEL	mhAccelCapture;
-	bool	mbCaptureActive;
-	bool	mbCaptureIsTest;
-	HFONT	mhClockFont;
-	HFONT	mhPanelFont2;
-	HFONT	mhPanelFont3;
+	bool	mbCaptureActive{};
+	bool	mbCaptureIsTest{};
+	HFONT	mhClockFont{};
+	HFONT	mhPanelFont2{};
+	HFONT	mhPanelFont3{};
 
-	uint32	mDeviceDisplayOptions;
+	uint32	mDeviceDisplayOptions{};
 
-	DisplayMode	mDisplayModeShadow;
-	bool		mbDisplayModeShadowed;
+	DisplayMode	mDisplayModeShadow{kDisplayNone};
+	bool		mbDisplayModeShadowed{};
 
-	DisplayAccelMode mDisplayAccelMode;
+	DisplayAccelMode mDisplayAccelMode{kDDP_Progressive};
 	VDCriticalSection	mDisplayAccelImageLock;
 
 	struct BufferedFrame : VDVideoDisplayFrame {
 		VDPixmapBuffer	mBuffer;
 	};
 
-	volatile bool	mbDisplayAccelActive;
-	VDAtomicInt		mDisplayAccelUpdateCounter;
+	volatile bool	mbDisplayAccelActive{};
+	VDAtomicInt		mDisplayAccelUpdateCounter{};
 
-	bool	mbSwitchSourcesTogether;
-	bool	mbStretchToWindow;
-	bool	mbStatusBar;
-	bool	mbInfoPanel;
-	bool	mbTimingGraph;
-	bool	mbStartOnLeft;
-	bool	mbDisplayLargeTimer;
-	bool	mbHideOnCapture;
-	bool	mbAutoIncrementAfterCapture;
-	bool	mbDisplayPrerollDialog;
-	bool	mbFullScreen;
-	bool	mbMaximize;
-	bool	mbMaximizeChanging;
+	bool	mbSwitchSourcesTogether{true};
+	bool	mbStretchToWindow{};
+	bool	mbStatusBar{true};
+	bool	mbInfoPanel{true};
+	bool	mbTimingGraph{};
+	bool	mbStartOnLeft{};
+	bool	mbDisplayLargeTimer{};
+	bool	mbHideOnCapture{};
+	bool	mbAutoIncrementAfterCapture{};
+	bool	mbDisplayPrerollDialog{};
+	bool	mbFullScreen{};
+	bool	mbMaximize{};
+	bool	mbMaximizeChanging{};
 
-	bool	mbMaxPower;
-	bool	enable_power_scheme;
-	GUID*	mpPrevPower;
-	GUID*	mpNewPower;
+	bool	mbMaxPower{};
+	bool	enable_power_scheme{true};
+	GUID*	mpPrevPower{};
+	GUID*	mpNewPower{};
 
-	uint32	mLastMouseMoveTime;
+	uint32	mLastMouseMoveTime{};
 	POINT	mLastMouseMovePoint;
 
 	// hotkeys
-	int		mCurrentHotKeyStart;
-	int		mCurrentHotKeyStop;
+	int		mCurrentHotKeyStart{};
+	int		mCurrentHotKeyStop{};
 
 	// Video display
-	HWND	mhwndDisplay;
-	IVDVideoDisplay	*mpDisplay;
+	HWND	mhwndDisplay{};
+	IVDVideoDisplay	*mpDisplay{};
 
 	// CPU usage reader
 	VDCPUUsageReader	mCPUReader;
 
 	// channel control
-	int				mNextChannel;
+	int				mNextChannel{-1};
 	uint32			mNextChannelSwitchTime;
 
 	// status update fields
@@ -568,17 +568,17 @@ protected:
 	vdfastvector<HWND>		mInfoPanelLabels;
 	vdfastvector<HWND>		mInfoPanelChildren;
 
-	UINT			mUpdateTimer;
-	uint32			mLastPreviewFrameCount;
+	UINT			mUpdateTimer{};
+	uint32			mLastPreviewFrameCount{};
 
 	float peak[16];
-	int peak_count;
+	int peak_count{};
 
-	vdautoptr<IVDUIWindow>	mpVideoHistogram;
-	vdautoptr<IVDUIWindow>	mpVumeter;
-	vdautoptr<IVDUIWindow>	mpGraph;
-	IVDUICaptureVumeter*    mpVumeter2;
-	int ref_procAmp;
+	std::unique_ptr<IVDUIWindow>	mpVideoHistogram;
+	std::unique_ptr<IVDUIWindow>	mpVumeter;
+	std::unique_ptr<IVDUIWindow>	mpGraph;
+	IVDUICaptureVumeter*    mpVumeter2{};
+	int ref_procAmp{};
 
 	VDUIPeerW32		mUIPeer;
 
@@ -586,7 +586,7 @@ protected:
 
 //	VDOneShotTimer	mOneShotTimer;
 
-	VDAtomicInt		mRefCount;
+	VDAtomicInt		mRefCount{};
 };
 
 IVDCaptureProjectUI *VDCreateCaptureProjectUI() {
@@ -594,54 +594,10 @@ IVDCaptureProjectUI *VDCreateCaptureProjectUI() {
 }
 
 VDCaptureProjectUI::VDCaptureProjectUI()
-	: mhwnd(NULL)
-	, mpProject(NULL)
-	, mhMenuCapture(NULL)
-	, mhMenuAuxCapture(NULL)
-	, mbCaptureActive(false)
-	, mbCaptureIsTest(false)
-	, mhClockFont(NULL)
-	, mDeviceDisplayOptions(0)
-	, mDisplayModeShadow(kDisplayNone)
-	, mbDisplayModeShadowed(false)
-	, mDisplayAccelMode(kDDP_Progressive)
-	, mbDisplayAccelActive(false)
-	, mDisplayAccelUpdateCounter(0)
-	, mbSwitchSourcesTogether(true)
-	, mbStretchToWindow(false)
-	, mbStatusBar(true)
-	, mbInfoPanel(true)
-	, mbTimingGraph(false)
-	, mbStartOnLeft(false)
-	, mbDisplayLargeTimer(false)
-	, mbHideOnCapture(false)
-	, mbAutoIncrementAfterCapture(false)
-	, mbDisplayPrerollDialog(false)
-	, mbMaxPower(false)
-	, mbFullScreen(false)
-	, mbMaximize(false)
-	, mbMaximizeChanging(false)
-	, mLastMouseMoveTime(0)
-	, mCurrentHotKeyStart(0)
-	, mCurrentHotKeyStop(0)
-	, mhwndDisplay(NULL)
-	, mpDisplay(NULL)
-	, mNextChannel(-1)
-	, mUpdateTimer(0)
-	, mLastPreviewFrameCount(0)
-	, mRefCount(0)
 {
 	mLastMouseMovePoint.x = 0;
 	mLastMouseMovePoint.y = 0;
-	memset(peak,0,sizeof(peak));
-	peak_count = 0;
-	mpVumeter2 = 0;
-	mhPanelFont2 = 0;
-	mhPanelFont3 = 0;
-	enable_power_scheme = true;
-	mpPrevPower = 0;
-	mpNewPower = 0;
-	ref_procAmp = 0;
+	memset(peak, 0, sizeof(peak));
 }
 
 VDCaptureProjectUI::~VDCaptureProjectUI() {
@@ -771,7 +727,7 @@ bool VDCaptureProjectUI::Attach(VDGUIHandle hwnd, IVDCaptureProject *pProject) {
 
 	mCPUReader.Init();
 
-	mUpdateTimer = SetTimer((HWND)mhwnd, kTimerIdUpdateStats, 1000, NULL);
+	mUpdateTimer = SetTimer((HWND)mhwnd, kTimerIdUpdateStats, 1000, nullptr);
 
 	if (!mpProject->IsDriverConnected())
 		SetStatusImmediate("");
@@ -790,7 +746,7 @@ void VDCaptureProjectUI::Detach() {
 
 	SaveLocalSettings();
 
-	VDToggleCaptureNRDialog(NULL, NULL);
+	VDToggleCaptureNRDialog(nullptr, nullptr);
 
 	mCPUReader.Shutdown();
 	ShutdownTimingGraph();
@@ -807,7 +763,7 @@ void VDCaptureProjectUI::Detach() {
 
 	if (mUpdateTimer) {
 		KillTimer((HWND)mhwnd, mUpdateTimer);
-		mUpdateTimer = NULL;
+		mUpdateTimer = 0;
 	}
 
 	CaptureCloseBT848Tweaker();
@@ -817,46 +773,46 @@ void VDCaptureProjectUI::Detach() {
 	if (mpDisplay) {
 		mpDisplay->Reset();
 		mpDisplay->Destroy();
-		mpDisplay = NULL;
-		mhwndDisplay = NULL;
+		mpDisplay = nullptr;
+		mhwndDisplay = nullptr;
 	}
 
 	SaveDeviceSettings(kSaveDevOnDisconnect);
 
-	mpProject->SetCallback(NULL);
+	mpProject->SetCallback(nullptr);
 
 	VDSetThreadExecutionStateW32(ES_CONTINUOUS);
 
 	if (mhwndPanel) {
 		DestroyWindow(mhwndPanel);
-		mhwndPanel = NULL;
+		mhwndPanel = nullptr;
 	}
 
 	if (mhwndStatus) {
 		DestroyWindow(mhwndStatus);
-		mhwndStatus = NULL;
+		mhwndStatus = nullptr;
 	}
 
 	if (mhMenuAuxCapture) {
 		DestroyMenu(mhMenuAuxCapture);
-		mhMenuAuxCapture = NULL;
+		mhMenuAuxCapture = nullptr;
 	}
 
 	if (mhMenuCapture) {
 		DestroyMenu(mhMenuCapture);
-		mhMenuCapture = NULL;
+		mhMenuCapture = nullptr;
 	}
 
-	mhAccelCapture	= NULL;		// no need to destroy resource-based accelerators
-	mpProject		= NULL;
+	mhAccelCapture	= nullptr;		// no need to destroy resource-based accelerators
+	mpProject		= nullptr;
 
 	mUIPeer.Detach();
 
 	VDUIFrame *pFrame = VDUIFrame::GetFrame((HWND)mhwnd);
 	pFrame->Detach();
 
-	InvalidateRect((HWND)mhwnd, NULL, TRUE);
-	mhwnd = NULL;
+	InvalidateRect((HWND)mhwnd, nullptr, TRUE);
+	mhwnd = nullptr;
 }
 
 bool VDCaptureProjectUI::SetDriver(const wchar_t *s) {
@@ -962,7 +918,7 @@ void VDCaptureProjectUI::SetPCMAudioFormat(sint32 sampling_rate, bool is_16bit, 
 
 void VDCaptureProjectUI::SetStatusImmediate(const char *s) {
 	SendMessage(mhwndStatus, SB_SETTEXTA, 0, (LPARAM)s);
-	RedrawWindow(mhwndStatus, NULL, NULL, RDW_INVALIDATE|RDW_UPDATENOW);
+	RedrawWindow(mhwndStatus, nullptr, nullptr, RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
 void VDCaptureProjectUI::SetStatusF(const char *format, ...) {
@@ -1008,7 +964,7 @@ void VDCaptureProjectUI::SetFullScreen(bool fs) {
 		if (IsZoomed((HWND)mhwnd))
 			ShowWindow((HWND)mhwnd, SW_RESTORE);
 		ShowWindow((HWND)mhwnd, SW_MAXIMIZE);
-		SetMenu((HWND)mhwnd, NULL);
+		SetMenu((HWND)mhwnd, nullptr);
 
 		if (mhwndPanel)
 			ShowWindow(mhwndPanel, SW_HIDE);
@@ -1100,7 +1056,7 @@ void VDCaptureProjectUI::LoadLocalSettings() {
 	mbHideOnCapture = key.getBool(g_szHideOnCapture, mbHideOnCapture);
 	mbDisplayLargeTimer = key.getBool(g_szDisplayLargeTimer, mbDisplayLargeTimer);
 
-	if (key.getBool(g_szShowVolumeMeter, mpVumeter != NULL))
+	if (key.getBool(g_szShowVolumeMeter, mpVumeter != nullptr))
 		InitVumeter();
 	else
 		ShutdownVumeter();
@@ -1213,7 +1169,7 @@ void VDCaptureProjectUI::SaveLocalSettings() {
 	key.setBool(g_szMaxPower, mbMaxPower);
 	key.setBool(g_szHideOnCapture, mbHideOnCapture);
 	key.setBool(g_szDisplayLargeTimer, mbDisplayLargeTimer);
-	key.setBool(g_szShowVolumeMeter, mpVumeter != NULL);
+	key.setBool(g_szShowVolumeMeter, mpVumeter != nullptr);
 
 	VDCaptureTimingSetup ts(mpProject->GetTimingSetup());
 
@@ -1394,7 +1350,7 @@ void VDCaptureProjectUI::LoadDeviceSettings() {
 		vdblock<char> buf(len);
 
 		if (devkey.getBinary(g_szAudioCompFormat, buf.data(), buf.size())) {
-			const char *pHint = NULL;
+			const char *pHint{};
 			VDStringA hint;
 
 			if (devkey.getString(g_szAudioCompHint, hint))
@@ -1528,7 +1484,7 @@ void VDCaptureProjectUI::SaveDeviceSettings(uint32 mask) {
 
 	if (mask & kSaveDevAudioDevice) {
 		int idx = mpProject->GetAudioDeviceIndex();
-		const wchar_t *s = NULL;
+		const wchar_t *s{};
 
 		if (idx >= 0)
 			s = mpProject->GetAudioDeviceName(idx);
@@ -1615,7 +1571,7 @@ void VDCaptureProjectUI::SaveDeviceSettings(uint32 mask) {
 		if (idx >= 0)
 			s = mpProject->GetVideoSourceName(idx);
 		else
-			s = NULL;
+			s = nullptr;
 
 		if (s)
 			devkey.setString(g_szCapVideoSource, s);
@@ -1639,7 +1595,7 @@ void VDCaptureProjectUI::SaveDeviceSettings(uint32 mask) {
 		if (idx >= 0)
 			s = mpProject->GetAudioInputName(idx);
 		else
-			s = NULL;
+			s = nullptr;
 
 		if (s)
 			devkey.setString(g_szCapAudioInput, s);
@@ -1745,7 +1701,7 @@ void VDCaptureProjectUI::UpdateDisplayPos() {
 
 	mpProject->SetDisplayRect(rUnfiltered);
 
-	SetWindowPos(mhwndDisplay, NULL, rFiltered.left, rFiltered.top, rFiltered.width(), rFiltered.height(), SWP_NOZORDER|SWP_NOACTIVATE);
+	SetWindowPos(mhwndDisplay, nullptr, rFiltered.left, rFiltered.top, rFiltered.width(), rFiltered.height(), SWP_NOZORDER|SWP_NOACTIVATE);
 }
 
 vdrect32 VDCaptureProjectUI::ComputeDisplayArea() {
@@ -1929,7 +1885,7 @@ bool VDCaptureProjectUI::InitVumeter() {
 	if (mpVumeter)
 		return true;
 
-	mpVumeter = VDCreateUICaptureVumeter();
+	mpVumeter.reset(VDCreateUICaptureVumeter());
 	mpVumeter->SetParent(&mUIPeer);
 	VDUIParameters vumParams;
 	vumParams.SetB(nsVDUI::kUIParam_Sunken, true);
@@ -1948,7 +1904,7 @@ void VDCaptureProjectUI::ShutdownVumeter() {
 
 	if (mpVumeter) {
 		mpVumeter->Destroy();
-		mpVumeter = NULL;
+		mpVumeter.reset();
 	}
 
 	OnSize();
@@ -1958,7 +1914,7 @@ bool VDCaptureProjectUI::InitVideoHistogram() {
 	if (mpVideoHistogram)
 		return true;
 
-	mpVideoHistogram = VDCreateUICaptureVideoHistogram();
+	mpVideoHistogram.reset(VDCreateUICaptureVideoHistogram());
 	mpVideoHistogram->SetParent(&mUIPeer);
 	VDUIParameters vumParams;
 	vumParams.SetB(nsVDUI::kUIParam_Sunken, true);
@@ -1978,7 +1934,7 @@ void VDCaptureProjectUI::ShutdownVideoHistogram() {
 		mpProject->SetVideoHistogramEnabled(false);
 
 		mpVideoHistogram->Destroy();
-		mpVideoHistogram = NULL;
+		mpVideoHistogram.reset();
 
 		UpdateDisplayMode();
 		OnSize();
@@ -1991,7 +1947,7 @@ bool VDCaptureProjectUI::InitTimingGraph() {
 	if (mpGraph)
 		return true;
 
-	mpGraph = VDCreateUICaptureGraph();
+	mpGraph.reset(VDCreateUICaptureGraph());
 	mpGraph->SetParent(&mUIPeer);
 	VDUIParameters vumParams;
 	vumParams.SetB(nsVDUI::kUIParam_Sunken, true);
@@ -2000,18 +1956,18 @@ bool VDCaptureProjectUI::InitTimingGraph() {
 		return false;
 	}
 
-	g_pCaptureProfiler = vdpoly_cast<IVDUICaptureGraph *>(mpGraph)->AsICaptureProfiler();
+	g_pCaptureProfiler = vdpoly_cast<IVDUICaptureGraph *>(mpGraph.get())->AsICaptureProfiler();
 
 	OnSize();
 	return true;
 }
 
 void VDCaptureProjectUI::ShutdownTimingGraph() {
-	g_pCaptureProfiler = NULL;
+	g_pCaptureProfiler = nullptr;
 
 	if (mpGraph) {
 		mpGraph->Destroy();
-		mpGraph = NULL;
+		mpGraph.reset();
 
 		OnSize();
 	}
@@ -2158,7 +2114,7 @@ void VDCaptureProjectUI::UICaptureVideoHistoBegin() {
 
 void VDCaptureProjectUI::UICaptureVideoHisto(const float data[256]) {
 	if (mpVideoHistogram)
-		vdpoly_cast<IVDUICaptureVideoHistogram *>(mpVideoHistogram)->SetHistogram(data);
+		vdpoly_cast<IVDUICaptureVideoHistogram *>(mpVideoHistogram.get())->SetHistogram(data);
 }
 
 void VDCaptureProjectUI::UICaptureVideoHistoEnd() {
@@ -2280,7 +2236,7 @@ bool VDCaptureProjectUI::UICaptureAnalyzeBegin(const VDPixmap& px) {
 	if (mDisplayAccelMode == kDDP_NonInterlaced_TopFirst || mDisplayAccelMode == kDDP_NonInterlaced_BottomFirst)
 		px2 = VDPixmapExtractField(px, mDisplayAccelMode == kDDP_NonInterlaced_BottomFirst);
 
-	if (px2.format && mpDisplay->SetSource(false, px2, NULL, NULL, true, mDisplayAccelMode == kDDP_Top || mDisplayAccelMode == kDDP_Bottom || mDisplayAccelMode == kDDP_Progressive)) {
+	if (px2.format && mpDisplay->SetSource(false, px2, nullptr, 0, true, mDisplayAccelMode == kDDP_Top || mDisplayAccelMode == kDDP_Bottom || mDisplayAccelMode == kDDP_Progressive)) {
 		success = true;
 		mbDisplayAccelActive = true;
 	} else {
@@ -2453,17 +2409,17 @@ void VDCaptureProjectUI::UICaptureStart(bool test) {
 	if (mbMaxPower) {
 		GUID* pActiveScheme = 0;
 
-		if (PowerGetActiveScheme(NULL, &pActiveScheme)==0) {
+		if (PowerGetActiveScheme(nullptr, &pActiveScheme)==0) {
 			DWORD min, max;
-			PowerReadACValueIndex(NULL, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, &min);
-			PowerReadACValueIndex(NULL, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MAXIMUM, &max);
+			PowerReadACValueIndex(nullptr, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, &min);
+			PowerReadACValueIndex(nullptr, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MAXIMUM, &max);
 			if (min<max) {
 				GUID* pNewScheme = 0;
-				if (PowerDuplicateScheme(NULL, pActiveScheme, &pNewScheme)==0) {
+				if (PowerDuplicateScheme(nullptr, pActiveScheme, &pNewScheme)==0) {
 					VDStringW name(L"VirtualDub2 Capture");
-					PowerWriteFriendlyName(NULL, pNewScheme, NULL, NULL, (UCHAR*)name.c_str(), (name.length()+1)*2);
-					PowerWriteACValueIndex(NULL, pNewScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, max);
-					PowerSetActiveScheme(NULL, pNewScheme);
+					PowerWriteFriendlyName(nullptr, pNewScheme, nullptr, nullptr, (UCHAR*)name.c_str(), (name.length()+1)*2);
+					PowerWriteACValueIndex(nullptr, pNewScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, max);
+					PowerSetActiveScheme(nullptr, pNewScheme);
 					mpPrevPower = pActiveScheme;
 					mpNewPower = pNewScheme;
 					pActiveScheme = 0;
@@ -2505,8 +2461,8 @@ void VDCaptureProjectUI::UICaptureEnd(bool success) {
 		VDLog(kVDLogInfo, VDStringW(L"Capture was completed successfully."));
 
 	if (mpPrevPower) {
-		PowerSetActiveScheme(NULL, mpPrevPower);
-		PowerDeleteScheme(NULL, mpNewPower);
+		PowerSetActiveScheme(nullptr, mpPrevPower);
+		PowerDeleteScheme(nullptr, mpNewPower);
 		LocalFree(mpPrevPower);
 		LocalFree(mpNewPower);
 		mpPrevPower = 0;
@@ -2525,9 +2481,9 @@ void VDCaptureProjectUI::UICaptureEnd(bool success) {
 
 	if (mhClockFont) {
 		DeleteObject(mhClockFont);
-		mhClockFont = NULL;
+		mhClockFont = nullptr;
 
-		InvalidateRect((HWND)mhwnd, NULL, TRUE);
+		InvalidateRect((HWND)mhwnd, nullptr, TRUE);
 	}
 
 	if (success) {
@@ -2537,7 +2493,7 @@ void VDCaptureProjectUI::UICaptureEnd(bool success) {
 		}
 
 		if (mpProject->IsLogEnabled() && mpProject->IsLogAvailable()) {
-			const VDStringW logfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Save timing log", L"Comma-separated values (*.csv)\0*.csv\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"csv" : NULL));
+			const VDStringW logfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Save timing log", L"Comma-separated values (*.csv)\0*.csv\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"csv" : nullptr));
 
 			if (!logfile.empty()) {
 				try {
@@ -2566,7 +2522,7 @@ LRESULT VDCaptureProjectUI::StatusWndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 				RECT r2;
 				if (SendMessage(hwnd, SB_GETRECT, i+1, (LPARAM)&r2)) {
 					if (PtInRect(&r2, pt)) {
-						MapWindowPoints(hwnd, NULL, (LPPOINT)&r2, 2);
+						MapWindowPoints(hwnd, nullptr, (LPPOINT)&r2, 2);
 
 						unsigned len = LOWORD(SendMessage(hwnd, SB_GETTEXTLENGTHA, i+1, 0));
 
@@ -2588,7 +2544,7 @@ LRESULT VDCaptureProjectUI::StatusWndProc(HWND hwnd, UINT msg, WPARAM wParam, LP
 									GetSubMenu(mhMenuAuxCapture, i),
 									TPM_BOTTOMALIGN | TPM_RIGHTALIGN | TPM_LEFTBUTTON,
 									r2.right, r2.top,
-									0, (HWND)mhwnd, NULL);
+									0, (HWND)mhwnd, nullptr);
 						}
 
 						SendMessage(hwnd, SB_SETTEXTA, (i+1) | SBT_POPOUT, (LPARAM)str.data());
@@ -2648,7 +2604,7 @@ LRESULT VDCaptureProjectUI::CommonWndProc(UINT msg, WPARAM wParam, LPARAM lParam
 						mLastMouseMovePoint = pt;
 						mLastMouseMoveTime = currentTime;
 					} else if (currentTime - mLastMouseMoveTime > 1000) {
-						SetCursor(NULL);
+						SetCursor(nullptr);
 					}
 				}
 			}
@@ -2664,7 +2620,7 @@ LRESULT VDCaptureProjectUI::CommonWndProc(UINT msg, WPARAM wParam, LPARAM lParam
 
 		case WM_SETCURSOR:
 			if (IsFullScreen()) {
-				SetCursor(LoadCursor(NULL, IDC_ARROW));
+				SetCursor(LoadCursor(nullptr, IDC_ARROW));
 				return TRUE;
 			}
 			break;
@@ -3000,7 +2956,7 @@ void VDCaptureProjectUI::OnSize() {
 
 	if (!mbFullScreen && mbStatusBar) {
 		hdwp = guiDeferWindowPos(hdwp, mhwndStatus,
-					NULL,
+					nullptr,
 					rClient.left,
 					y_bottom - statusHt,
 					rClient.right-rClient.left,
@@ -3026,7 +2982,7 @@ void VDCaptureProjectUI::OnSize() {
 
 	if (!mbFullScreen && mbInfoPanel) {
 		hdwp = guiDeferWindowPos(hdwp, mhwndPanel,
-					NULL,
+					nullptr,
 					rClient.right - (rPanel.right - rPanel.left),
 					rClient.top,
 					rPanel.right - rPanel.left,
@@ -3058,7 +3014,7 @@ void VDCaptureProjectUI::OnSize() {
 		SendMessage(mhwndStatus, SB_SETPARTS, nParts, (LPARAM)aWidth);
 	}
 
-	InvalidateRect((HWND)mhwnd, NULL, FALSE);
+	InvalidateRect((HWND)mhwnd, nullptr, FALSE);
 }
 
 bool VDCaptureProjectUI::OnParentNotify(WPARAM wParam, LPARAM lParam) {
@@ -3069,7 +3025,7 @@ bool VDCaptureProjectUI::OnParentNotify(WPARAM wParam, LPARAM lParam) {
 	RECT r;
 
 	GetWindowRect(mhwndStatus, &r);
-	MapWindowPoints(NULL, (HWND)mhwnd, (LPPOINT)&r, 2);
+	MapWindowPoints(nullptr, (HWND)mhwnd, (LPPOINT)&r, 2);
 	if (PtInRect(&r, pt))
 		return true;		// always eat status bar messages
 
@@ -3218,13 +3174,13 @@ bool VDCaptureProjectUI::OnCaptureSafeCommand(UINT id) {
 		mbStatusBar = !mbStatusBar;
 		OnSize();
 		ShowWindow(GetDlgItem((HWND)mhwnd, IDC_STATUS_WINDOW), !mbFullScreen && mbStatusBar ? SW_SHOW : SW_HIDE);
-		InvalidateRect((HWND)mhwnd, NULL, TRUE);
+		InvalidateRect((HWND)mhwnd, nullptr, TRUE);
 		break;
 	case ID_CAPTURE_INFOPANEL:
 		mbInfoPanel = !mbInfoPanel;
 		OnSize();
 		ShowWindow(GetDlgItem((HWND)mhwnd, IDC_CAPTURE_PANEL), !mbFullScreen && mbInfoPanel ? SW_SHOW : SW_HIDE);
-		InvalidateRect((HWND)mhwnd, NULL, TRUE);
+		InvalidateRect((HWND)mhwnd, nullptr, TRUE);
 		break;
 	case ID_CAPTURE_AUTOINCREMENT:
 		mbAutoIncrementAfterCapture = !mbAutoIncrementAfterCapture;
@@ -3265,7 +3221,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 
 				int optvals[1]={false};
 
-				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Set Capture File", L"Audio-Video Interleave (*.avi)\0*.avi\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"avi" : NULL, opts, optvals));
+				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Set Capture File", L"Audio-Video Interleave (*.avi)\0*.avi\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"avi" : nullptr, opts, optvals));
 
 				if (!capfile.empty()) {
 					mpProject->SetCaptureFile(capfile.c_str(), false);
@@ -3282,7 +3238,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 		case ID_FILE_SETSTRIPINGSYSTEM:
 			SuspendDisplay();
 			{
-				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Select Striping System for Internal Capture", L"AVI Stripe System (*.stripe)\0*.stripe\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"stripe" : NULL));
+				const VDStringW capfile(VDGetSaveFileName(VDFSPECKEY_CAPTURENAME, mhwnd, L"Select Striping System for Internal Capture", L"AVI Stripe System (*.stripe)\0*.stripe\0All Files (*.*)\0*.*\0", VDPreferencesGetAttachExtension() ? L"stripe" : nullptr));
 
 				if (!capfile.empty()) {
 					try {
@@ -3427,8 +3383,8 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 				vdstructex<VDWaveFormat> wfex;
 				vdstructex<VDWaveFormat> wfexSrc;
 				vdstructex<VDWaveFormat> wfexSrc2;
-				VDWaveFormat *pwfexSrc = NULL;
-				VDWaveFormat *pwfexOld = NULL;
+				VDWaveFormat *pwfexSrc{};
+				VDWaveFormat *pwfexOld{};
 				VDStringA hint;
 				vdblock<char> config;
 
@@ -3459,7 +3415,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 			}
 			break;
 		case ID_AUDIO_WINMIXER:
-			ShellExecuteW((HWND)mhwnd, NULL, L"rundll32.exe", L"shell32.dll,Control_RunDLL mmsys.cpl,,1", NULL, SW_SHOWNORMAL);
+			ShellExecuteW((HWND)mhwnd, nullptr, L"rundll32.exe", L"shell32.dll,Control_RunDLL mmsys.cpl,,1", nullptr, SW_SHOWNORMAL);
 			break;
 		case ID_VIDEO_NODISPLAY:
 			SetDisplayMode(kDisplayNone);
@@ -3562,7 +3518,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 				if (mpProject->GetVideoFormat(bih))
 					ChooseCaptureCompressor((HWND)mhwnd, &g_compression, (BITMAPINFOHEADER *)bih.data());
 				else
-					ChooseCaptureCompressor((HWND)mhwnd, &g_compression, NULL);
+					ChooseCaptureCompressor((HWND)mhwnd, &g_compression, nullptr);
 			}
 			ResumeDisplay();
 			break;
@@ -3577,7 +3533,7 @@ bool VDCaptureProjectUI::OnCommand(UINT id) {
 					int format = VDBitmapFormatToPixmapFormat(*bih);
 					VDShowDialogVideoFilters(mhwnd, bih->biWidth, bih->biHeight, format, VDFraction(10000000, mpProject->GetFrameTime()), 100, -1);
 				} else {
-					VDShowDialogVideoFilters(mhwnd, NULL, -1);
+					VDShowDialogVideoFilters(mhwnd, nullptr, -1);
 				}
 			}
 
@@ -3869,7 +3825,7 @@ void VDCaptureProjectUI::OnUpdateVumeter() {
 	mpProject->GetAudioMask(param);
 	int mask = param.mask;
 	if (mpVumeter) {
-		IVDUICaptureVumeter *pVumeter = vdpoly_cast<IVDUICaptureVumeter *>(mpVumeter);
+		IVDUICaptureVumeter *pVumeter = vdpoly_cast<IVDUICaptureVumeter *>(mpVumeter.get());
 
 		pVumeter->SetPeakLevels(peak_count, peak, mask);
 	}
@@ -4194,8 +4150,8 @@ void VDCaptureProjectUI::RebuildPanel() {
 			const wchar_t *itemLabel = VDLoadString(0, kVDST_CaptureUI, kVDMBase_CapInfoLabels + infoid);
 			int h = extraBig ? rSpacing.bottom*3 : rSpacing.bottom;
 
-			hwndLabel = CreateWindowW(L"STATIC", itemLabel, WS_CHILD|WS_VISIBLE|SS_CENTERIMAGE|SS_NOPREFIX|SS_LEFT, xpos, y, xwidth, h, mhwndPanel, (HMENU)-1, g_hInst, NULL);
-			if (!filterLabel) hwndChild = CreateWindowW(L"STATIC", L"", WS_CHILD|WS_VISIBLE|SS_CENTERIMAGE|SS_NOPREFIX|SS_RIGHT, xpos, y, xwidth, h, mhwndPanel, (HMENU)-1, g_hInst, NULL);
+			hwndLabel = CreateWindowW(L"STATIC", itemLabel, WS_CHILD|WS_VISIBLE|SS_CENTERIMAGE|SS_NOPREFIX|SS_LEFT, xpos, y, xwidth, h, mhwndPanel, (HMENU)-1, g_hInst, nullptr);
+			if (!filterLabel) hwndChild = CreateWindowW(L"STATIC", L"", WS_CHILD|WS_VISIBLE|SS_CENTERIMAGE|SS_NOPREFIX|SS_RIGHT, xpos, y, xwidth, h, mhwndPanel, (HMENU)-1, g_hInst, nullptr);
 
 			if (hwndLabel) {
 				if (extraBig) {
@@ -4222,8 +4178,8 @@ void VDCaptureProjectUI::RebuildPanel() {
 
 					if (success) {
 						int offset = sz.cx + 2;
-						SetWindowPos(hwndLabel, NULL, 0, 0, offset, rSpacing.bottom, SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);
-						SetWindowPos(hwndChild, NULL, xpos + offset, y, xwidth - offset, rSpacing.bottom, SWP_NOZORDER|SWP_NOACTIVATE);
+						SetWindowPos(hwndLabel, nullptr, 0, 0, offset, rSpacing.bottom, SWP_NOMOVE|SWP_NOZORDER|SWP_NOACTIVATE);
+						SetWindowPos(hwndChild, nullptr, xpos + offset, y, xwidth - offset, rSpacing.bottom, SWP_NOZORDER|SWP_NOACTIVATE);
 					}
 				}
 
@@ -4248,7 +4204,7 @@ void VDCaptureProjectUI::RebuildPanel() {
 			HWND hwndGroup;
 			const wchar_t *groupLabel = VDLoadString(0, kVDST_CaptureUI, kVDMBase_CapInfoTypeLabels + type);
 
-			hwndGroup = CreateWindowW(L"BUTTON", groupLabel, WS_CHILD|WS_VISIBLE|BS_GROUPBOX, x1, groupY, x2-x1, y - groupY, mhwndPanel, (HMENU)-1, g_hInst, NULL);
+			hwndGroup = CreateWindowW(L"BUTTON", groupLabel, WS_CHILD|WS_VISIBLE|BS_GROUPBOX, x1, groupY, x2-x1, y - groupY, mhwndPanel, (HMENU)-1, g_hInst, nullptr);
 
 			if (hwndGroup) {
 				if (type==kVDCaptureInfoType_Flag)
@@ -4359,10 +4315,10 @@ void VDCaptureProjectUI::UpdatePanel(VDCaptureStatus& status) {
 			case kVDCaptureInfo_CPUPower:
 				{
 					GUID* pActiveScheme;
-					if (PowerGetActiveScheme(NULL, &pActiveScheme)==0) {
+					if (PowerGetActiveScheme(nullptr, &pActiveScheme)==0) {
 						DWORD min, max;
-						PowerReadACValueIndex(NULL, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, &min);
-						PowerReadACValueIndex(NULL, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MAXIMUM, &max);
+						PowerReadACValueIndex(nullptr, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MINIMUM, &min);
+						PowerReadACValueIndex(nullptr, pActiveScheme, &GUID_PROCESSOR_SETTINGS_SUBGROUP, &GUID_PROCESSOR_THROTTLE_MAXIMUM, &max);
 						LocalFree(pActiveScheme);
 						if (min==100 && max==100)
 							swprintf(buf, std::size(buf), L"100%%");
@@ -4786,7 +4742,7 @@ static INT_PTR CALLBACK CaptureCustomVidSizeDlgProc(HWND hdlg, UINT msg, WPARAM 
 				pbih->biClrImportant	= 0;
 
 				if (!pProject->SetVideoFormat(*pbih, pbih.size())) {
-					MessageBoxA(NULL, "The capture device does not support the selected video format.", g_szError, MB_OK|MB_ICONEXCLAMATION);
+					MessageBoxA(nullptr, "The capture device does not support the selected video format.", g_szError, MB_OK|MB_ICONEXCLAMATION);
 					return TRUE;
 				}
 			} while(false);

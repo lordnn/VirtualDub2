@@ -703,7 +703,7 @@ static void JobAddClose(JobScriptOutput& output) {
 }
 
 static void JobCreateEntry(JobScriptOutput& output, JobRequest& req) {
-	vdautoptr<VDJob> vdj(new VDJob);
+	std::unique_ptr<VDJob> vdj{ new VDJob };
 	vdj->SetInputFile(req.fileInput.c_str());
 
 	if (!req.fileOutput.empty())
@@ -716,7 +716,7 @@ static void JobCreateEntry(JobScriptOutput& output, JobRequest& req) {
 
 	const JobScriptOutput::Script& script = output.getscript();
 	vdj->SetScript(script.data(), script.size(), -1, true);
-	g_VDJobQueue.Add(vdj, false);
+	g_VDJobQueue.Add(vdj.get(), false);
 	vdj.release();
 }
 

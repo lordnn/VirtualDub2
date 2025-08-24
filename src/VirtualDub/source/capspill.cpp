@@ -99,7 +99,7 @@ CapSpillDrive *CapSpillPickDrive(bool fAudio) {
 
 	CapSpillDrive *pcsd = g_spillDrives.AtHead();
 	CapSpillDrive *pcsd_next;
-	CapSpillDrive *pcsd_best = NULL;
+	CapSpillDrive *pcsd_best{};
 	__int64 i64Free, i64FreeBest = 0;
 
 	while(pcsd_next = pcsd->NextFromHead()) {
@@ -137,7 +137,7 @@ CapSpillDrive *CapSpillFindDrive(const wchar_t *path) {
 		pcsd = pcsd_next;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 void CapSpillSaveToRegistry() {
@@ -379,8 +379,8 @@ INT_PTR CALLBACK CaptureSpillDlgProc(HWND hdlg, UINT msg, WPARAM wParam, LPARAM 
 ///////////////////////////////////////////////////////////////////////////
 
 static HWND g_hwndBox;
-static HWND g_hwndEdit=NULL;
-static HWND g_hwndSpin=NULL;
+static HWND g_hwndEdit{};
+static HWND g_hwndSpin{};
 static CapSpillDrive *g_csdPtr;
 static int g_csdItem;
 static int g_index;
@@ -400,7 +400,7 @@ int CALLBACK LVSorter(LPARAM lp1, LPARAM lp2, LPARAM lp) {
 static void LVDestroyEdit(bool write, bool sort) {
 	if (g_hwndSpin) {
 		DestroyWindow(g_hwndSpin);
-		g_hwndSpin = NULL;
+		g_hwndSpin = nullptr;
 	}
 
 	if (g_hwndEdit) {
@@ -423,7 +423,7 @@ static void LVDestroyEdit(bool write, bool sort) {
 			}
 		}
 		DestroyWindow(g_hwndEdit);
-		g_hwndEdit = NULL;
+		g_hwndEdit = nullptr;
 
 		if (sort) {
 			SendMessage(g_hwndBox, LVM_REDRAWITEMS, g_index, g_index);
@@ -499,13 +499,13 @@ static void LVBeginEdit(HWND hwndLV, int index, int subitem) {
 
 	g_hwndBox = hwndLV;
 	g_hwndEdit = CreateWindowW(L"EDIT",
-			NULL,
+			nullptr,
 			WS_VISIBLE|WS_CHILD|WS_BORDER | ES_WANTRETURN|ES_AUTOHSCROLL,
 			w2-w - 1,
 			r.top - 1,
 			w + 2,
 			r.bottom-r.top + 2,
-			hwndLV, (HMENU)1, g_hInst, NULL);
+			hwndLV, (HMENU)1, g_hInst, nullptr);
 
 	if (g_hwndEdit) {
 		LVITEM lvi;

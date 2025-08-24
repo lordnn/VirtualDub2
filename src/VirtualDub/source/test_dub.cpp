@@ -66,7 +66,7 @@ void VDTestVideoFilters() {
 		for(VDPosition i=0; i<len1; i += 240)
 			fs.addRange(i, std::min<VDPosition>(len1-i, 120), false, 0);
 
-		vdautoptr<VDAVIOutputFileSystem> os(new VDAVIOutputFileSystem);
+		std::unique_ptr<VDAVIOutputFileSystem> os{ new VDAVIOutputFileSystem };
 		os->SetFilename(L"e:\\test\\test.avi");
 		os->SetBuffer(1048576);
 

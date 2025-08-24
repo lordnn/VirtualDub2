@@ -30,7 +30,7 @@ void VDBenchmarkResampler(VDGUIHandle h) {
 	CreateTextPixmap(src);
 
 	uint64 results[IVDPixmapResampler::kFilterCount];
-	vdautoptr<IVDPixmapResampler> resampler(VDCreatePixmapResampler());
+	std::unique_ptr<IVDPixmapResampler> resampler{ VDCreatePixmapResampler() };
 
 	for(unsigned i=0; i<IVDPixmapResampler::kFilterCount; ++i) {
 		IVDPixmapResampler::FilterMode mode = (IVDPixmapResampler::FilterMode)i;

@@ -533,8 +533,6 @@ static void strgetarg2(VDStringA& str, const char *s) {
 }
 
 void VDJobQueue::ListLoad(const wchar_t *fileName, bool merge) {
-	vdautoptr<VDJob> job;
-
 	// Try to create VirtualDub.jobs in the same directory as VirtualDub.
 
 	bool usingGlobalFile = false;
@@ -564,7 +562,7 @@ void VDJobQueue::LoadProject(const wchar_t *fileName) {
 
 bool VDJobQueue::Load(IVDStream *stream, bool merge) {
 	JobQueue newJobs;
-	vdautoptr<VDJob> job;
+	std::unique_ptr<VDJob> job;
 
 	bool modified = false;
 	try {
@@ -616,7 +614,7 @@ bool VDJobQueue::Load(IVDStream *stream, bool merge) {
 					newSignature = sig;
 					newRevision = revision;
 				} else if (!_stricmp(s, "job")) {
-					job = new_nothrow VDJob;
+					job.reset(new_nothrow VDJob);
 					if (!job) throw MyError("out of memory");
 
 					job->mpJobQueue			= this;
@@ -750,7 +748,7 @@ bool VDJobQueue::Load(IVDStream *stream, bool merge) {
 						}
 					}
 
-					newJobs.push_back(job);
+					newJobs.push_back(job.get());
 					job.release();
 
 				} else if (!_stricmp(s, "logent")) {

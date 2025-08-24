@@ -48,9 +48,9 @@ public:
 
 	VDFilterFrameBuffer();
 
-	int AddRef();
-	int Release();
-	void *AsInterface(uint32 iid);
+	int AddRef() override;
+	int Release() override;
+	void *AsInterface(uint32 iid) override;
 
 	virtual void Shutdown();
 
@@ -70,7 +70,7 @@ public:
 	void EvictFromCaches();
 
 protected:
-	virtual ~VDFilterFrameBuffer();
+	~VDFilterFrameBuffer() override;
 
 	IVDFilterFrameAllocator *mpAllocator;
 

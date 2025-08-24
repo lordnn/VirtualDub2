@@ -1263,15 +1263,15 @@ InputFileOptions *VDInputFileTest::createOptions(const void *buf, uint32 len) {
 }
 
 InputFileOptions *VDInputFileTest::promptForOptions(VDGUIHandle hwnd) {
-	vdautoptr<VDInputFileTestOptions> testopts(new_nothrow VDInputFileTestOptions);
+	std::unique_ptr<VDInputFileTestOptions> testopts{ new_nothrow VDInputFileTestOptions };
 
 	if (!testopts)
-		return NULL;
+		return nullptr;
 
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer((VDGUIHandle)hwnd));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer((VDGUIHandle)hwnd) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(3000, peer);
-	VDInputFileTestOptionsDialog dlg(*testopts);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(3000, peer.get());
+	VDInputFileTestOptionsDialog dlg(*testopts.get());
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);
 

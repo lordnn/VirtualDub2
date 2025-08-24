@@ -62,7 +62,7 @@ void VDTestVideoFilters() {
 
 	VDPosition len = pSource->asStream()->getLength();
 
-	vdautoptr<IVDVideoFilterSystem> pfiltsys(VDCreateVideoFilterSystem());
+	std::unique_ptr<IVDVideoFilterSystem> pfiltsys{ VDCreateVideoFilterSystem() };
 	VDScheduler scheduler;
 
 	class SchedulerThread : public VDThread {

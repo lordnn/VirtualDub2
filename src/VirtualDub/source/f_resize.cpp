@@ -817,40 +817,40 @@ void VDVideoFilterResize::StartAccel(IVDXAContext *vdxa) {
 
 	vdfastvector<uint32> filt(std::max<uint32>(mVDXADestCroppedW, mVDXADestCroppedH) * 3, 0);
 
-	vdautoptr<IVDResamplerFilter> horizFilter;
-	vdautoptr<IVDResamplerFilter> vertFilter;
+	std::unique_ptr<IVDResamplerFilter> horizFilter;
+	std::unique_ptr<IVDResamplerFilter> vertFilter;
 
 	const double horiz_twofc = 1.0f / mVDXAHorizFactor;
 	const double vert_twofc = 1.0f / mVDXAVertFactor;
 
 	switch(mConfig.mFilterMode) {
 		case VDResizeFilterData::FILTER_BILINEAR:
-			horizFilter = new VDResamplerLinearFilter(horiz_twofc);
-			vertFilter = new VDResamplerLinearFilter(vert_twofc);
+			horizFilter.reset(new VDResamplerLinearFilter(horiz_twofc));
+			vertFilter.reset(new VDResamplerLinearFilter(vert_twofc));
 			break;
 		case VDResizeFilterData::FILTER_BICUBIC:
-			horizFilter = new VDResamplerCubicFilter(horiz_twofc, -0.75f);
-			vertFilter = new VDResamplerCubicFilter(vert_twofc, -0.75f);
+			horizFilter.reset(new VDResamplerCubicFilter(horiz_twofc, -0.75f));
+			vertFilter.reset(new VDResamplerCubicFilter(vert_twofc, -0.75f));
 			break;
 		case VDResizeFilterData::FILTER_TABLEBILINEAR:
-			horizFilter = new VDResamplerLinearFilter(horiz_twofc);
-			vertFilter = new VDResamplerLinearFilter(vert_twofc);
+			horizFilter.reset(new VDResamplerLinearFilter(horiz_twofc));
+			vertFilter.reset(new VDResamplerLinearFilter(vert_twofc));
 			break;
 		case VDResizeFilterData::FILTER_TABLEBICUBIC060:
-			horizFilter = new VDResamplerCubicFilter(horiz_twofc, -0.60f);
-			vertFilter = new VDResamplerCubicFilter(vert_twofc, -0.60f);
+			horizFilter.reset(new VDResamplerCubicFilter(horiz_twofc, -0.60f));
+			vertFilter.reset(new VDResamplerCubicFilter(vert_twofc, -0.60f));
 			break;
 		case VDResizeFilterData::FILTER_TABLEBICUBIC075:
-			horizFilter = new VDResamplerCubicFilter(horiz_twofc, -0.75f);
-			vertFilter = new VDResamplerCubicFilter(vert_twofc, -0.75f);
+			horizFilter.reset(new VDResamplerCubicFilter(horiz_twofc, -0.75f));
+			vertFilter.reset(new VDResamplerCubicFilter(vert_twofc, -0.75f));
 			break;
 		case VDResizeFilterData::FILTER_TABLEBICUBIC100:
-			horizFilter = new VDResamplerCubicFilter(horiz_twofc, -1.0f);
-			vertFilter = new VDResamplerCubicFilter(vert_twofc, -1.0f);
+			horizFilter.reset(new VDResamplerCubicFilter(horiz_twofc, -1.0f));
+			vertFilter.reset(new VDResamplerCubicFilter(vert_twofc, -1.0f));
 			break;
 		case VDResizeFilterData::FILTER_LANCZOS3:
-			horizFilter = new VDResamplerLanczos3Filter(horiz_twofc);
-			vertFilter = new VDResamplerLanczos3Filter(vert_twofc);
+			horizFilter.reset(new VDResamplerLanczos3Filter(horiz_twofc));
+			vertFilter.reset(new VDResamplerLanczos3Filter(vert_twofc));
 			break;
 	}
 
@@ -858,11 +858,11 @@ void VDVideoFilterResize::StartAccel(IVDXAContext *vdxa) {
 	initData.mpData = filt.data();
 	initData.mPitch = sizeof(uint32) * mVDXADestCroppedW;
 
-	CreateFilterTexture(filt.data(), initData.mPitch, mConfig.mDstRect.left, (float)mVDXADestRect.left, mVDXADestCroppedW, dstw, fa->src.w, mVDXAHorizTaps, *horizFilter);
+	CreateFilterTexture(filt.data(), initData.mPitch, mConfig.mDstRect.left, (float)mVDXADestRect.left, mVDXADestCroppedW, dstw, fa->src.w, mVDXAHorizTaps, *horizFilter.get());
 	mVDXATex_HorizFilt = vdxa->CreateTexture2D(mVDXADestCroppedW, 3, 1, kVDXAF_A8R8G8B8, false, &initData);
 
 	initData.mPitch = sizeof(uint32) * mVDXADestCroppedH;
-	CreateFilterTexture(filt.data(), initData.mPitch, mConfig.mDstRect.top, (float)mVDXADestRect.top, mVDXADestCroppedH, dsth, fa->src.h, mVDXAVertTaps, *vertFilter);
+	CreateFilterTexture(filt.data(), initData.mPitch, mConfig.mDstRect.top, (float)mVDXADestRect.top, mVDXADestCroppedH, dsth, fa->src.h, mVDXAVertTaps, *vertFilter.get());
 	mVDXATex_VertFilt = vdxa->CreateTexture2D(mVDXADestCroppedH, 3, 1, kVDXAF_A8R8G8B8, false, &initData);
 
 	mVDXAFP_2Tap = vdxa->CreateFragmentProgram(kVDXAPF_D3D9ByteCodePS20, kVDFilterResizeFP_2tap, sizeof kVDFilterResizeFP_2tap);

@@ -29,7 +29,7 @@ public:
 	IVDFilterFrameSource::RunResult RunProcess();
 
 	VDFilterFrameConverter* source;
-	vdautoptr<IVDPixmapBlitter> mpBlitter;
+	std::unique_ptr<IVDPixmapBlitter> mpBlitter;
 	vdrefptr<VDFilterFrameRequest> mpRequest;
 
 	VDPixmap	mPixmapSrc;
@@ -78,7 +78,7 @@ int VDFilterFrameConverter::AllocateNodes(int threads) {
 
 	{for(int i=0; i<threads; i++){
 		node[i].source = this;
-		node[i].mpBlitter = VDPixmapCreateBlitter(mLayout, mSourceLayout, extraDst);
+		node[i].mpBlitter.reset(VDPixmapCreateBlitter(mLayout, mSourceLayout, extraDst));
 	}}
 
 	delete extraDst;

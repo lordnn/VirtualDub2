@@ -1473,9 +1473,9 @@ void VDProjectUI::SaveAnimatedGIFAsk() {
 	if (!inputVideo)
 		throw MyError("No input video stream to process.");
 
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(mhwnd));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(mhwnd) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(3001, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(3001, peer.get());
 	VDOutputFileAnimatedGIFOptionsDialog dlg;
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);
@@ -1494,9 +1494,9 @@ void VDProjectUI::SaveAnimatedPNGAsk() {
 	if (!inputVideo)
 		throw MyError("No input video stream to process.");
 
-	vdautoptr<IVDUIWindow> peer(VDUICreatePeer(mhwnd));
+	std::unique_ptr<IVDUIWindow> peer{ VDUICreatePeer(mhwnd) };
 
-	IVDUIWindow *pWin = VDCreateDialogFromResource(3002, peer);
+	IVDUIWindow *pWin = VDCreateDialogFromResource(3002, peer.get());
 	VDOutputFileAnimatedPNGOptionsDialog dlg;
 
 	IVDUIBase *pBase = vdpoly_cast<IVDUIBase *>(pWin);
