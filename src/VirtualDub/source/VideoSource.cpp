@@ -1411,7 +1411,7 @@ bool VideoSourceAVI::_construct(int streamIndex) {
 		}
 
 		if (mjpeg_mode) {
-			if (!(mjpeg_splits = new long[(size_t)(mSampleLast - mSampleFirst)]))
+			if (!(mjpeg_splits = new_nothrow long[(size_t)(mSampleLast - mSampleFirst)]))
 				throw MyMemoryError();
 
 			for(int i=0; i<mSampleLast-mSampleFirst; i++)
@@ -1478,7 +1478,7 @@ void VideoSourceAVI::Reinit() {
 		if (nNewFrames > (size_t)-1)
 			throw MyMemoryError();
 
-		long *pNewSplits = new long[(size_t)nNewFrames];
+		long *pNewSplits = new_nothrow long[(size_t)nNewFrames];
 
 		if (!pNewSplits)
 			throw MyMemoryError();
@@ -1521,9 +1521,7 @@ void VideoSourceAVI::redoKeyFlags(vdfastvector<uint32>& newFlags) {
 	long lMaxFrame=0;
 	uint32 lActualBytes, lActualSamples;
 	int err;
-	char* lpInputBuffer = nullptr;
 	bool fStreamBegun = false;
-	long *pFrameSums;
 
 	uint32 maskWords = (uint32)((mSampleLast-mSampleFirst+31) >> 5);
 	newFlags.resize(maskWords, 0);
@@ -1547,14 +1545,13 @@ void VideoSourceAVI::redoKeyFlags(vdfastvector<uint32>& newFlags) {
 				if (!setDecompressedFormat(8))
 					throw MyError("Video decompressor is incapable of decompressing to an RGB format.");
 
-	lpInputBuffer = new(std::nothrow) char[((lMaxFrame + 7) & -8) + lMaxFrame];
+	std::unique_ptr<char[]> lpInputBuffer(new(std::nothrow) char[((lMaxFrame + 7) & -8) + lMaxFrame]);
 	if (!lpInputBuffer) {
 		throw MyMemoryError();
 	}
 
-	pFrameSums = new(std::nothrow) long[(size_t)(mSampleLast - mSampleFirst)];
+	std::unique_ptr<long[]> pFrameSums(new(std::nothrow) long[(size_t)(mSampleLast - mSampleFirst)]);
 	if (!pFrameSums) {
-		delete[] lpInputBuffer;
 		throw MyMemoryError();
 	}
 
@@ -1576,12 +1573,12 @@ void VideoSourceAVI::redoKeyFlags(vdfastvector<uint32>& newFlags) {
 
 			_RPT1(0,"Rekeying frame %ld\n", lSample);
 
-			err = _read(lSample, 1, lpInputBuffer, lMaxFrame, &lActualBytes, &lActualSamples);
+			err = _read(lSample, 1, lpInputBuffer.get(), lMaxFrame, &lActualBytes, &lActualSamples);
 			if (err != IVDStreamSource::kOK)
 				goto rekey_error;
 
 
-			streamGetFrame(lpInputBuffer, lActualBytes, false, lSample, lSample);
+			streamGetFrame(lpInputBuffer.get(), lActualBytes, false, lSample, lSample);
 
 			ptr = (unsigned char *)mpFrameBuffer.get();
 			y = lHeight;
@@ -1618,11 +1615,11 @@ rekey_error:
 			const long lHeight	= abs(mpTargetFormatHeader->biHeight);
 			unsigned char *ptr;
 
-			err = _read(lSample, 1, lpInputBuffer, lMaxFrame, &lActualBytes, &lActualSamples);
+			err = _read(lSample, 1, lpInputBuffer.get(), lMaxFrame, &lActualBytes, &lActualSamples);
 			if (err != IVDStreamSource::kOK)
 				goto rekey_error2;
 
-			streamGetFrame(lpInputBuffer, lActualBytes, false, lSample, lSample);
+			streamGetFrame(lpInputBuffer.get(), lActualBytes, false, lSample, lSample);
 
 			ptr = (unsigned char *)mpFrameBuffer.get();
 			y = lHeight;
@@ -1653,13 +1650,9 @@ rekey_error2:
 		streamEnd();
 	} catch(...) {
 		if (fStreamBegun) streamEnd();
-		delete[] lpInputBuffer;
-		delete[] pFrameSums;
 		throw;
 	}
 
-	delete[] lpInputBuffer;
-	delete[] pFrameSums;
 }
 
 int VideoSourceAVI::_read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) {

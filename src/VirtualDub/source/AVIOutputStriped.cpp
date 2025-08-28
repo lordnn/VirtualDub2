@@ -102,39 +102,26 @@ public:
 AVIOutputStriped::AVIOutputStriped(AVIStripeSystem *stripesys) {
 	this->stripesys		= stripesys;
 
-	stripe_files		= NULL;
-	stripe_data			= NULL;
-
 	audio_index_cache_point		= 0;
 	video_index_cache_point		= 0;
 
 	f1GbMode = false;
 }
 
-AVIOutputStriped::~AVIOutputStriped() {
-	int i;
-
-	if (stripe_files) {
-		for(i=0; i<stripe_count; i++)
-			delete stripe_files[i];
-
-		delete[] stripe_files;
-	}
-	delete[] stripe_data;
-}
+AVIOutputStriped::~AVIOutputStriped() = default;
 
 //////////////////////////////////
 
 IVDMediaOutputStream *AVIOutputStriped::createVideoStream() {
 	VDASSERT(!videoOut);
-	if (!(videoOut = new AVIStripedVideoOutputStream(this)))
+	if (!(videoOut = new_nothrow AVIStripedVideoOutputStream(this)))
 		throw MyMemoryError();
 	return videoOut;
 }
 
 IVDMediaOutputStream *AVIOutputStriped::createAudioStream() {
 	VDASSERT(!audioOut);
-	if (!(audioOut = new AVIStripedAudioOutputStream(this)))
+	if (!(audioOut = new_nothrow AVIStripedAudioOutputStream(this)))
 		throw MyMemoryError();
 	return audioOut;
 }
@@ -148,18 +135,19 @@ bool AVIOutputStriped::init(const wchar_t *szFile) {
 
 	stripe_count = stripesys->getStripeCount();
 
-	if (!(stripe_data = new AVIOutputStripeState [stripe_count]))
+	stripe_data.reset(new_nothrow AVIOutputStripeState [stripe_count]);
+	if (!stripe_data)
 		throw MyMemoryError();
 
-	memset(stripe_data, 0, sizeof(AVIOutputStripeState)*stripe_count);
+	memset(stripe_data.get(), 0, sizeof(AVIOutputStripeState) * stripe_count);
 
-	if (!(stripe_files = new IVDMediaOutputAVIFile *[stripe_count]))
+	stripe_files.reset(new_nothrow std::unique_ptr<IVDMediaOutputAVIFile>[stripe_count]);
+	if (!stripe_files)
 		throw MyMemoryError();
 
 	bool fFoundIndex = false;
 
 	for(i=0; i<stripe_count; i++) {
-		stripe_files[i] = NULL;
 		if (stripesys->getStripeInfo(i)->isIndex())
 			fFoundIndex = true;
 	}
@@ -170,12 +158,12 @@ bool AVIOutputStriped::init(const wchar_t *szFile) {
 	for(i=0; i<stripe_count; i++) {
 		AVIStripe *sinfo = stripesys->getStripeInfo(i);
 
-		stripe_files[i] = VDCreateMediaOutputAVIFile();
+		stripe_files[i].reset(VDCreateMediaOutputAVIFile());
 
 		if (f1GbMode)
 			stripe_files[i]->set_1Gb_limit();
 
-		IVDMediaOutput *pOutput = stripe_files[i];
+		IVDMediaOutput *pOutput = stripe_files[i].get();
 
 		if (videoOut && (sinfo->isVideo() || sinfo->isIndex())) {
 			IVDMediaOutputStream *pStripeVideoOut = pOutput->createVideoStream();
@@ -197,7 +185,7 @@ bool AVIOutputStriped::init(const wchar_t *szFile) {
 				vhdr.fccHandler		= 'TSDV';
 				vhdr.dwSampleSize	= 16;
 
-				index_file = stripe_files[i];
+				index_file = stripe_files[i].get();
 			}
 
 			pStripeVideoOut->setStreamInfo(vsi);
@@ -215,7 +203,7 @@ bool AVIOutputStriped::init(const wchar_t *szFile) {
 				ahdr.fccHandler		= 'TSDV';
 				ahdr.dwSampleSize	= 16;
 
-				index_file = stripe_files[i];
+				index_file = stripe_files[i].get();
 			}
 
 			pStripeAudioOut->setStreamInfo(asi);
@@ -287,7 +275,7 @@ void AVIOutputStriped::writeChunk(bool is_audio, uint32 flags, const void *pBuff
 	// Write data to stripe.
 
 	if (best_stripe >= 0) {
-		IVDMediaOutput *pOutput = stripe_files[best_stripe];
+		IVDMediaOutput *pOutput = stripe_files[best_stripe].get();
 
 		if (is_audio)
 			pOutput->getAudioOutput()->write(flags, pBuffer, cbBuffer, lSampleCount);
@@ -302,7 +290,7 @@ void AVIOutputStriped::writeChunk(bool is_audio, uint32 flags, const void *pBuff
 	// NOTE: Do not write index marks to the same stream the data
 	//       was written to!
 
-	if (index_file != stripe_files[best_stripe]) {
+	if (index_file != stripe_files[best_stripe].get()) {
 		if (is_audio) {
 			if (audio_index_cache_point >= CACHE_SIZE)
 				FlushCache(TRUE);

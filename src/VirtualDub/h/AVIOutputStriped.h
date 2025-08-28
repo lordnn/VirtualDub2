@@ -26,13 +26,13 @@ class IVDMediaOutputAVIFile;
 
 class AVIOutputStriped : public AVIOutput {
 private:
-	AVIStripeSystem			*stripesys;
-	IVDMediaOutputAVIFile	**stripe_files;
-	AVIOutputStripeState	*stripe_data;
+	AVIStripeSystem			*stripesys{};
+	std::unique_ptr<std::unique_ptr<IVDMediaOutputAVIFile>[]>	stripe_files;
+	std::unique_ptr<AVIOutputStripeState[]>	stripe_data;
 	int						stripe_count;
 	int						stripe_order;
 
-	IVDMediaOutputAVIFile	*index_file;
+	IVDMediaOutputAVIFile	*index_file{};
 
 	enum { CACHE_SIZE = 256 };
 
