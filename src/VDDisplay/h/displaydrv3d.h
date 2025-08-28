@@ -174,12 +174,12 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////
 
-class VDDisplayDriver3D : public VDVideoDisplayMinidriver {
-	VDDisplayDriver3D(const VDDisplayDriver3D&);
-	VDDisplayDriver3D& operator=(const VDDisplayDriver3D&);
+class VDDisplayDriverDX11 : public VDVideoDisplayMinidriver {
+	VDDisplayDriverDX11(const VDDisplayDriverDX11&);
+	VDDisplayDriverDX11& operator=(const VDDisplayDriverDX11&);
 public:
-	VDDisplayDriver3D();
-	~VDDisplayDriver3D();
+	VDDisplayDriverDX11();
+	~VDDisplayDriverDX11();
 
 	virtual bool Init(HWND hwnd, HMONITOR hmonitor, const VDVideoDisplaySourceInfo& info);
 	virtual void Shutdown();

@@ -488,7 +488,7 @@ namespace {
 		
 		vdprotected1("attempting to open video codec with FOURCC '%.4s'", const char *, (const char *)&fccHandler) {
 			wchar_t buf[64];
-			vdswprintf(buf, std::size(buf), L"A video codec with FOURCC '%.4S'", (const char *)&fccHandler);
+			swprintf(buf, std::size(buf), L"A video codec with FOURCC '%.4S'", (const char *)&fccHandler);
 			VDExternalCodeBracket bracket(buf, __FILE__, __LINE__);
 			hic = ICOpen(fccType, fccHandler, wMode);
 		}
@@ -516,7 +516,7 @@ namespace {
 				continue;
 
 			wchar_t buf[64];
-			vdswprintf(buf, 64, L"A video codec with FOURCC '%.4S'", (const char *)&fccHandler);
+			swprintf(buf, 64, L"A video codec with FOURCC '%.4S'", (const char *)&fccHandler);
 
 			vdprotected1("querying video codec with FOURCC \"%.4s\"", const char *, (const char *)&info.fccHandler) {
 				DWORD result = VDSafeICDecompressQueryW32(hic, lpbiIn, cbIn, lpbiOut, cbOut, buf);
@@ -619,7 +619,7 @@ IVDVideoDecompressor *VDFindVideoDecompressor(uint32 preferredHandler, const voi
 			hicDecomp = VDSafeICOpenW32(ICTYPE_VIDEO, preferredHandler, ICMODE_DECOMPRESS);
 
 		wchar_t buf[64];
-		vdswprintf(buf, 64, L"A video codec with FOURCC '%.4S'", (const char *)&preferredHandler);
+		swprintf(buf, 64, L"A video codec with FOURCC '%.4S'", (const char *)&preferredHandler);
 
 		if (!hicDecomp || ICERR_OK!=VDSafeICDecompressQueryW32(hicDecomp, &*bmih, bmih.size(), NULL, 0, buf)) {
 			if (hicDecomp)

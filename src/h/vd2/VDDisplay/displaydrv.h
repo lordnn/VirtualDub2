@@ -164,6 +164,5 @@ IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverOpenGL();
 IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverDirectDraw(bool enableOverlays, bool enableSecondaryDraw);
 IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverGDI();
 IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverDX9(bool clipToMonitor, bool use9ex);
-IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverD3D101();
 
 #endif

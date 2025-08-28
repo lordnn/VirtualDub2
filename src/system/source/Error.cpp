@@ -32,7 +32,7 @@
 #include <vd2/system/log.h>
 
 MyError::MyError() {
-	buf = NULL;
+	buf = nullptr;
 }
 
 MyError::MyError(const MyError& err) {
@@ -40,7 +40,7 @@ MyError::MyError(const MyError& err) {
 }
 
 MyError::MyError(const char *f, ...)
-	: buf(NULL)
+	: buf(nullptr)
 {
 	va_list val;
 
@@ -56,7 +56,7 @@ MyError::~MyError() {
 void MyError::clear() {
 	if (buf)			// we do this check because debug free() always does a heapchk even if buf==NULL
 		free(buf);
-	buf = NULL;
+	buf = nullptr;
 }
 
 void MyError::assign(const MyError& e) {
@@ -80,22 +80,21 @@ void MyError::setf(const char *f, ...) {
 }
 
 void MyError::vsetf(const char *f, va_list val) {
-	for(int size = 1024; size <= 32768; size += size) {
-		free(buf);
-		buf = NULL;
+	free(buf);
+	buf = nullptr;
+
+	int len = _vscprintf(f, val);
+	if (len >= 0) {
+		size_t size = std::min(len + 1, 32768);
 
 		buf = (char *)malloc(size);
 		if (!buf) {
 			return;
 		}
+		buf[0] = 0;
 
-		if ((unsigned)vsprintf_s(buf, size, f, val) < (unsigned)size) {
-			return;
-		}
+		_vsnprintf_s(buf, size, _TRUNCATE, f, val);
 	}
-
-	free(buf);
-	buf = NULL;
 }
 
 void MyError::post(HWND hWndParent, const char *title) const {
@@ -110,7 +109,7 @@ void MyError::post(HWND hWndParent, const char *title) const {
 
 void MyError::discard() {
 	free(buf);
-	buf = NULL;
+	buf = nullptr;
 }
 
 void MyError::swap(MyError& err) {
@@ -124,7 +123,7 @@ void MyError::TransferFrom(MyError& err) {
 		free(buf);
 
 	buf = err.buf;
-	err.buf = NULL;
+	err.buf = nullptr;
 }
 
 MyMemoryError::MyMemoryError() {
@@ -141,11 +140,11 @@ MyUserAbortError::MyUserAbortError() {
 
 MyInternalError::MyInternalError(const char *format, ...) {
 	char buf[1024];
-	va_list val;
+	buf[0] = 0;
 
+	va_list val;
 	va_start(val, format);
-	vsprintf_s(buf, format, val);
-	buf[1023] = 0;
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
 	va_end(val);
 
 	setf("Internal error: %s", buf);

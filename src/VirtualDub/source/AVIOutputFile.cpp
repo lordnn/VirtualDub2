@@ -758,8 +758,9 @@ void AVIOutputFile::finalize() {
 			const VDXAVIStreamHeader& hdr = stream.mpStream->getStreamInfo().aviHeader;
 
 			if (hdr.fccType == VDMAKEFOURCC('v', 'i', 'd', 's')) {
-				if (stream.mChunkCount && hdr.dwScale && stream.mChunkCount)
+				if (stream.mChunkCount && hdr.dwScale) {
 					mAVIHeader.dwMaxBytesPerSec = VDClampToUint32(VDRoundToInt64((double)mFilePosition / (double)stream.mChunkCount * hdr.dwRate / hdr.dwScale));
+				}
 
 				break;
 			}

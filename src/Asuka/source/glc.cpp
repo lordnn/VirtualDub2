@@ -298,14 +298,12 @@ bool GLCTokenizer::IsKeyword(const GLCKeyword& keyword) const {
 
 void GLCErrorSink::ThrowError(const char *format, ...) {
 	char buf[4096];
+	buf[0] = 0;
+
 	va_list val;
-
 	va_start(val, format);
-	int cnt = vsprintf_s(buf, format, val);
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
 	va_end(val);
-
-	if ((unsigned)cnt >= 4096)
-		buf[4095] = 0;
 
 	const GLCCodeLocation loc(GetLocation());
 	throw MyError("Shader compilation failed.\n%s(%d,%d): Error! %s", loc.mpFileName, loc.mLine, loc.mColumn, buf);
@@ -313,14 +311,12 @@ void GLCErrorSink::ThrowError(const char *format, ...) {
 
 void GLCErrorSink::ThrowError(const GLCCodeLocation& loc, const char *format, ...) {
 	char buf[4096];
+	buf[0] = 0;
+
 	va_list val;
-
 	va_start(val, format);
-	int cnt = vsprintf_s(buf, format, val);
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
 	va_end(val);
-
-	if ((unsigned)cnt >= 4096)
-		buf[4095] = 0;
 
 	throw MyError("Shader compilation failed.\n%s(%d,%d): Error! %s", loc.mpFileName, loc.mLine, loc.mColumn, buf);
 }

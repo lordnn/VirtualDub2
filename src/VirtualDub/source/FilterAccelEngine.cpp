@@ -31,7 +31,6 @@
 #include "FilterAccelEngine.inl"
 
 bool VDTCreateContextD3D9(int width, int height, int refresh, bool fullscreen, bool vsync, void *hwnd, IVDTContext **ppctx);
-bool VDTCreateContextD3D10(IVDTContext **ppctx);
 
 void VDFilterAccelInterleaveYUV_SSE2(
 		void *dst, ptrdiff_t dstpitch,

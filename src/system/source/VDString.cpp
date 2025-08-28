@@ -97,21 +97,16 @@ VDStringA& VDStringA::append_sprintf(const value_type *format, ...) {
 VDStringA& VDStringA::append_vsprintf(const value_type *format, va_list val) {
 	char buf[2048];
 
-	int len = vsprintf_s(buf, format, val);
+	int len = _vsnprintf_s(buf, _TRUNCATE, format, val);
 	if (len >= 0)
-		append(buf, buf+len);
+		append(buf, buf + len);
 	else {
-		int len;
-
-		vdfastvector<char> tmp;
-		for(int siz = 8192; siz <= 65536; siz += siz) {
-			tmp.resize(siz);
-
-			char *tmpp = tmp.data();
-			len = vsprintf_s(tmp.data(), siz, format, val);
+		len = _vscprintf(format, val);
+		if (len >= 0) {
+			vdfastvector<char> tmp(len + 1);
+			len = _vsnprintf_s(tmp.data(), tmp.size(), _TRUNCATE, format, val);
 			if (len >= 0) {
-				append(tmpp, tmpp+len);
-				break;
+				append(tmp.data(), tmp.data() + len);
 			}
 		}
 	}
@@ -199,26 +194,20 @@ VDStringW& VDStringW::append_sprintf(const value_type *format, ...) {
 VDStringW& VDStringW::append_vsprintf(const value_type *format, va_list val) {
 	wchar_t buf[1024];
 
-	int len = vdvswprintf(buf, 1024, format, val);
+	int len = _vsnwprintf_s(buf, _TRUNCATE, format, val);
 	if (len >= 0)
 		append(buf, buf+len);
 	else {
-		int len;
-
-		vdfastvector<wchar_t> tmp;
-		for(int siz = 4096; siz <= 65536; siz += siz) {
-			tmp.resize(siz);
-
-			wchar_t *tmpp = tmp.data();
-			len = vdvswprintf(tmpp, siz, format, val);
+		len = _vscwprintf(format, val);
+		if (len >= 0) {
+			vdfastvector<wchar_t> tmp(len + 1);
+			len = _vsnwprintf_s(tmp.data(), tmp.size(), _TRUNCATE, format, val);
 			if (len >= 0) {
-				append(tmpp, tmpp+len);
-				break;
+				append(tmp.data(), tmp.data() + len);
 			}
 		}
 	}
 
-	va_end(val);
 	return *this;
 }
 

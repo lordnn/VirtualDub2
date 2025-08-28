@@ -267,15 +267,18 @@ void VDBackfaceService::operator()(const char *format, ...) {
 	va_list val;
 
 	va_start(val, format);
-	if ((unsigned)vsprintf_s(buf, format, val) < 3072) {
-		if (mpCaptureString)
+	int len = _vsnprintf_s(buf, _TRUNCATE, format, val);
+	if (len > 0)
+		if (mpCaptureString) {
 			mpCaptureString->assign(buf);
+		}
 		else {
 			*mpOutput << buf;
 			*mpOutput << "\n";
 		}
-	} else if (mpCaptureString)
+	} else if (mpCaptureString) {
 		mpCaptureString->clear();
+	}
 	va_end(val);
 }
 

@@ -361,7 +361,7 @@ void VDTextOutputStream::Format(const char *format, ...) {
 
 	int rv = -1;
 	if (mLevel < kBufSize - 4) {
-		rv = vsprintf_s(mBuf + mLevel, kBufSize - mLevel, format, val);
+		rv = _vsnprintf_s(mBuf + mLevel, kBufSize - mLevel, _TRUNCATE, format, val);
 	}
 
 	if (rv >= 0) {
@@ -380,7 +380,7 @@ void VDTextOutputStream::FormatLine(const char *format, ...) {
 
 	int rv = -1;
 	if (mLevel < kBufSize - 4) {
-		rv = vsprintf_s(mBuf + mLevel, kBufSize - mLevel, format, val);
+		rv = _vsnprintf_s(mBuf + mLevel, kBufSize - mLevel, _TRUNCATE, format, val);
 	}
 
 	if (rv >= 0) {
@@ -389,16 +389,18 @@ void VDTextOutputStream::FormatLine(const char *format, ...) {
 		Format2(format, val);
 	}
 
-	PutData("\r\n", 2);
 	va_end(val);
+
+	PutData("\r\n", 2);
 }
 
 void VDTextOutputStream::Format2(const char *format, va_list val) {
 	char buf[3072];
 
-	int rv = vsprintf_s(buf, format, val);
-	if (rv > 0)
+	int rv = _vsnprintf_s(buf, _TRUNCATE, format, val);
+	if (rv > 0) {
 		PutData(buf, rv);
+	}
 }
 
 void VDTextOutputStream::PutData(const char *s, int len) {

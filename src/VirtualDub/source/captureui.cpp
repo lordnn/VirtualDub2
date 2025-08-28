@@ -923,24 +923,30 @@ void VDCaptureProjectUI::SetStatusImmediate(const char *s) {
 
 void VDCaptureProjectUI::SetStatusF(const char *format, ...) {
 	char buf[3072];
-	va_list val;
+	buf[0] = 0;
 
+	va_list val;
 	va_start(val, format);
-	if ((unsigned)vsprintf_s(buf, format, val) < std::size(buf)) {
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
+	va_end(val);
+
+	if (buf[0]) {
 		SendMessage(mhwndStatus, SB_SETTEXTA, 0, (LPARAM)buf);
 	}
-	va_end(val);
 }
 
 void VDCaptureProjectUI::SetStatusImmediateF(const char *format, ...) {
 	char buf[3072];
-	va_list val;
+	buf[0] = 0;
 
+	va_list val;
 	va_start(val, format);
-	if ((unsigned)vsprintf_s(buf, format, val) < std::size(buf)) {
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
+	va_end(val);
+
+	if (buf[0]) {
 		SetStatusImmediate(buf);
 	}
-	va_end(val);
 }
 
 bool VDCaptureProjectUI::IsFullScreen() const {

@@ -66,7 +66,7 @@ static long VDFilterCallbackGetHostVersionInfo(char *buf, int len) {
 
 	const unsigned long version_num = REV_NUM;
 
-	LoadStringA(g_hInst, IDS_TITLE_INITIAL, tbuf, sizeof tbuf);
+	LoadStringA(g_hInst, IDS_TITLE_INITIAL, tbuf, std::size(tbuf));
 	_snprintf(buf, len, tbuf, version_num,
 #ifdef _DEBUG
 		"debug"

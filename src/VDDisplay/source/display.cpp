@@ -45,7 +45,7 @@ extern const wchar_t g_szVideoDisplayControlName[] = L"phaeronVideoDisplay";
 extern void VDMemcpyRect(void *dst, ptrdiff_t dststride, const void *src, ptrdiff_t srcstride, size_t w, size_t h);
 
 extern IVDVideoDisplayMinidriver *VDCreateVideoDisplayMinidriverD3DFX(bool clipToMonitor);
-extern IVDVideoDisplayMinidriver *VDCreateDisplayDriver3D();
+extern IVDVideoDisplayMinidriver *VDCreateDisplayDriverDX11();
 
 vdautoptr<VDVideoDisplayManager> g_pVDVideoDisplayManager;
 
@@ -1174,7 +1174,7 @@ bool VDVideoDisplayWindow::SyncInit(bool bAutoRefresh, bool bAllowNonpersistentS
 				// The 3D drivers don't currently support subrects.
 				if (sbEnableDX) {
 					if (!mbUseSubrect && sbEnableD3D11 && (sbEnableTS3D || !isTermServ)) {
-						mpMiniDriver = VDCreateDisplayDriver3D();
+						mpMiniDriver = VDCreateDisplayDriverDX11();
 						if (InitMiniDriver())
 							break;
 						SyncReset();

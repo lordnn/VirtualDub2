@@ -39,16 +39,14 @@ namespace {
 
 void VDCompilerWriteLogOutputF(IVDCompilerLogOutput& out, const char *format ...) {
 	char buf[3072];
-	va_list val;
+	buf[0] = 0;
 
+	va_list val;
 	va_start(val, format);
-	int len = vsprintf_s(buf, format, val);
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
 	va_end(val);
 
-	if ((unsigned)len <= 3071) {
-		buf[len] = 0;
-		out.WriteLogOutput(buf);
-	}
+	out.WriteLogOutput(buf);
 }
 
 void VDCompilerLexer::Init(const char *src, size_t len, const char *context, IVDCompilerLogOutput *pOutput) {

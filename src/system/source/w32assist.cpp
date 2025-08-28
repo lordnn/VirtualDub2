@@ -76,9 +76,9 @@ void VDSetWindowTextFW32(HWND hwnd, const wchar_t *format, ...) {
 	va_start(val, format);
 	{
 		wchar_t buf[512];
-		int r = vdvswprintf(buf, 512, format, val);
+		int r = _vsnwprintf_s(buf, _TRUNCATE, format, val);
 
-		if ((unsigned)r < 512) {
+		if (r >= 0) {
 			VDSetWindowTextW32(hwnd, buf);
 			va_end(val);
 			return;

@@ -64,11 +64,11 @@ MyICError::MyICError(const char *s, uint32 icErr) {
 
 MyICError::MyICError(uint32 icErr, const char *format, ...) {
 	char tmpbuf[1024];
+	tmpbuf[0] = 0;
 
 	va_list val;
 	va_start(val, format);
-	tmpbuf[(sizeof tmpbuf) - 1] = 0;
-	vsprintf_s(tmpbuf, format, val);
+	_vsnprintf_s(tmpbuf, _TRUNCATE, format, val);
 	va_end(val);
 
 	setf(tmpbuf, GetVCMErrorString(icErr));
@@ -107,11 +107,11 @@ MyWin32Error::MyWin32Error(const char *format, uint32 err, ...)
 {
 	char szError[1024];
 	char szTemp[1024];
-	va_list val;
+	szError[0] = 0;
 
+	va_list val;
 	va_start(val, err);
-	szError[(sizeof szError)-1] = 0;
-	vsprintf_s(szError, format, val);
+	_vsnprintf_s(szError, _TRUNCATE, format, val);
 	va_end(val);
 
 	// Determine the position of the last %s, and escape everything else. This doesn't

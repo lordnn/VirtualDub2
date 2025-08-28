@@ -1148,7 +1148,7 @@ void VDDisplayStretchNode3D::Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx
 
 ///////////////////////////////////////////////////////////////////////////
 
-VDDisplayDriver3D::VDDisplayDriver3D()
+VDDisplayDriverDX11::VDDisplayDriverDX11()
 	: mhwnd(NULL)
 	, mpContext(NULL)
 	, mpSwapChain(NULL)
@@ -1160,10 +1160,10 @@ VDDisplayDriver3D::VDDisplayDriver3D()
 {
 }
 
-VDDisplayDriver3D::~VDDisplayDriver3D() {
+VDDisplayDriverDX11::~VDDisplayDriverDX11() {
 }
 
-bool VDDisplayDriver3D::Init(HWND hwnd, HMONITOR hmonitor, const VDVideoDisplaySourceInfo& info) {
+bool VDDisplayDriverDX11::Init(HWND hwnd, HMONITOR hmonitor, const VDVideoDisplaySourceInfo& info) {
 	mhwnd = hwnd;
 
 //	if (!VDTCreateContextD3D9(640, 480, 0, false, false, hwnd, &mpContext))
@@ -1180,7 +1180,7 @@ bool VDDisplayDriver3D::Init(HWND hwnd, HMONITOR hmonitor, const VDVideoDisplayS
 	return true;
 }
 
-void VDDisplayDriver3D::Shutdown() {
+void VDDisplayDriverDX11::Shutdown() {
 	mDisplayNodeContext.Shutdown();
 	vdsaferelease <<= mpRootNode,
 		mpImageNode,
@@ -1190,7 +1190,7 @@ void VDDisplayDriver3D::Shutdown() {
 	mhwnd = NULL;
 }
 
-bool VDDisplayDriver3D::ModifySource(const VDVideoDisplaySourceInfo& info) {
+bool VDDisplayDriverDX11::ModifySource(const VDVideoDisplaySourceInfo& info) {
 	bool rebuildTree = false;
 
 	if (info.pixmap.w != mSource.pixmap.w ||
@@ -1214,7 +1214,7 @@ bool VDDisplayDriver3D::ModifySource(const VDVideoDisplaySourceInfo& info) {
 	return true;
 }
 
-void VDDisplayDriver3D::SetFilterMode(FilterMode mode) {
+void VDDisplayDriverDX11::SetFilterMode(FilterMode mode) {
 	if (mode == kFilterAnySuitable)
 		mode = kFilterBilinear;
 
@@ -1225,11 +1225,11 @@ void VDDisplayDriver3D::SetFilterMode(FilterMode mode) {
 	mbCompositionTreeDirty = true;
 }
 
-bool VDDisplayDriver3D::IsValid() {
+bool VDDisplayDriverDX11::IsValid() {
 	return true;
 }
 
-bool VDDisplayDriver3D::Resize(int w, int h) {
+bool VDDisplayDriverDX11::Resize(int w, int h) {
 	bool success = VDVideoDisplayMinidriver::Resize(w, h);
 
 	if (mFilterMode == kFilterBicubic)
@@ -1238,12 +1238,12 @@ bool VDDisplayDriver3D::Resize(int w, int h) {
 	return success;
 }
 
-bool VDDisplayDriver3D::Update(UpdateMode) {
+bool VDDisplayDriverDX11::Update(UpdateMode) {
 	mpImageNode->Load(mSource.pixmap);
 	return true;
 }
 
-void VDDisplayDriver3D::Refresh(UpdateMode) {
+void VDDisplayDriverDX11::Refresh(UpdateMode) {
 	const uint32 w = (uint32)mClientRect.right;
 	const uint32 h = (uint32)mClientRect.bottom;
 
@@ -1293,12 +1293,12 @@ void VDDisplayDriver3D::Refresh(UpdateMode) {
 	mpSwapChain->Present();
 }
 
-bool VDDisplayDriver3D::Paint(HDC hdc, const RECT& rClient, UpdateMode lastUpdateMode) {
+bool VDDisplayDriverDX11::Paint(HDC hdc, const RECT& rClient, UpdateMode lastUpdateMode) {
 	Refresh(lastUpdateMode);
 	return true;
 }
 
-bool VDDisplayDriver3D::CreateImageNode() {
+bool VDDisplayDriverDX11::CreateImageNode() {
 	if (mpImageNode)
 		return true;
 
@@ -1312,11 +1312,11 @@ bool VDDisplayDriver3D::CreateImageNode() {
 	return true;
 }
 
-void VDDisplayDriver3D::DestroyImageNode() {
+void VDDisplayDriverDX11::DestroyImageNode() {
 	vdsaferelease <<= mpRootNode, mpImageNode;
 }
 
-bool VDDisplayDriver3D::RebuildTree() {
+bool VDDisplayDriverDX11::RebuildTree() {
 	vdsaferelease <<= mpRootNode;
 
 	if (!mpImageNode && !CreateImageNode())
@@ -1361,6 +1361,6 @@ bool VDDisplayDriver3D::RebuildTree() {
 
 ///////////////////////////////////////////////////////////////////////////
 
-IVDVideoDisplayMinidriver *VDCreateDisplayDriver3D() {
-	return new VDDisplayDriver3D;
+IVDVideoDisplayMinidriver *VDCreateDisplayDriverDX11() {
+	return new VDDisplayDriverDX11;
 }

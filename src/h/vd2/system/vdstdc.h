@@ -34,15 +34,4 @@
 #include <stdlib.h>
 #include <vd2/system/vdtypes.h>
 
-#ifdef VD_COMPILER_GCC_MINGW
-	// MinGW doesn't define the correct standard version of (v)swprintf with
-	// a length parameter, even though VC++ has already been fixed. Fortunately,
-	// it does have non-standardly named versions we can map to.
-	#define vdvswprintf _vsnwprintf
-	#define vdswprintf _snwprintf
-#else
-	#define vdvswprintf vswprintf
-	#define vdswprintf swprintf
-#endif
-
 #endif

@@ -131,11 +131,13 @@ VDAssertResult VDAssertPtr(const char *exp, const char *file, int line) {
 
 void VDDebugPrint(const char *format, ...) {
 	char buf[4096];
+	buf[0] = 0;
 
 	va_list val;
 	va_start(val, format);
-	vsprintf_s(buf, format, val);
+	_vsnprintf_s(buf, _TRUNCATE, format, val);
 	va_end(val);
+
 	Sleep(0);
 	OutputDebugStringA(buf);
 }
