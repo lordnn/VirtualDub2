@@ -166,7 +166,7 @@ private:
 	FilterModPixmapInfo mInputInfo;
 	VDFraction	mFrameRate;
 	VDPosition	mFrameCount;
-	char		*pPrevBuffer;
+	std::unique_ptr<char[]>		pPrevBuffer;
 	long		lFrameSent;
 	long		lFrameDone;
 	long		lKeyRate;
@@ -201,7 +201,6 @@ IVDVideoCompressor *VDCreateVideoCompressorVCM(EncoderHIC *pHIC, uint32 kilobyte
 }
 
 VDVideoCompressorVCM::VDVideoCompressorVCM() {
-	pPrevBuffer		= NULL;
 	fCompressionStarted = false;
 	mbCompressionRestarted = false;
 }
@@ -211,8 +210,6 @@ VDVideoCompressorVCM::~VDVideoCompressorVCM() {
 
 	if (mbOwnHandle)
 		delete driver;
-
-	delete pPrevBuffer;
 }
 
 void VDVideoCompressorVCM::SetDriver(EncoderHIC* driver, uint32 kilobytesPerSecond, long quality, long keyrate, bool ownHandle) {
@@ -345,7 +342,8 @@ void VDVideoCompressorVCM::internalStart(const void *outputFormat, uint32 output
 		if (!(info.dwFlags & VIDCF_FASTTEMPORALC)) {
 			// Allocate backbuffer
 
-			if (!(pPrevBuffer = new char[mInputFormat->biSizeImage]))
+            pPrevBuffer.reset(new_nothrow char[mInputFormat->biSizeImage]);
+			if (!pPrevBuffer)
 				throw MyMemoryError();
 		}
 	}
@@ -849,12 +847,12 @@ crunch_complete:
 
 		{
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			vdprotected4("decompressing frame %u from %p to %p using codec \"%ls\"", unsigned, lFrameDone, decltype(dst), dst, decltype(pPrevBuffer), pPrevBuffer, const wchar_t *, mCodecName.c_str()) {
+			vdprotected4("decompressing frame %u from %p to %p using codec \"%ls\"", unsigned, lFrameDone, decltype(dst), dst, decltype(pPrevBuffer.get()), pPrevBuffer.get(), const wchar_t *, mCodecName.c_str()) {
 				res = driver->decompress(dwFlagsOut & AVIIF_KEYFRAME ? 0 : ICDECOMPRESS_NOTKEYFRAME,
 						&*mOutputFormat,
 						dst,
 						&*mInputFormat,
-						pPrevBuffer);
+						pPrevBuffer.get());
 			}
 		}
 		if (res != ICERR_OK)
@@ -911,8 +909,8 @@ void VDVideoCompressorVCM::PackFrameInternal(void *dst, DWORD frameSize, DWORD q
 				lFrameSent,
 				lFrameSent ? frameSize : 0xFFFFFF,
 				q,
-				dwFlagsIn & ICCOMPRESS_KEYFRAME ? NULL : mInputFormat.data(),
-				dwFlagsIn & ICCOMPRESS_KEYFRAME ? NULL : pPrevBuffer,
+				dwFlagsIn & ICCOMPRESS_KEYFRAME ? nullptr : mInputFormat.data(),
+				dwFlagsIn & ICCOMPRESS_KEYFRAME ? nullptr : pPrevBuffer.get(),
 				packetInfo,
 				&mInputLayout);
 	}
