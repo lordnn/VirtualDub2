@@ -187,7 +187,7 @@ private:
 	sint32		mQualityLast;
 	sint32		mQualityHi;
 
-	void		*pConfigData;
+	std::unique_ptr<char[]>		pConfigData;
 	int			cbConfigData;
 
 	VDStringW	mCodecName;
@@ -202,7 +202,6 @@ IVDVideoCompressor *VDCreateVideoCompressorVCM(EncoderHIC *pHIC, uint32 kilobyte
 
 VDVideoCompressorVCM::VDVideoCompressorVCM() {
 	pPrevBuffer		= NULL;
-	pConfigData		= NULL;
 	fCompressionStarted = false;
 	mbCompressionRestarted = false;
 }
@@ -213,7 +212,6 @@ VDVideoCompressorVCM::~VDVideoCompressorVCM() {
 	if (mbOwnHandle)
 		delete driver;
 
-	delete pConfigData;
 	delete pPrevBuffer;
 }
 
@@ -402,12 +400,13 @@ void VDVideoCompressorVCM::internalStart(const void *outputFormat, uint32 output
 	}
 
 	if (cbConfigData > 0) {
-		if (!(pConfigData = new char[cbConfigData]))
+        pConfigData.reset(new_nothrow char[cbConfigData]);
+		if (!pConfigData)
 			throw MyMemoryError();
 
 		{
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			cbConfigData = driver->getState(pConfigData, cbConfigData);
+			cbConfigData = driver->getState(pConfigData.get(), cbConfigData);
 		}
 
 		// As odd as this may seem, if this isn't done, then the Indeo5
@@ -416,7 +415,7 @@ void VDVideoCompressorVCM::internalStart(const void *outputFormat, uint32 output
 
 		if (cbConfigData) {
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			driver->setState(pConfigData, cbConfigData);
+			driver->setState(pConfigData.get(), cbConfigData);
 		}
 	}
 
@@ -528,7 +527,7 @@ void VDVideoCompressorVCM::Stop() {
 
 	if (cbConfigData && pConfigData) {
 		VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-		driver->setState(pConfigData, cbConfigData);
+		driver->setState(pConfigData.get(), cbConfigData);
 	}
 }
 
