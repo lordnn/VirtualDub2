@@ -423,7 +423,7 @@ public:
 	VDPixmapBuffer repack_buffer;
 	VDPixmapLayout driverLayout;
 	VDPixmapLayout vfwLayout;
-	void *pOutputBuffer{};
+	std::unique_ptr<char[]> pOutputBuffer;
 
 	VDStringW		mCaptureFile;
 	VDStringW		mCaptureRoot;
@@ -2159,7 +2159,7 @@ unknown_PCM_format:
 				icd.mpVideoCompressor->Start(bmiToFile, biSizeToFile, bmiOutput.data(), bmiOutput.size(), scaledRate, 0x0FFFFFFF);
 				icd.createOutputBlitter();
 			}
-			icd.pOutputBuffer = icd.mpVideoCompressor->createResultBuffer();
+			icd.pOutputBuffer.reset(icd.mpVideoCompressor->createResultBuffer());
 
 			bmiToFile = (VDAVIBitmapInfoHeader *)bmiOutput.data();
 			biSizeToFile = bmiOutput.size();
@@ -2441,8 +2441,7 @@ VDDEBUG("Capture has stopped.\n");
 		ShutdownFilter();
 
 	icd.mpVideoCompressor.reset();
-	delete icd.pOutputBuffer;
-	icd.pOutputBuffer = 0;
+	icd.pOutputBuffer.reset();
 
 	if (icd.mpOutputFilePending && icd.mpOutputFilePending == icd.mpOutputFile)
 		icd.mpOutputFilePending = NULL;
@@ -3599,7 +3598,7 @@ void VDCaptureData::VideoCallbackWriteFrame(void *pFilteredData, uint32 dwBytesU
 		VDPacketInfo packetInfo;
 
 		VDPROFILEBEGIN("V-Compress");
-		bool have_output = mpVideoCompressor->packFrame(pOutputBuffer, pFilteredData, lBytes, packetInfo);
+		bool have_output = mpVideoCompressor->packFrame(pOutputBuffer.get(), pFilteredData, lBytes, packetInfo);
 		VDPROFILEEND();
 
 		if (!flush) mVideoDelay.push_back(1);
@@ -3609,7 +3608,7 @@ void VDCaptureData::VideoCallbackWriteFrame(void *pFilteredData, uint32 dwBytesU
 			if (mpOutput) {
 				VDPROFILEBEGIN("V-Write");
 				int flags = packetInfo.keyframe ? AVIOutputStream::kFlagKeyFrame : 0;
-				mpVideoOut->write(flags, pOutputBuffer, lBytes, 1);
+				mpVideoOut->write(flags, pOutputBuffer.get(), lBytes, 1);
 				VDPROFILEEND();
 
 				CheckVideoAfter();

@@ -60,7 +60,7 @@ public:
 		return lMaxPackedSize;
 	}
 
-	void* createResultBuffer();
+	char* createResultBuffer();
 
 private:
 	void PackFrameInternal(void* dst, DWORD frameSize, DWORD q, const void *src, DWORD dwFlagsIn, DWORD& dwFlagsOut, VDPacketInfo& packetInfo, sint32& bytes);
