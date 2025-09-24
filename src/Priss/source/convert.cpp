@@ -141,11 +141,12 @@ void VDAPIENTRY VDAudioFilterPCM16SymmetricArray(sint16 *dst, ptrdiff_t dst_stri
 		sint32 v = 0x2000 + (sint32)filter[0] * src[i];
 
 		for(uint32 j=1; j<=filterelsizeminus4; j+=4) {
-			int k = -(int)j;
-			v += (sint32)filter[j  ] * ((sint32)src[i+j  ] + (sint32)src[i+k  ]);
-			v += (sint32)filter[j+1] * ((sint32)src[i+j+1] + (sint32)src[i+k-1]);
-			v += (sint32)filter[j+2] * ((sint32)src[i+j+2] + (sint32)src[i+k-2]);
-			v += (sint32)filter[j+3] * ((sint32)src[i+j+3] + (sint32)src[i+k-3]);
+            uint32_t a = i + j;
+            int b = (int)i - (int)j;
+			v += (sint32)filter[j  ] * ((sint32)src[a  ] + (sint32)src[b  ]);
+			v += (sint32)filter[j+1] * ((sint32)src[a+1] + (sint32)src[b-1]);
+			v += (sint32)filter[j+2] * ((sint32)src[a+2] + (sint32)src[b-2]);
+			v += (sint32)filter[j+3] * ((sint32)src[a+3] + (sint32)src[b-3]);
 		}
 
 		v = (v>>14) + 0x8000;

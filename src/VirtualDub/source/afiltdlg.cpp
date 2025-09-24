@@ -549,8 +549,6 @@ void VDDialogAudioFiltersW32::SaveGraph(VDAudioFilterGraph& graph, IVDFilterGrap
 	const int nFilters = nodes.size();
 	int i;
 
-	std::vector<IVDAudioFilterInstance *> filters(nFilters);
-
 	for(i=0; i<nFilters; ++i) {
 		const VDFilterGraphNode& node = nodes[i];
 		AudioFilterData *pd = static_cast<AudioFilterData *>(node.pInstance);

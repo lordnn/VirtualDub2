@@ -3936,7 +3936,7 @@ void VDProjectUI::RepositionPanes(bool reset) {
 	VDASSERT(!mbPaneLayoutBusy);
 	mbPaneLayoutBusy = true;
 
-	HWND panes[2];
+	HWND panes[2]{};
 	int n = 0;
 
 	RECT rWork;

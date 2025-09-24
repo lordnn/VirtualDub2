@@ -383,7 +383,7 @@ void ScanForUnreadableFrames(FrameSubset *pSubset, IVDVideoSource *pVideoSource)
 	try {
 		ProgressDialog pd(g_hWnd, "Frame scan", "Scanning for unreadable frames", VDClampToSint32(lLast-lFrame), true);
 		bool bLastValid = true;
-		VDPosition lRangeFirst;
+		VDPosition lRangeFirst{};
 		long lDeadFrames = 0;
 		long lMaskedFrames = 0;
 
