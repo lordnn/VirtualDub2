@@ -81,8 +81,6 @@ extern IVDVideoCodecBugTrap *g_pVDVideoCodecBugTrap;
 //////////////////////////////////////////////////////////////////////////////
 
 VideoSequenceCompressor::VideoSequenceCompressor() {
-	pPrevBuffer		= nullptr;
-	pConfigData		= nullptr;
 	fCompressionStarted = false;
 	mbCompressionRestarted = false;
 }
@@ -92,9 +90,6 @@ VideoSequenceCompressor::~VideoSequenceCompressor() {
 
 	if (mbOwnHandle)
 		delete driver;
-
-	delete[] pConfigData;
-	delete[] pPrevBuffer;
 }
 
 void VideoSequenceCompressor::SetDriver(EncoderHIC* driver, uint32 kilobytesPerSecond, long quality, long keyrate, bool ownHandle) {
@@ -204,7 +199,7 @@ void VideoSequenceCompressor::internalStart(const void *outputFormat, uint32 out
 	if (info.dwFlags & (VIDCF_TEMPORAL | VIDCF_FASTTEMPORALC)) {
 		if (!(info.dwFlags & VIDCF_FASTTEMPORALC)) {
 			// Allocate backbuffer
-			pPrevBuffer = new(std::nothrow) char[mInputFormat->biSizeImage];
+			pPrevBuffer.reset(new_nothrow char[mInputFormat->biSizeImage]);
 			if (!pPrevBuffer) {
 				throw MyMemoryError();
 			}
@@ -261,14 +256,14 @@ void VideoSequenceCompressor::internalStart(const void *outputFormat, uint32 out
 	}
 
 	if (cbConfigData > 0) {
-		pConfigData = new(std::nothrow) char[cbConfigData];
+		pConfigData.reset(new_nothrow char[cbConfigData]);
 		if (!pConfigData) {
 			throw MyMemoryError();
 		}
 
 		{
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			cbConfigData = driver->getState(pConfigData, cbConfigData);
+			cbConfigData = driver->getState(pConfigData.get(), cbConfigData);
 		}
 
 		// As odd as this may seem, if this isn't done, then the Indeo5
@@ -277,7 +272,7 @@ void VideoSequenceCompressor::internalStart(const void *outputFormat, uint32 out
 
 		if (cbConfigData) {
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			driver->setState(pConfigData, cbConfigData);
+			driver->setState(pConfigData.get(), cbConfigData);
 		}
 	}
 
@@ -389,7 +384,7 @@ void VideoSequenceCompressor::Stop() {
 
 	if (cbConfigData && pConfigData) {
 		VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-		driver->setState(pConfigData, cbConfigData);
+		driver->setState(pConfigData.get(), cbConfigData);
 	}
 }
 
@@ -629,12 +624,12 @@ crunch_complete:
 
 		{
 			VDExternalCodeBracket bracket(mDriverName.c_str(), __FILE__, __LINE__);
-			vdprotected4("decompressing frame %u from %p to %p using codec \"%ls\"", unsigned, lFrameDone, decltype(dst), dst, decltype(pPrevBuffer), pPrevBuffer, const wchar_t *, mCodecName.c_str()) {
+			vdprotected4("decompressing frame %u from %p to %p using codec \"%ls\"", unsigned, lFrameDone, decltype(dst), dst, decltype(pPrevBuffer.get()), pPrevBuffer.get(), const wchar_t *, mCodecName.c_str()) {
 				res = driver->decompress(dwFlagsOut & AVIIF_KEYFRAME ? 0 : ICDECOMPRESS_NOTKEYFRAME,
 						&*mOutputFormat,
 						dst,
 						&*mInputFormat,
-						pPrevBuffer);
+						pPrevBuffer.get());
 			}
 		}
 		if (res != ICERR_OK)
@@ -691,8 +686,8 @@ void VideoSequenceCompressor::PackFrameInternal(void* dst, DWORD frameSize, DWOR
 				lFrameSent,
 				lFrameSent ? frameSize : 0xFFFFFF,
 				q,
-				dwFlagsIn & ICCOMPRESS_KEYFRAME ? NULL : mInputFormat.data(),
-				dwFlagsIn & ICCOMPRESS_KEYFRAME ? NULL : pPrevBuffer,
+				dwFlagsIn & ICCOMPRESS_KEYFRAME ? nullptr : mInputFormat.data(),
+				dwFlagsIn & ICCOMPRESS_KEYFRAME ? nullptr : pPrevBuffer.get(),
 				packetInfo,
 				&mInputLayout);
 	}

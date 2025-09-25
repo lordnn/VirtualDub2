@@ -75,7 +75,7 @@ private:
 	FilterModPixmapInfo mInputInfo;
 	VDFraction	mFrameRate;
 	VDPosition	mFrameCount;
-	char		*pPrevBuffer;
+	std::unique_ptr<char[]>		pPrevBuffer;
 	long		lFrameSent;
 	long		lFrameDone;
 	long		lKeyRate;
@@ -96,7 +96,7 @@ private:
 	sint32		mQualityLast;
 	sint32		mQualityHi;
 
-	char		*pConfigData;
+	std::unique_ptr<char[]>		pConfigData;
 	int			cbConfigData;
 
 	VDStringW	mCodecName;
