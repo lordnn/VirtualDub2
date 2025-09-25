@@ -267,9 +267,9 @@ void VDVideoCompressorVCM::GetOutputFormat(const void *inputFormat, vdstructex<t
 
 		// Huffyuv doesn't initialize a few padding bytes at the end of its format
 		// struct, so we clear them here.
-		memset(&*outputFormat, 0, outputFormat.size());
+		memset(outputFormat.data(), 0, outputFormat.size());
 
-		if (ICERR_OK != (icErr = driver->compressGetFormat((LPBITMAPINFO)inputFormat, (LPBITMAPINFO)&*outputFormat)))
+		if (ICERR_OK != (icErr = driver->compressGetFormat((LPBITMAPINFO)inputFormat, (LPBITMAPINFO)outputFormat.data())))
 			throw MyICError("Output compressor", icErr);
 	}
 }
@@ -285,9 +285,9 @@ void VDVideoCompressorVCM::GetOutputFormat(const VDPixmapLayout *inputFormat, vd
 
 		// Huffyuv doesn't initialize a few padding bytes at the end of its format
 		// struct, so we clear them here.
-		memset(&*outputFormat, 0, outputFormat.size());
+		memset(outputFormat.data(), 0, outputFormat.size());
 
-		if (ICERR_OK != (icErr = driver->compressGetFormat(0, (LPBITMAPINFO)&*outputFormat, inputFormat)))
+		if (ICERR_OK != (icErr = driver->compressGetFormat(0, (LPBITMAPINFO)outputFormat.data(), inputFormat)))
 			throw MyICError("Output compressor", icErr);
 	}
 }
