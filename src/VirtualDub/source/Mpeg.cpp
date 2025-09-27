@@ -564,35 +564,35 @@ private:
 
 public:
 	VideoSourceMPEG(InputFileMPEG *);
-	~VideoSourceMPEG();
+	~VideoSourceMPEG() override;
 
 	void init();
 
 	const VDFraction getPixelAspectRatio() const { return parentPtr->mPixelAspectRatio; }
 
-	char getFrameTypeChar(VDPosition lFrameNum);
-	bool _isKey(VDPosition lSample);
-	virtual VDPosition nearestKey(VDPosition lSample);
-	virtual VDPosition prevKey(VDPosition lSample);
-	virtual VDPosition nextKey(VDPosition lSample);
-	bool setTargetFormat(VDPixmapFormatEx format);
-	void invalidateFrameBuffer();
-	bool isFrameBufferValid();
-	void streamBegin(bool fRealTime, bool bForceReset);
-	void streamEnd();
-	void streamRestart();
-	void streamSetDesiredFrame(VDPosition frame_num);
-	VDPosition streamGetNextRequiredFrame(bool& is_preroll);
-	int streamGetRequiredCount(long *);
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition frame_num, VDPosition target_num);
-	uint32 streamGetDecodePadding() { return 8; }
+	char getFrameTypeChar(VDPosition lFrameNum) override;
+	bool _isKey(VDPosition lSample) override;
+	VDPosition nearestKey(VDPosition lSample) override;
+	VDPosition prevKey(VDPosition lSample) override;
+	VDPosition nextKey(VDPosition lSample) override;
+	bool setTargetFormat(VDPixmapFormatEx format) override;
+	void invalidateFrameBuffer() override;
+	bool isFrameBufferValid() override;
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamEnd() override;
+	void streamRestart() override;
+	void streamSetDesiredFrame(VDPosition frame_num) override;
+	VDPosition streamGetNextRequiredFrame(bool& is_preroll) override;
+	int streamGetRequiredCount(uint32 *) override;
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition frame_num, VDPosition target_num) override;
+	uint32 streamGetDecodePadding() override { return 8; }
 
-	const void *getFrame(VDPosition frameNum);
-	eDropType getDropType(VDPosition);
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	sint64 getSampleBytePosition(VDPosition lStart64);
+	const void *getFrame(VDPosition frameNum) override;
+	eDropType getDropType(VDPosition) override;
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	sint64 getSampleBytePosition(VDPosition lStart64) override;
 
-	VDPosition streamToDisplayOrder(VDPosition sample_num) {
+	VDPosition streamToDisplayOrder(VDPosition sample_num) override {
 		if (sample_num < mSampleFirst || sample_num >= mSampleLast)
 			return sample_num;
 
@@ -604,13 +604,13 @@ public:
 		return gopbase + parentPtr->video_sample_list[sample_num].subframe_num;
 	}
 
-	VDPosition displayToStreamOrder(VDPosition display_num) {
+	VDPosition displayToStreamOrder(VDPosition display_num) override {
 		return (display_num<mSampleFirst || display_num >= mSampleLast)
 			? display_num
 			: translate_frame(renumber_frame((long)display_num));
 	}
 
-	bool isDecodable(VDPosition sample_num);
+	bool isDecodable(VDPosition sample_num) override;
 };
 
 VideoSourceMPEG::VideoSourceMPEG(InputFileMPEG *parent)
@@ -975,10 +975,10 @@ VDPosition VideoSourceMPEG::streamGetNextRequiredFrame(bool& is_preroll) {
 	return stream_current_frame++;
 }
 
-int VideoSourceMPEG::streamGetRequiredCount(long *pSize) {
+int VideoSourceMPEG::streamGetRequiredCount(uint32 *pSize) {
 	int current = (int)stream_current_frame;
 	int needed = 1;
-	long size = 0;
+	uint32 size = 0;
 
 	if (frame_forw == stream_desired_frame
 		|| frame_back == stream_desired_frame
