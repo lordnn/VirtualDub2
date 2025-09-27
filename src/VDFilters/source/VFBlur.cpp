@@ -29,9 +29,9 @@
 
 class VDVFilterBlurBase : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void End();
-	void Run();
+	uint32 GetParams() override;
+	void End() override;
+	void Run() override;
 
 protected:
 	vdautoptr<VEffect> mpEffect;
@@ -198,12 +198,12 @@ void VDVFilterBlurHi::EndAccel(IVDXAContext *vdxa) {
 ///////////////////////////////////////////////////////////////////////////////
 
 extern const VDXFilterDefinition g_VDVFBlur = VDXVideoFilterDefinition<VDVFilterBlur>(
-		NULL,
+		nullptr,
 		"blur",
 		"Applies a radius-1 gaussian blur to the image.");
 
 extern const VDXFilterDefinition g_VDVFBlurHi = VDXVideoFilterDefinition<VDVFilterBlurHi>(
-		NULL,
+		nullptr,
 		"blur more",
 		"Applies a radius-2 gaussian blur to the image.");
 

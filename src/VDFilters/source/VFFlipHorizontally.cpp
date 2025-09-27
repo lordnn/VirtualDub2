@@ -20,8 +20,8 @@
 
 class VDVFFlipHorizontally : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 	void Run32(void* d, void* s, int dpitch, int spitch, int w, int h);
 	void Run64(void* d, void* s, int dpitch, int spitch, int w, int h);
 	void Run8(void* d, void* s, int dpitch, int spitch, int w, int h);
@@ -194,6 +194,6 @@ void VDVFFlipHorizontally::Run16(void* d, void* s, int dpitch, int spitch, int w
 }
 
 extern const VDXFilterDefinition g_VDVFFlipHorizontally = VDXVideoFilterDefinition<VDVFFlipHorizontally>(
-	NULL,
+	nullptr,
 	"flip horizontally",
 	"Horizontally flips an image.");

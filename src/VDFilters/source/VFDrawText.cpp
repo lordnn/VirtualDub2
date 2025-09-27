@@ -395,13 +395,13 @@ public:
 		param = a.param;
 	}
 
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
-	bool Configure(VDXHWND hwnd);
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
 	void FormatString(const VDStringW& text);
-	void GetScriptString(char *buf, int maxlen);
+	void GetScriptString(char *buf, int maxlen) override;
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
@@ -687,12 +687,12 @@ VDXVF_END_SCRIPT_METHODS()
 ///////////////////////////////////////////////////////////////////////////////
 
 extern const VDXFilterDefinition2 g_VDVFDrawText = VDXVideoFilterDefinition<VDVFilterDrawText>(
-		NULL,
+		nullptr,
 		"DrawText",
 		"Draw basic text using vector fonts.");
 
 extern const VDXFilterDefinition2 g_VDVFDrawTime = VDXVideoFilterDefinition<VDVFilterDrawTime>(
-		NULL,
+		nullptr,
 		"DrawTime",
 		"Draw timecode using vector fonts.");
 

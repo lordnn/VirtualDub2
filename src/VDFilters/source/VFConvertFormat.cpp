@@ -397,13 +397,13 @@ class VDVFilterConvertFormat : public VDXVideoFilter {
 public:
 	VDVFilterConvertFormat();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	bool Configure(VDXHWND hwnd);
+	bool Configure(VDXHWND hwnd) override;
 
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 	void ScriptConfig3(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
@@ -642,6 +642,6 @@ VDXVF_BEGIN_SCRIPT_METHODS(VDVFilterConvertFloat)
 VDXVF_DEFINE_SCRIPT_METHOD(VDVFilterConvertFloat, ScriptConfig, "i")
 VDXVF_END_SCRIPT_METHODS()
 
-extern const VDXFilterDefinition2 g_VDVFConvertFormat = VDXVideoFilterDefinition<VDVFilterConvertFormat>(NULL, "convert format", "Converts video to a different color space or color encoding.");
-extern const VDXFilterDefinition2 g_VDVFConvertGray = VDXVideoFilterDefinition<VDVFilterConvertGray>(NULL, "convert to gray", "Converts video to single channel (grayscale).");
-extern const VDXFilterDefinition2 g_VDVFConvertFloat = VDXVideoFilterDefinition<VDVFilterConvertFloat>(NULL, "convert to floating point", "Converts video to planar rgb with 32-bit floating point precision.");
+extern const VDXFilterDefinition2 g_VDVFConvertFormat = VDXVideoFilterDefinition<VDVFilterConvertFormat>(nullptr, "convert format", "Converts video to a different color space or color encoding.");
+extern const VDXFilterDefinition2 g_VDVFConvertGray = VDXVideoFilterDefinition<VDVFilterConvertGray>(nullptr, "convert to gray", "Converts video to single channel (grayscale).");
+extern const VDXFilterDefinition2 g_VDVFConvertFloat = VDXVideoFilterDefinition<VDVFilterConvertFloat>(nullptr, "convert to floating point", "Converts video to planar rgb with 32-bit floating point precision.");

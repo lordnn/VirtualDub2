@@ -613,13 +613,13 @@ public:
 	bool Begin(uint32 w, uint32 h, nsVDPixmap::VDPixmapFormat format);
 	bool End(sint32 x, sint32 y);
 
-	void SetColorRGB(uint32 color);
-	void FillRect(sint32 x, sint32 y, sint32 w, sint32 h);
-	void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView);
+	void SetColorRGB(uint32 color) override;
+	void FillRect(sint32 x, sint32 y, sint32 w, sint32 h) override;
+	void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView) override;
 
 public:
-	void DirectDrawShutdown();
-	void DirectDrawPrimaryRestored();
+	void DirectDrawShutdown() override;
+	void DirectDrawPrimaryRestored() override;
 
 protected:
 	VDDisplayCachedImageDirectDraw *GetCachedImage(VDDisplayImageView& imageView);

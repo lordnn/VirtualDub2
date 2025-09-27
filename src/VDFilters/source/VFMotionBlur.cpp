@@ -24,12 +24,12 @@
 
 class VDVFMotionBlur : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
 
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
 
 protected:
 	sint64	mPrevFrame;

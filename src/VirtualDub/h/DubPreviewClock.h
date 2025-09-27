@@ -42,7 +42,7 @@ public:
 	}
 
 protected:
-	void TimerCallback();
+	void TimerCallback() override;
 
 	uint32 ReadClock() const;
 

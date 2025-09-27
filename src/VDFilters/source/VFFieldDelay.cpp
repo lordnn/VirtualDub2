@@ -89,13 +89,13 @@ bool VDVideoFilterFieldDelayDialog::OnCommand(uint32 id, uint32 excode) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 class VDVideoFilterFieldDelay : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	uint32 GetParams() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -227,7 +227,7 @@ void VDVideoFilterFieldDelay::ScriptConfig(IVDXScriptInterpreter *, const VDXScr
 }
 
 extern const VDXFilterDefinition g_VDVFFieldDelay = VDXVideoFilterDefinition<VDVideoFilterFieldDelay>(
-	NULL,
+	nullptr,
 	"field delay",
 	"Applies a one-field delay to flip the field dominance of an interlaced video stream."
 	);

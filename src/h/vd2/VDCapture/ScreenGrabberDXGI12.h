@@ -10,25 +10,25 @@ class IVDResamplerFilter;
 struct VDScreenGrabberDXGI12 : public IVDScreenGrabber {
 public:
 	VDScreenGrabberDXGI12();
-	~VDScreenGrabberDXGI12();
+	~VDScreenGrabberDXGI12() override;
 
-	bool Init(IVDScreenGrabberCallback *cb);
-	void Shutdown();
+	bool Init(IVDScreenGrabberCallback *cb) override;
+	void Shutdown() override;
 
-	bool InitCapture(uint32 srcw, uint32 srch, uint32 dstw, uint32 dsth, VDScreenGrabberFormat format);
-	void ShutdownCapture();
+	bool InitCapture(uint32 srcw, uint32 srch, uint32 dstw, uint32 dsth, VDScreenGrabberFormat format) override;
+	void ShutdownCapture() override;
 
-	void SetCaptureOffset(int x, int y);
-	void SetCapturePointer(bool enable);
+	void SetCaptureOffset(int x, int y) override;
+	void SetCapturePointer(bool enable) override;
 
-	uint64 GetCurrentTimestamp();
-	sint64 ConvertTimestampDelta(uint64 t, uint64 base);
+	uint64 GetCurrentTimestamp() override;
+	sint64 ConvertTimestampDelta(uint64 t, uint64 base) override;
 
-	bool InitDisplay(HWND hwndParent, bool preview);
-	void ShutdownDisplay();
+	bool InitDisplay(HWND hwndParent, bool preview) override;
+	void ShutdownDisplay() override;
 
-	void SetDisplayVisible(bool visible);
-	void SetDisplayArea(const vdrect32& area);
+	void SetDisplayVisible(bool visible) override;
+	void SetDisplayArea(const vdrect32& area) override;
 
 	bool AcquireFrame(bool dispatch);
 

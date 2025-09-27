@@ -140,9 +140,9 @@ public:
 	void Begin(sint32 w, sint32 h);
 	void End();
 
-	void SetColorRGB(uint32 color);
-	void FillRect(sint32 x, sint32 y, sint32 w, sint32 h);
-	void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView);
+	void SetColorRGB(uint32 color) override;
+	void FillRect(sint32 x, sint32 y, sint32 w, sint32 h) override;
+	void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView) override;
 
 protected:
 	VDDisplayCachedImageOpenGL *GetCachedImage(VDDisplayImageView& imageView);

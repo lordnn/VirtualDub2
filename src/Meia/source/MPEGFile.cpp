@@ -190,15 +190,15 @@ public:
 	~VDMPEGAudioStream() {
 	}
 	
-	int AddRef() { return refCount.inc(); }
-	int Release() { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.inc(); }
+	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
 
-	void getInitialFormat(VDMPEGAudioFormat &format) {
+	void getInitialFormat(VDMPEGAudioFormat &format) override {
 		format.sampling_rate = mSamplingRate;
 		format.channels = ((master_header & 0xC0) != 0xC0) ? 2 : 1;
 	}
 
-	unsigned long getFrameCount() {
+	unsigned long getFrameCount() override {
 		VDASSERT(mFrameMap.begin() != mFrameMap.end());
 
 		tFrameMap::iterator it = mFrameMap.end();
@@ -207,7 +207,7 @@ public:
 		return (*it).first + 1;
 	}
 
-	long ReadFrames(long frame_num, int frame_count, void *buf, long maxbuffer, long& bytes_read) {
+	long ReadFrames(long frame_num, int frame_count, void *buf, long maxbuffer, long& bytes_read) override {
 		if (frame_num < 0)
 			return -1;
 
@@ -471,14 +471,14 @@ public:
 	~VDMPEGVideoStream() {
 	}
 	
-	int AddRef() { return refCount.inc(); }
-	int Release() { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.inc(); }
+	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
 
-	void getInitialFormat(VDMPEGSequenceHeader& dst) {
+	void getInitialFormat(VDMPEGSequenceHeader& dst) override {
 		dst = mInitialSeqHdr;
 	}
 
-	long getFrameCount() {
+	long getFrameCount() override {
 		long frames = 0;
 
 		if (mFrameTable.end() != mFrameTable.begin()) {
@@ -492,7 +492,7 @@ public:
 		return frames;
 	}
 
-	long getNearestI(long f) {
+	long getNearestI(long f) override {
 		while(f>0) {
 			FrameType type;
 
@@ -508,7 +508,7 @@ public:
 		return f;
 	}
 
-	long getPrevIP(long f) {
+	long getPrevIP(long f) override {
 		while(f>0) {
 			FrameType type;
 
@@ -524,7 +524,7 @@ public:
 		return f;
 	}
 
-	long getNextIP(long f) {
+	long getNextIP(long f) override {
 		FrameMap::iterator itEnd = mFrameTable.end();
 
 		if (itEnd == mFrameTable.begin())
@@ -553,7 +553,7 @@ public:
 		return f;
 	}
 
-	long DisplayToStreamOrder(long f) {
+	long DisplayToStreamOrder(long f) override {
 		if (f<0)
 			return -1;
 
@@ -608,7 +608,7 @@ public:
 
 	// happily, this one is easier
 
-	long StreamToDisplayOrder(long f) {
+	long StreamToDisplayOrder(long f) override {
 		if (f<0)
 			return -1;
 
@@ -625,7 +625,7 @@ public:
 		return (*it).second.display_order;
 	}
 
-	long ReadPicture(long stream_number, void *buf, long maxbuffer, FrameType &ftype) {
+	long ReadPicture(long stream_number, void *buf, long maxbuffer, FrameType &ftype) override {
 
 		if (stream_number < 0)
 			return -1;
@@ -1386,10 +1386,10 @@ public:
 		delete[] pBuffer;
 	}
 
-	int AddRef() { return refCount.inc(); }
-	int Release() { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.inc(); }
+	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
 
-	void Open(const wchar_t *pszFile) {
+	void Open(const wchar_t *pszFile) override {
 		mFile.open(pszFile, nsVDFile::kRead | nsVDFile::kDenyWrite | nsVDFile::kOpenExisting | nsVDFile::kSequential);
 		_streamFlush();
 		posBufferBase = 0;
@@ -1398,7 +1398,7 @@ public:
 		nVideoStreamMask = 0;
 	}
 
-	void Close() {
+	void Close() override {
 		int i;
 
 		for(i=0; i<32; ++i) {
@@ -1414,7 +1414,7 @@ public:
 		mFile.closeNT();		// It's open for read.  We don't care if the close fails.
 	}
 
-	bool Init() {
+	bool Init() override {
 		int64 sysclk;
 		long mux;
 
@@ -1555,10 +1555,10 @@ public:
 		return true;
 	}
 
-	long getAudioStreamMask() { return nAudioStreamMask; }
-	long getVideoStreamMask() { return nVideoStreamMask; }
+	long getAudioStreamMask() override { return nAudioStreamMask; }
+	long getVideoStreamMask() override { return nVideoStreamMask; }
 
-	IVDMPEGAudioStream *getAudioStream(int n) {
+	IVDMPEGAudioStream *getAudioStream(int n) override {
 		if (!pAudioStream[n])
 			return NULL;
 
@@ -1567,7 +1567,7 @@ public:
 		return pAudioStream[n];
 	}
 
-	IVDMPEGVideoStream *getVideoStream(int n) {
+	IVDMPEGVideoStream *getVideoStream(int n) override {
 		if (!pVideoStream[n])
 			return NULL;
 
@@ -1576,7 +1576,7 @@ public:
 		return pVideoStream[n];
 	}
 
-	bool PreScan() {
+	bool PreScan() override {
 		int64 sysclk;
 		long mux;
 		int stream;
@@ -1659,7 +1659,7 @@ public:
 	//							desired range during the scan.
 	//							
 
-	bool DoScanByPos(int64 pos, int active_stream, int64 lobound, int64 hibound) {
+	bool DoScanByPos(int64 pos, int active_stream, int64 lobound, int64 hibound) override {
 		int64 sysclk;
 		long mux;
 		int stream;
@@ -1751,7 +1751,7 @@ public:
 
 	// The packet position given is the first byte after the start code.
 
-	bool ReadPacket(int desired_stream, int64 packet, int offset, char *dst, int length) {
+	bool ReadPacket(int desired_stream, int64 packet, int offset, char *dst, int length) override {
 
 		if (mPacketCache.Read(dst, packet, length, offset))
 			return true;

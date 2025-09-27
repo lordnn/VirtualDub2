@@ -103,12 +103,12 @@ class VDVideoFilterInvert : public VDXVideoFilter {
 public:
 	VDVideoFilterInvert();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
 protected:
 	uint32 mAccelFP;
@@ -237,7 +237,7 @@ void VDVideoFilterInvert::StopAccel(IVDXAContext *vdxa) {
 ///////////////////////////////////////////////////////////////////////////////
 
 extern const VDXFilterDefinition g_VDVFInvert = VDXVideoFilterDefinition<VDVideoFilterInvert>(
-		NULL,
+		nullptr,
 		"invert",
 		"Inverts the colors in the image.");
 

@@ -54,11 +54,11 @@ public:
 	uint32 ListSize();
 	void ListClear(bool force_no_update = false);
 
-	void Refresh(VDJob *job);
+	void Refresh(VDJob *job) override;
 	void Add(VDJob *job, bool force_no_update);
 	void Delete(VDJob *job, bool force_no_update);
-	void Run(VDJob *job);
-	void Reload(VDJob *job);
+	void Run(VDJob *job) override;
+	void Reload(VDJob *job) override;
 	void ReloadAutosave();
 	void Transform(int fromState, int toState);
 
@@ -79,7 +79,7 @@ public:
 
 	void Swap(int x, int y);
 
-	bool IsLocal(const VDJob *job) const;
+	bool IsLocal(const VDJob *job) const override;
 
 	bool IsRunInProgress() const {
 		return mbRunning;
@@ -120,8 +120,8 @@ protected:
 
 	void NotifyStatus();
 	uint64 CreateListSignature();
-	bool OnFileUpdated(const wchar_t *path);
-	void TimerCallback();
+	bool OnFileUpdated(const wchar_t *path) override;
+	void TimerCallback() override;
 
 	JobQueue mJobQueue;
 	VDProjectAutoSave autoSave;

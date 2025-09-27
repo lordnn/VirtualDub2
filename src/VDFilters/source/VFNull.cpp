@@ -22,9 +22,9 @@
 
 class VDVFNull : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
-	bool Configure(VDXHWND hwnd);
+	uint32 GetParams() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
 };
 
 uint32 VDVFNull::GetParams() {
@@ -158,12 +158,12 @@ bool VDVFNull::Configure(VDXHWND hwnd) {
 }
 
 extern const VDXFilterDefinition g_VDVFNull = VDXVideoFilterDefinition<VDVFNull>(
-	NULL,
+	nullptr,
 	"null transform",
 	"Does nothing. Typically used as a placeholder for cropping.");
 
 extern const VDXFilterDefinition g_VDVFCrop = VDXVideoFilterDefinition<VDVFNull>(
-	NULL,
+	nullptr,
 	"crop",
 	"Used for cropping.");
 

@@ -246,13 +246,13 @@ class VDVFChromaSmoother : public VDXVideoFilter {
 public:
 	VDVFChromaSmoother() : mMode(0) {}
 
-	void Run();
-	uint32 GetParams();
-	bool Configure(VDXHWND hwnd);
-	void Start();
-	void End();
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	void Run() override;
+	uint32 GetParams() override;
+	bool Configure(VDXHWND hwnd) override;
+	void Start() override;
+	void End() override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -518,6 +518,6 @@ void VDVFChromaSmoother::ScriptConfig(IVDXScriptInterpreter *isi, const VDXScrip
 }
 
 extern const VDXFilterDefinition g_VDVFChromaSmoother = VDXVideoFilterDefinition<VDVFChromaSmoother>(
-	NULL,
+	nullptr,
 	"chroma smoother",
 	"Applies linear interpolation to point-upsampled chroma without affecting luma.");

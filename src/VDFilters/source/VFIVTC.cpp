@@ -1267,14 +1267,14 @@ void VDVideoFilterIVTCDialog::UpdateEnables() {
 
 class VDVideoFilterIVTC : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Start();
-	void Run();
-	bool OnInvalidateCaches();
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
-	bool Configure(VDXHWND);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	uint32 GetParams() override;
+	void Start() override;
+	void Run() override;
+	bool OnInvalidateCaches() override;
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
+	bool Configure(VDXHWND) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *interp, const VDXScriptValue *argv, int argc);
 
@@ -1737,7 +1737,7 @@ void VDVideoFilterIVTC::ScriptConfig(IVDXScriptInterpreter *interp, const VDXScr
 
 extern const VDXFilterDefinition g_VDVFIVTC =
 	VDXVideoFilterDefinition<VDVideoFilterIVTC>(
-		NULL,
+		nullptr,
 		"IVTC", 
 		"Removes 3:2 pulldown (telecine) from video.");
 

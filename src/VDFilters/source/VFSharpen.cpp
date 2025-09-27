@@ -132,11 +132,11 @@ class VDVFSharpen : public VDXVideoFilter {
 public:
 	VDVFSharpen();
 
-	virtual uint32 GetParams();
-	virtual void Run();
-	virtual bool Configure(VDXHWND hwnd);
-	virtual void GetSettingString(char *buf, int maxlen);
-	virtual void GetScriptString(char *buf, int maxlen);
+	virtual uint32 GetParams() override;
+	virtual void Run() override;
+	virtual bool Configure(VDXHWND hwnd) override;
+	virtual void GetSettingString(char *buf, int maxlen) override;
+	virtual void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -269,6 +269,6 @@ void VDVFSharpen::ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue 
 }
 
 extern const VDXFilterDefinition g_VDVFSharpen = VDXVideoFilterDefinition<VDVFSharpen>(
-	NULL,
+	nullptr,
 	"sharpen",
 	"Enhances contrast between adjacent elements in an image.\n\n[Assembly optimized] [MMX optimized]");

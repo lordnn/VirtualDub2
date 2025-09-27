@@ -22,8 +22,8 @@
 
 class VDVideoFilterFieldSwap : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
 protected:
 	static void SwapPlaneScanlines(void *p, ptrdiff_t pitch, uint32 vecw, uint32 h);
@@ -147,7 +147,7 @@ void VDVideoFilterFieldSwap::SwapPlaneScanlines(void *p, ptrdiff_t pitch, uint32
 }
 
 extern const VDXFilterDefinition g_VDVFFieldSwap = VDXVideoFilterDefinition<VDVideoFilterFieldSwap>(
-	NULL,
+	nullptr,
 	"field swap",
 	"Swaps interlaced fields in the image.");
 

@@ -68,7 +68,7 @@ public:
 
 class VDDisplayNode3D : public vdrefcount {
 public:
-	virtual ~VDDisplayNode3D();
+	~VDDisplayNode3D() override;
 
 	virtual void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx) = 0;
 };
@@ -78,7 +78,7 @@ public:
 class VDDisplayImageNode3D : public VDDisplayNode3D {
 public:
 	VDDisplayImageNode3D();
-	~VDDisplayImageNode3D();
+	~VDDisplayImageNode3D() override;
 
 	bool CanStretch() const;
 	void SetBilinear(bool enabled) { mbBilinear = enabled; }
@@ -88,7 +88,7 @@ public:
 
 	void Load(const VDPixmap& px);
 
-	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx);
+	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx) override;
 
 private:
 	enum RenderMode {
@@ -125,12 +125,12 @@ private:
 class VDDisplayBufferNode3D : public VDDisplayNode3D {
 public:
 	VDDisplayBufferNode3D();
-	~VDDisplayBufferNode3D();
+	~VDDisplayBufferNode3D() override;
 
 	bool Init(IVDTContext& ctx, VDDisplayNodeContext3D& dctx, uint32 w, uint32 h, bool linear, VDDisplayNode3D *child);
 	void Shutdown();
 
-	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx);
+	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx) override;
 
 private:
 	struct Vertex;
@@ -146,12 +146,12 @@ private:
 class VDDisplayStretchNode3D : public VDDisplayNode3D {
 public:
 	VDDisplayStretchNode3D();
-	~VDDisplayStretchNode3D();
+	~VDDisplayStretchNode3D() override;
 
 	bool Init(IVDTContext& ctx, VDDisplayNodeContext3D& dctx, uint32 srcw, uint32 srch, uint32 dstw, uint32 dsth, VDDisplayNode3D *child);
 	void Shutdown();
 
-	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx);
+	void Draw(IVDTContext& ctx, VDDisplayNodeContext3D& dctx) override;
 
 private:
 	struct Vertex;

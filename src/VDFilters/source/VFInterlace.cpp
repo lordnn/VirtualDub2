@@ -70,15 +70,15 @@ void VDVideoFilterInterlaceDialog::OnDataExchange(bool write) {
 
 class VDVideoFilterInterlace : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
 
-	bool Configure(VDXHWND hwnd);
+	bool Configure(VDXHWND hwnd) override;
 
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 
@@ -279,7 +279,7 @@ void VDVideoFilterInterlace::ScriptConfig(IVDXScriptInterpreter *, const VDXScri
 
 extern const VDXFilterDefinition g_VDVFInterlace =
 	VDXVideoFilterDefinition<VDVideoFilterInterlace>(
-		NULL,
+		nullptr,
 		"interlace", 
 		"Converts progressive-scan video to interlace at half the frame rate.");
 

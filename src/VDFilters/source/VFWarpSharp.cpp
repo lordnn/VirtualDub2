@@ -98,18 +98,18 @@ public:
 	VDVFilterWarpSharp();
 	~VDVFilterWarpSharp();
 
-	uint32 GetParams();
-	void Start();
-	void Run();
-	void End();
+	uint32 GetParams() override;
+	void Start() override;
+	void Run() override;
+	void End() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *interp, const VDXScriptValue *argv, int argc);
 

@@ -141,17 +141,17 @@ class VDVFilterBrightCont : public VDXVideoFilter {
 public:
 	VDVFilterBrightCont();
 
-	uint32 GetParams();
-	void Start();
-	void Run();
+	uint32 GetParams() override;
+	void Start() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
@@ -518,7 +518,7 @@ void VDVFilterBrightCont::GetScriptString(char *buf, int maxlen) {
 
 
 extern const VDXFilterDefinition g_VDVFBrightCont = VDXVideoFilterDefinition<VDVFilterBrightCont>(
-	NULL,
+	nullptr,
 	"brightness/contrast",
 	"Adjusts brightness and contrast of an image linearly."
 );

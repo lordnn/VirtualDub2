@@ -2904,21 +2904,21 @@ public:
 	{
 	}
 
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
-	bool OnInvalidateCaches();
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
+	bool OnInvalidateCaches() override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -3766,7 +3766,7 @@ void VDVideoFilterDeinterlace::ScriptConfigOld(IVDXScriptInterpreter *, const VD
 }
 
 extern const VDXFilterDefinition g_VDVFDeinterlace = VDXVideoFilterDefinition<VDVideoFilterDeinterlace>(
-	NULL,
+	nullptr,
 	"deinterlace",
 	"Removes scanline artifacts from interlaced video. Parts based on the Yadif deinterlacing algorithm by Michael Niedermayer."
 	);

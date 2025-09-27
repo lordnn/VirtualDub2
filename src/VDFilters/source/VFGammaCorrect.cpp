@@ -62,13 +62,13 @@ public:
 	VDVideoFilterGammaCorrect() { mLookup16=0; }
 	VDVideoFilterGammaCorrect(const VDVideoFilterGammaCorrect& a) { mLookup16=0; mConfig = a.mConfig; }
 	~VDVideoFilterGammaCorrect() { free(mLookup16); }
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
@@ -294,7 +294,7 @@ void VDVideoFilterGammaCorrect::ScriptConfig(IVDXScriptInterpreter *, const VDXS
 }
 
 extern const VDXFilterDefinition g_VDVFGammaCorrect = VDXVideoFilterDefinition<VDVideoFilterGammaCorrect>(
-	NULL,
+	nullptr,
 	"gamma correct",
 	"Converts video color representation between gamma space and linear space."
 	);

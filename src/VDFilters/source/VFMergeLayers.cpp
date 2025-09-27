@@ -139,17 +139,17 @@ class VDVFMergeLayers : public VDXVideoFilter {
 public:
 	VDVFMergeLayers();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
-	bool Configure(VDXHWND hwnd);
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	bool Configure(VDXHWND hwnd) override;
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -326,7 +326,7 @@ void VDVFMergeLayers::OnScriptConfig(IVDXScriptInterpreter *, const VDXScriptVal
 	mConfig.mMode = (VDVFMergeLayersConfig::Mode)mode;
 }
 
-extern const VDXFilterDefinition g_VDVFMergeLayers = VDXVideoFilterDefinition<VDVFMergeLayers>(NULL, "merge layers", "Blends two layers together using a third layer.");
+extern const VDXFilterDefinition g_VDVFMergeLayers = VDXVideoFilterDefinition<VDVFMergeLayers>(nullptr, "merge layers", "Blends two layers together using a third layer.");
 
 // warning C4505: 'VDXVideoFilter::[thunk]: __thiscall VDXVideoFilter::`vcall'{24,{flat}}' }'' : unreferenced local function has been removed
 #pragma warning(disable: 4505)

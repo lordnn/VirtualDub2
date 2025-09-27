@@ -191,14 +191,14 @@ void VDVideoFilterInterpolateDialog::UpdateEnables() {
 
 class VDVideoFilterInterpolate : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Run();
-	bool Configure(VDXHWND hwnd);
+	uint32 GetParams() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
 
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
 
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 
@@ -404,7 +404,7 @@ void VDVideoFilterInterpolate::ScriptConfig(IVDXScriptInterpreter *, const VDXSc
 }
 
 extern const VDXFilterDefinition g_VDVFInterpolate = VDXVideoFilterDefinition<VDVideoFilterInterpolate>(
-	NULL,
+	nullptr,
 	"interpolate",
 	"Interpolates video to a different frame rate.");
 

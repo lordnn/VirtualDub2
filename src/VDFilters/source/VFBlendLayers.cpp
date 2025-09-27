@@ -195,17 +195,17 @@ class VDVFBlendLayers : public VDXVideoFilter {
 public:
 	VDVFBlendLayers();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
 
-	bool Configure(VDXHWND hwnd);
-	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	bool Configure(VDXHWND hwnd) override;
+	bool Prefetch2(sint64 frame, IVDXVideoPrefetcher *prefetcher) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -574,7 +574,7 @@ void VDVFBlendLayers::OnScriptConfig(IVDXScriptInterpreter *, const VDXScriptVal
 		mConfig.mAmount = 1.0f;
 }
 
-extern const VDXFilterDefinition g_VDVFBlendLayers = VDXVideoFilterDefinition<VDVFBlendLayers>(NULL, "blend layers", "Blends layers from two video streams.");
+extern const VDXFilterDefinition g_VDVFBlendLayers = VDXVideoFilterDefinition<VDVFBlendLayers>(nullptr, "blend layers", "Blends layers from two video streams.");
 
 // warning C4505: 'VDXVideoFilter::[thunk]: __thiscall VDXVideoFilter::`vcall'{24,{flat}}' }'' : unreferenced local function has been removed
 #pragma warning(disable: 4505)

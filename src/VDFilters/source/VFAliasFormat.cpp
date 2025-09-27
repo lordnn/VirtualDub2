@@ -155,13 +155,13 @@ class VDVFilterAliasFormat : public VDXVideoFilter {
 public:
 	VDVFilterAliasFormat();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	bool Configure(VDXHWND hwnd);
+	bool Configure(VDXHWND hwnd) override;
 
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *, const VDXScriptValue *argv, int argc);
 
@@ -291,7 +291,7 @@ VDXVF_DEFINE_SCRIPT_METHOD(VDVFilterAliasFormat, ScriptConfig, "ii")
 VDXVF_DEFINE_SCRIPT_METHOD(VDVFilterAliasFormat, ScriptConfig, "iii")
 VDXVF_END_SCRIPT_METHODS()
 
-extern const VDXFilterDefinition2 g_VDVFAliasFormat = VDXVideoFilterDefinition<VDVFilterAliasFormat>(NULL, "alias format", "Relabel video with a different color space or color encoding without changing video data.");
+extern const VDXFilterDefinition2 g_VDVFAliasFormat = VDXVideoFilterDefinition<VDVFilterAliasFormat>(nullptr, "alias format", "Relabel video with a different color space or color encoding without changing video data.");
 
 // warning C4505: 'VDXVideoFilter::[thunk]: __thiscall VDXVideoFilter::`vcall'{24,{flat}}' }'' : unreferenced local function has been removed
 #pragma warning(disable: 4505)

@@ -123,7 +123,7 @@ protected:
 		return false;
 	}
 
-	void OnTick() {
+	void OnTick() override {
 		if (mpMiniDriver)
 			mpMiniDriver->Poll();
 	}
@@ -163,9 +163,9 @@ protected:
 	void SyncSetFilterMode(FilterMode mode);
 	void SyncSetDisplayMode(DisplayMode mode);
 	void SyncSetSolidColor(uint32 color);
-	void OnDisplayChange();
-	void OnForegroundChange(bool bForeground);
-	void OnRealizePalette();
+	void OnDisplayChange() override;
+	void OnForegroundChange(bool bForeground) override;
+	void OnRealizePalette() override;
 	bool InitMiniDriver();
 	void ShutdownMiniDriver();
 	void RequestUpdate();

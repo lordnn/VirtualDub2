@@ -566,13 +566,13 @@ bool VDVideoFilterFieldBob2ConfigDialog::OnCancel() {
 
 class VDVideoFilterFieldBob2 : public VDXVideoFilter {
 public:
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	void ScriptConfig(IVDXScriptInterpreter *isi, const VDXScriptValue *argv, int argc);
 
@@ -771,7 +771,7 @@ void VDVideoFilterFieldBob2::ScriptConfig(IVDXScriptInterpreter *isi, const VDXS
 
 extern const VDXFilterDefinition g_VDVFFieldBob2 =
 	VDXVideoFilterDefinition<VDVideoFilterFieldBob2>(
-		NULL,
+		nullptr,
 		"bob doubler", 
 		"Upsamples an interlaced video to double frame rate.");
 

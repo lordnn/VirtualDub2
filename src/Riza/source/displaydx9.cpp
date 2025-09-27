@@ -757,16 +757,16 @@ void VDDisplayCachedImageD3D9::Update(const VDDisplayImageView& imageView) {
 
 class VDDisplayRendererD3D9 : public vdrefcounted<IVDDisplayRendererD3D9> {
 public:
-	virtual bool Init(VDD3D9Manager *d3dmgr);
-	virtual void Shutdown();
+	bool Init(VDD3D9Manager *d3dmgr) override;
+	void Shutdown() override;
 
-	virtual bool Begin();
-	virtual void End();
+	bool Begin() override;
+	void End() override;
 
 public:
-	virtual void SetColorRGB(uint32 color);
-	virtual void FillRect(sint32 x, sint32 y, sint32 w, sint32 h);
-	virtual void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView);
+	void SetColorRGB(uint32 color) override;
+	void FillRect(sint32 x, sint32 y, sint32 w, sint32 h) override;
+	void Blt(sint32 x, sint32 y, VDDisplayImageView& imageView) override;
 
 public:
 	VDDisplayCachedImageD3D9 *GetCachedImage(VDDisplayImageView& imageView);
@@ -950,7 +950,7 @@ VDDisplayCachedImageD3D9 *VDDisplayRendererD3D9::GetCachedImage(VDDisplayImageVi
 }
 
 bool VDCreateDisplayRendererD3D9(IVDDisplayRendererD3D9 **pp) {
-	*pp = new VDDisplayRendererD3D9;
+	*pp = new_nothrow VDDisplayRendererD3D9;
 
 	if (!*pp)
 		return false;

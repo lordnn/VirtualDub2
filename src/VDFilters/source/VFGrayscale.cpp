@@ -128,12 +128,12 @@ class VDVFGrayscale : public VDXVideoFilter {
 public:
 	VDVFGrayscale();
 
-	uint32 GetParams();
-	void Run();
+	uint32 GetParams() override;
+	void Run() override;
 
-	void StartAccel(IVDXAContext *vdxa);
-	void StopAccel(IVDXAContext *vdxa);
-	void RunAccel(IVDXAContext *vdxa);
+	void StartAccel(IVDXAContext *vdxa) override;
+	void StopAccel(IVDXAContext *vdxa) override;
+	void RunAccel(IVDXAContext *vdxa) override;
 
 protected:
 	void RunYUV(const VDXPixmap& pxdst, int xbits, int ybits);
@@ -324,6 +324,6 @@ void VDVFGrayscale::RunAccel(IVDXAContext *vdxa) {
 }
 
 extern const VDXFilterDefinition g_VDVFGrayscale = VDXVideoFilterDefinition<VDVFGrayscale>(
-	NULL,
+	nullptr,
 	"grayscale",
 	"Rips the color out of your image.\n\n[Assembly optimized] [YCbCr processing]");

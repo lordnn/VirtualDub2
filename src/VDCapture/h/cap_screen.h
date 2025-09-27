@@ -39,98 +39,98 @@ class VDCaptureDriverScreen : public IVDCaptureDriver, public IVDScreenGrabberCa
 	VDCaptureDriverScreen& operator=(const VDCaptureDriverScreen&);
 public:
 	VDCaptureDriverScreen();
-	~VDCaptureDriverScreen();
+	~VDCaptureDriverScreen() override;
 
-	void	*AsInterface(uint32 id) { return NULL; }
+	void	*AsInterface(uint32 id) override { return nullptr; }
 
-	bool	Init(VDGUIHandle hParent);
+	bool	Init(VDGUIHandle hParent) override;
 	void	Shutdown();
 
-	void	SetCallback(IVDCaptureDriverCallback *pCB);
+	void	SetCallback(IVDCaptureDriverCallback *pCB) override;
 
-	void	LockUpdates() {}
-	void	UnlockUpdates() {}
+	void	LockUpdates() override {}
+	void	UnlockUpdates() override {}
 
-	bool	IsHardwareDisplayAvailable();
+	bool	IsHardwareDisplayAvailable() override;
 
-	void	SetDisplayMode(nsVDCapture::DisplayMode m);
-	nsVDCapture::DisplayMode		GetDisplayMode();
+	void	SetDisplayMode(nsVDCapture::DisplayMode m) override;
+	nsVDCapture::DisplayMode		GetDisplayMode() override;
 
-	void	SetDisplayRect(const vdrect32& r);
-	vdrect32	GetDisplayRectAbsolute();
-	void	SetDisplayVisibility(bool vis);
+	void	SetDisplayRect(const vdrect32& r) override;
+	vdrect32	GetDisplayRectAbsolute() override;
+	void	SetDisplayVisibility(bool vis) override;
 
-	void	SetFramePeriod(sint32 ms);
-	sint32	GetFramePeriod();
+	void	SetFramePeriod(sint32 ms) override;
+	sint32	GetFramePeriod() override;
 
-	uint32	GetPreviewFrameCount();
+	uint32	GetPreviewFrameCount() override;
 
-	bool	GetVideoFormat(vdstructex<BITMAPINFOHEADER>& vformat);
-	bool	SetVideoFormat(const BITMAPINFOHEADER *pbih, uint32 size);
+	bool	GetVideoFormat(vdstructex<BITMAPINFOHEADER>& vformat) override;
+	bool	SetVideoFormat(const BITMAPINFOHEADER *pbih, uint32 size) override;
 
-	bool	SetTunerChannel(int channel) { return false; }
-	int		GetTunerChannel() { return -1; }
-	bool	GetTunerChannelRange(int& minChannel, int& maxChannel) { return false; }
-	uint32	GetTunerFrequencyPrecision() { return 0; }
-	uint32	GetTunerExactFrequency() { return 0; }
-	bool	SetTunerExactFrequency(uint32 freq) { return false; }
-	nsVDCapture::TunerInputMode	GetTunerInputMode() { return nsVDCapture::kTunerInputUnknown; }
-	void	SetTunerInputMode(nsVDCapture::TunerInputMode tunerMode) {}
+	bool	SetTunerChannel(int channel) override { return false; }
+	int		GetTunerChannel() override { return -1; }
+	bool	GetTunerChannelRange(int& minChannel, int& maxChannel) override { return false; }
+	uint32	GetTunerFrequencyPrecision() override { return 0; }
+	uint32	GetTunerExactFrequency() override { return 0; }
+	bool	SetTunerExactFrequency(uint32 freq) override { return false; }
+	nsVDCapture::TunerInputMode	GetTunerInputMode() override { return nsVDCapture::kTunerInputUnknown; }
+	void	SetTunerInputMode(nsVDCapture::TunerInputMode tunerMode) override {}
 
-	int		GetAudioDeviceCount();
-	const wchar_t *GetAudioDeviceName(int idx);
-	bool	SetAudioDevice(int idx);
-	int		GetAudioDeviceIndex();
-	bool	IsAudioDeviceIntegrated(int idx) { return false; }
+	int		GetAudioDeviceCount() override;
+	const wchar_t *GetAudioDeviceName(int idx) override;
+	bool	SetAudioDevice(int idx) override;
+	int		GetAudioDeviceIndex() override;
+	bool	IsAudioDeviceIntegrated(int idx) override { return false; }
 
-	int		GetVideoSourceCount();
-	const wchar_t *GetVideoSourceName(int idx);
-	bool	SetVideoSource(int idx);
-	int		GetVideoSourceIndex();
+	int		GetVideoSourceCount() override;
+	const wchar_t *GetVideoSourceName(int idx) override;
+	bool	SetVideoSource(int idx) override;
+	int		GetVideoSourceIndex() override;
 
-	int		GetAudioSourceCount();
-	const wchar_t *GetAudioSourceName(int idx);
-	bool	SetAudioSource(int idx);
-	int		GetAudioSourceIndex();
+	int		GetAudioSourceCount() override;
+	const wchar_t *GetAudioSourceName(int idx) override;
+	bool	SetAudioSource(int idx) override;
+	int		GetAudioSourceIndex() override;
 
-	int		GetAudioInputCount();
-	const wchar_t *GetAudioInputName(int idx);
-	bool	SetAudioInput(int idx);
-	int		GetAudioInputIndex();
+	int		GetAudioInputCount() override;
+	const wchar_t *GetAudioInputName(int idx) override;
+	bool	SetAudioInput(int idx) override;
+	int		GetAudioInputIndex() override;
 
-	int		GetAudioSourceForVideoSource(int idx) { return -2; }
+	int		GetAudioSourceForVideoSource(int idx) override { return -2; }
 
-	bool	IsAudioCapturePossible();
-	bool	IsAudioCaptureEnabled();
-	bool	IsAudioPlaybackPossible() { return false; }
-	bool	IsAudioPlaybackEnabled() { return false; }
-	void	SetAudioCaptureEnabled(bool b);
-	void	SetAudioAnalysisEnabled(bool b);
-	void	SetAudioPlaybackEnabled(bool b) {}
+	bool	IsAudioCapturePossible() override;
+	bool	IsAudioCaptureEnabled() override;
+	bool	IsAudioPlaybackPossible() override { return false; }
+	bool	IsAudioPlaybackEnabled() override { return false; }
+	void	SetAudioCaptureEnabled(bool b) override;
+	void	SetAudioAnalysisEnabled(bool b) override;
+	void	SetAudioPlaybackEnabled(bool b) override {}
 
-	void	GetAvailableAudioFormats(std::list<vdstructex<WAVEFORMATEX> >& aformats);
+	void	GetAvailableAudioFormats(std::list<vdstructex<WAVEFORMATEX> >& aformats) override;
 	void	GetExtraFormats(std::list<vdstructex<WAVEFORMATEX> >& aformats);
 
-	bool	GetAudioFormat(vdstructex<WAVEFORMATEX>& aformat);
-	bool	SetAudioFormat(const WAVEFORMATEX *pwfex, uint32 size);
+	bool	GetAudioFormat(vdstructex<WAVEFORMATEX>& aformat) override;
+	bool	SetAudioFormat(const WAVEFORMATEX *pwfex, uint32 size) override;
 
-	bool	IsDriverDialogSupported(nsVDCapture::DriverDialog dlg);
-	void	DisplayDriverDialog(nsVDCapture::DriverDialog dlg);
+	bool	IsDriverDialogSupported(nsVDCapture::DriverDialog dlg) override;
+	void	DisplayDriverDialog(nsVDCapture::DriverDialog dlg) override;
 
-	bool	IsPropertySupported(uint32 id) { return false; }
-	sint32	GetPropertyInt(uint32 id, bool *pAutomatic) { if (pAutomatic) *pAutomatic = true; return 0; }
-	void	SetPropertyInt(uint32 id, sint32 value, bool automatic) {}
-	void	GetPropertyInfoInt(uint32 id, sint32& minVal, sint32& maxVal, sint32& step, sint32& defaultVal, bool& automatic, bool& manual) {}
+	bool	IsPropertySupported(uint32 id) override { return false; }
+	sint32	GetPropertyInt(uint32 id, bool *pAutomatic) override { if (pAutomatic) *pAutomatic = true; return 0; }
+	void	SetPropertyInt(uint32 id, sint32 value, bool automatic) override {}
+	void	GetPropertyInfoInt(uint32 id, sint32& minVal, sint32& maxVal, sint32& step, sint32& defaultVal, bool& automatic, bool& manual) override {}
 
-	bool	CaptureStart();
-	void	CaptureStop();
-	void	CaptureAbort();
-
-protected:
-	virtual void ReceiveFrame(uint64 timestamp, const void *data, ptrdiff_t pitch, uint32 rowlen, uint32 rowcnt);
+	bool	CaptureStart() override;
+	void	CaptureStop() override;
+	void	CaptureAbort() override;
 
 protected:
-	virtual void ReceiveAudioDataWASAPI();
+	void ReceiveFrame(uint64 timestamp, const void *data, ptrdiff_t pitch, uint32 rowlen, uint32 rowcnt) override;
+
+protected:
+	void ReceiveAudioDataWASAPI() override;
 
 protected:
 	void	SyncCaptureStop();
@@ -147,7 +147,7 @@ protected:
 	void	UpdateTracking();
 	void	DispatchFrame(const void *data, uint32 size, sint64 timestamp);
 
-	void	TimerCallback();
+	void	TimerCallback() override;
 
 	void	InitPreviewTimer();
 	void	ShutdownPreviewTimer();

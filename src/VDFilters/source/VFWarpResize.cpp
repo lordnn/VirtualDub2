@@ -57,13 +57,13 @@ class WarpResizeFilter : public VDXVideoFilter, public VDXVideoFilterDialog {
 public:
 	WarpResizeFilter();
 
-	uint32 GetParams();
-	void Start();
-	void End();
-	void Run();
-	bool Configure(VDXHWND hwnd);
-	void GetSettingString(char *buf, int maxlen);
-	void GetScriptString(char *buf, int maxlen);
+	uint32 GetParams() override;
+	void Start() override;
+	void End() override;
+	void Run() override;
+	bool Configure(VDXHWND hwnd) override;
+	void GetSettingString(char *buf, int maxlen) override;
+	void GetScriptString(char *buf, int maxlen) override;
 
 	VDXVF_DECLARE_SCRIPT_METHODS();
 
@@ -96,7 +96,7 @@ protected:
 ///////////////////////////////////////////////////////////////////////////
 
 extern const VDXFilterDefinition g_VDVFWarpResize = VDXVideoFilterDefinition<WarpResizeFilter>(
-	NULL,
+	nullptr,
 	"warp resize",
 	"Stretches an image with edge-directed sharpening using a variant of the warpsharp algorithm."
 	);
