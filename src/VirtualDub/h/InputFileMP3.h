@@ -88,10 +88,10 @@ private:
 class VDAudioSourceMP3 : public AudioSource {
 public:
 	VDAudioSourceMP3(VDInputFileMP3 *parent);
-	~VDAudioSourceMP3();
+	~VDAudioSourceMP3() override;
 
-	virtual VBRMode GetVBRMode() const { return mbVBRMode ? kVBRModeVariableFrames : kVBRModeNone; }
-	virtual int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead);
+	VBRMode GetVBRMode() const  override { return mbVBRMode ? kVBRModeVariableFrames : kVBRModeNone; }
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead) override;
 
 protected:
 	vdrefptr<VDInputFileMP3>	mpParent;

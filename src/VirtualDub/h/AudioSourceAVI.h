@@ -47,7 +47,7 @@ private:
 
 	bool _isKey(VDPosition lSample);
 
-	~AudioSourceAVI();
+	~AudioSourceAVI() override;
 
 public:
 	AudioSourceAVI(InputFileAVI *pParent, IAVIReadHandler *pAVIFile, int streamIndex, bool bAutomated);
@@ -56,17 +56,17 @@ public:
 
 	void Reinit();
 	int GetPreloadSamples();
-	bool isStreaming();
+	bool isStreaming() override;
 
-	void streamBegin(bool fRealTime, bool bForceReset);
-	void streamEnd();
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamEnd() override;
 
 	bool init();
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead) override;
 
-	virtual VDPosition TimeToPositionVBR(VDTime us) const;
-	virtual VDTime PositionToTimeVBR(VDPosition samples) const;
-	virtual VBRMode GetVBRMode() const;
+	VDPosition TimeToPositionVBR(VDTime us) const override;
+	VDTime PositionToTimeVBR(VDPosition samples) const override;
+	VBRMode GetVBRMode() const override;
 };
 
 class AudioSourceDV : public VDAudioSourceAVISourced {
@@ -74,21 +74,21 @@ public:
 	AudioSourceDV(InputFileAVI *pParent, IAVIReadStream *pAVIStream, bool bAutomated);
 
 	void Reinit();
-	int GetPreloadSamples() { return 0; }
-	bool isStreaming();
+	int GetPreloadSamples() override { return 0; }
+	bool isStreaming() override;
 
-	void streamBegin(bool fRealTime, bool bForceReset);
-	void streamEnd();
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamEnd() override;
 
-	ErrorMode getDecodeErrorMode() { return mErrorMode; }
-	void setDecodeErrorMode(ErrorMode mode) { mErrorMode = mode; }
-	bool isDecodeErrorModeSupported(ErrorMode mode) { return mode == kErrorModeConceal || mode == kErrorModeReportAll; }
+	ErrorMode getDecodeErrorMode() override { return mErrorMode; }
+	void setDecodeErrorMode(ErrorMode mode) override { mErrorMode = mode; }
+	bool isDecodeErrorModeSupported(ErrorMode mode) override { return mode == kErrorModeConceal || mode == kErrorModeReportAll; }
 
 	bool init();
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead) override;
 
 protected:
-	~AudioSourceDV();
+	~AudioSourceDV() override;
 
 	struct CacheLine;
 

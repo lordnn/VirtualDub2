@@ -61,9 +61,9 @@ private:
 class VDAudioSourceWAV : public AudioSource {
 public:
 	VDAudioSourceWAV(VDInputFileWAV *parent);
-	~VDAudioSourceWAV();
+	~VDAudioSourceWAV() override;
 
-	virtual int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lSamplesRead, uint32 *lBytesRead) override;
 
 protected:
 	vdrefptr<VDInputFileWAV>	mpParent;

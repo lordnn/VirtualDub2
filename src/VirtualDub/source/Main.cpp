@@ -1135,8 +1135,8 @@ public:
 	vdfastvector<int> opt_format;
 	bool fUseCompatibility;
 
-	virtual bool Commit(const VDStringW& fname);
-	virtual void ChangeFilterIndex();
+	bool Commit(const VDStringW& fname) override;
+	void ChangeFilterIndex() override;
 };
 
 void SaveAVI(HWND hWnd, bool fUseCompatibility, bool queueAsJob) {
@@ -1283,7 +1283,7 @@ public:
 	vdfastvector<int> opt_format;
 	bool fUseCompatibility;
 
-	virtual bool Commit(const VDStringW& fname);
+	bool Commit(const VDStringW& fname) override;
 };
 
 void SaveAudio(HWND hWnd, bool queueAsJob) {

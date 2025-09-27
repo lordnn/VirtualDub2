@@ -396,49 +396,49 @@ public:
 	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
 
 	// VideoSource
-	const void *getFrameBuffer();
-	const VDFraction getPixelAspectRatio() const;
+	const void *getFrameBuffer() override;
+	const VDFraction getPixelAspectRatio() const override;
 
-	const VDPixmap& getTargetFormat();
-	bool setTargetFormat(VDPixmapFormatEx format);
-	bool setDecompressedFormat(int depth);
-	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih);
+	const VDPixmap& getTargetFormat() override;
+	bool setTargetFormat(VDPixmapFormatEx format) override;
+	bool setDecompressedFormat(int depth) override;
+	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih) override;
 
-	void streamSetDesiredFrame(VDPosition frame_num);
-	VDPosition streamGetNextRequiredFrame(bool& is_preroll);
-	int	streamGetRequiredCount(uint32 *totalsize);
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
-	uint32 streamGetDecodePadding();
+	void streamSetDesiredFrame(VDPosition frame_num) override;
+	VDPosition streamGetNextRequiredFrame(bool& is_preroll) override;
+	int	streamGetRequiredCount(uint32 *totalsize) override;
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
+	uint32 streamGetDecodePadding() override;
 
-	void streamBegin(bool fRealTime, bool bForceReset);
-	void streamRestart();
-	void streamAppendReinit();
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	void streamRestart() override;
+	void streamAppendReinit() override;
 	void applyStreamMode(sint32 flags);
 	void LoadFormat();
 
-	void invalidateFrameBuffer();
-	bool isFrameBufferValid();
+	void invalidateFrameBuffer() override;
+	bool isFrameBufferValid() override;
 
-	const void *getFrame(VDPosition frameNum);
-	char		getFrameTypeChar(VDPosition lFrameNum);
+	const void *getFrame(VDPosition frameNum) override;
+	char		getFrameTypeChar(VDPosition lFrameNum) override;
 
-	eDropType	getDropType(VDPosition lFrameNum);
+	eDropType	getDropType(VDPosition lFrameNum) override;
 
-	bool isKey(VDPosition lSample);
-	VDPosition nearestKey(VDPosition lSample);
-	VDPosition prevKey(VDPosition lSample);
-	VDPosition nextKey(VDPosition lSample);
+	bool isKey(VDPosition lSample) override;
+	VDPosition nearestKey(VDPosition lSample) override;
+	VDPosition prevKey(VDPosition lSample) override;
+	VDPosition nextKey(VDPosition lSample) override;
 
-	bool isKeyframeOnly();
-	bool isSyncDecode();
+	bool isKeyframeOnly() override;
+	bool isSyncDecode() override;
 
-	VDPosition	streamToDisplayOrder(VDPosition sample_num);
-	VDPosition	displayToStreamOrder(VDPosition display_num);
-	VDPosition	getRealDisplayFrame(VDPosition display_num);
+	VDPosition	streamToDisplayOrder(VDPosition sample_num) override;
+	VDPosition	displayToStreamOrder(VDPosition display_num) override;
+	VDPosition	getRealDisplayFrame(VDPosition display_num) override;
 
-	bool		isDecodable(VDPosition sample_num);
+	bool		isDecodable(VDPosition sample_num) override;
 
-	sint64		getSampleBytePosition(VDPosition sample_num);
+	sint64		getSampleBytePosition(VDPosition sample_num) override;
 
 protected:
 	vdrefptr<InputFile>					mpParent;		// must be before IVDX objects
@@ -1066,16 +1066,16 @@ sint64 VDVideoSourcePlugin::getSampleBytePosition(VDPosition sample_num) {
 class VDAudioSourcePlugin : public AudioSource {
 public:
 	VDAudioSourcePlugin(IVDXAudioSource *pVS, VDInputDriverContextImpl *pContext, InputFile *pParent);
-	~VDAudioSourcePlugin();
+	~VDAudioSourcePlugin() override;
 
 	// DubSource
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	void SetTargetFormat(const VDWaveFormat* format);
-	void streamAppendReinit();
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	void SetTargetFormat(const VDWaveFormat* format) override;
+	void streamAppendReinit() override;
 
-	VBRMode GetVBRMode() const { return mVBRMode; }
-	VDPosition	TimeToPositionVBR(VDTime us) const;
-	VDTime		PositionToTimeVBR(VDPosition samples) const;
+	VBRMode GetVBRMode() const override { return mVBRMode; }
+	VDPosition	TimeToPositionVBR(VDTime us) const override;
+	VDTime		PositionToTimeVBR(VDPosition samples) const override;
 
 protected:
 	vdrefptr<InputFile>			mpParent;		// also holds plugin open

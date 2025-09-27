@@ -66,7 +66,7 @@ private:
 	bool _construct(int streamIndex);
 	void _destruct();
 
-	~VideoSourceAVI();
+	~VideoSourceAVI() override;
 
 public:
 	VideoSourceAVI(InputFileAVI *pParent, IAVIReadHandler *pAVI, AVIStripeSystem *stripesys, IAVIReadHandler **stripe_files, bool use_internal, int mjpeg_mode, uint32 fccForceVideo, uint32 fccForceVideoHandler, const uint32 *key_flags);
@@ -75,26 +75,26 @@ public:
 	void Reinit();
 	void redoKeyFlags(vdfastvector<uint32>& newFlags);
 
-	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead);
-	bool _isKey(VDPosition samp);
-	VDPosition nearestKey(VDPosition lSample);
-	VDPosition prevKey(VDPosition lSample);
-	VDPosition nextKey(VDPosition lSample);
+	int _read(VDPosition lStart, uint32 lCount, void *lpBuffer, uint32 cbBuffer, uint32 *lBytesRead, uint32 *lSamplesRead) override;
+	bool _isKey(VDPosition samp) override;
+	VDPosition nearestKey(VDPosition lSample) override;
+	VDPosition prevKey(VDPosition lSample) override;
+	VDPosition nextKey(VDPosition lSample) override;
 
-	bool setTargetFormat(VDPixmapFormatEx format);
-	bool setDecompressedFormat(int depth) { return VideoSource::setDecompressedFormat(depth); }
-	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih);
-	void invalidateFrameBuffer();
-	bool isFrameBufferValid();
+	bool setTargetFormat(VDPixmapFormatEx format) override;
+	bool setDecompressedFormat(int depth) override { return VideoSource::setDecompressedFormat(depth); }
+	bool setDecompressedFormat(const VDAVIBitmapInfoHeader *pbih) override;
+	void invalidateFrameBuffer() override;
+	bool isFrameBufferValid() override;
 	bool isStreaming();
 
-	void streamBegin(bool fRealTime, bool bForceReset);
-	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample);
-	void streamEnd();
+	void streamBegin(bool fRealTime, bool bForceReset) override;
+	const void *streamGetFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, VDPosition sample_num, VDPosition target_sample) override;
+	void streamEnd() override;
 
 	// I really hate doing this, but an awful lot of codecs are sloppy about their
 	// Huffman or VLC decoding and read a few bytes beyond the end of the stream.
-	uint32 streamGetDecodePadding() { return 16; }
+	uint32 streamGetDecodePadding() override { return 16; }
 
 	// This is to work around an XviD decode bug. From squid_80:
 	// "When decompressing a b-frame, Xvid reads past the end of the input buffer looking for a resync
@@ -102,26 +102,26 @@ public:
 	//  end of the input buffer merrily decoding garbage. Unfortunately it doesn't stay merry for long.
 	//  Best case = artifacts in the decompressed frame, worst case = heap corruption which lets the
 	//  encode continue but with a borked result, normal case = plain old access violation."
-	void streamFillDecodePadding(void *inputBuffer, uint32 data_len);
+	void streamFillDecodePadding(void *inputBuffer, uint32 data_len) override;
 
-	const void *getFrame(VDPosition frameNum);
+	const void *getFrame(VDPosition frameNum) override;
 
 	const wchar_t *getDecompressorName() const {
 		return mpDecompressor ? mpDecompressor->GetName() : NULL;
 	}
 
-	char getFrameTypeChar(VDPosition lFrameNum);
-	eDropType getDropType(VDPosition lFrameNum);
-	bool isKeyframeOnly();
-	bool isType1();
-	bool isDecodable(VDPosition sample_num);
+	char getFrameTypeChar(VDPosition lFrameNum) override;
+	eDropType getDropType(VDPosition lFrameNum) override;
+	bool isKeyframeOnly() override;
+	bool isType1() override;
+	bool isDecodable(VDPosition sample_num) override;
 
 	ErrorMode getDecodeErrorMode() { return mErrorMode; }
 	void setDecodeErrorMode(ErrorMode mode);
 	bool isDecodeErrorModeSupported(ErrorMode mode);
 
-	VDPosition	getRealDisplayFrame(VDPosition display_num);
-	sint64 getSampleBytePosition(VDPosition pos);
+	VDPosition	getRealDisplayFrame(VDPosition display_num) override;
+	sint64 getSampleBytePosition(VDPosition pos) override;
 };
 
 #endif
