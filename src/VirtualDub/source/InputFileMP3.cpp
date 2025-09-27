@@ -159,10 +159,10 @@ struct VDInputFileOptionsSerializedMP3 {
 class VDInputFileOptionsMP3 : public InputFileOptions {
 public:
 	VDInputFileOptionsMP3();
-	~VDInputFileOptionsMP3();
+	~VDInputFileOptionsMP3() override;
 
 	bool read(const void *buf, int buflen);
-	int write(char *buf, int buflen) const;
+	int write(char *buf, int buflen) const override;
 
 public:
 	VDInputFileMP3::BitRateMode mMode;

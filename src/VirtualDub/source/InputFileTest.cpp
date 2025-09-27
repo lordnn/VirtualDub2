@@ -1132,9 +1132,9 @@ void VDVideoSourceTest::DrawPhysFrame(VDPixmap& dst, bool oddField, int frameIdx
 class VDInputFileTestOptions : public InputFileOptions {
 public:
 	VDInputFileTestOptions();
-	~VDInputFileTestOptions();
+	~VDInputFileTestOptions() override;
 	bool read(const char *buf);
-	int write(char *buf, int buflen) const;
+	int write(char *buf, int buflen) const override;
 
 public:
 	int mMode;
@@ -1219,18 +1219,18 @@ public:
 class VDInputFileTest : public InputFile {
 public:
 	VDInputFileTest();
-	~VDInputFileTest();
+	~VDInputFileTest() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
-	void setOptions(InputFileOptions *_ifo);
-	InputFileOptions *createOptions(const void *buf, uint32 len);
-	InputFileOptions *promptForOptions(VDGUIHandle hwnd);
+	void setOptions(InputFileOptions *_ifo) override;
+	InputFileOptions *createOptions(const void *buf, uint32 len) override;
+	InputFileOptions *promptForOptions(VDGUIHandle hwnd) override;
 
 	void setAutomated(bool fAuto);
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
 protected:
 	VDInputFileTestOptions	mOptions;

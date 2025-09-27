@@ -302,10 +302,10 @@ public:
 		}
 	} opts;
 
-	~InputFileAVIOptions();
+	~InputFileAVIOptions() override;
 
 	bool read(const char *buf);
-	int write(char *buf, int buflen) const;
+	int write(char *buf, int buflen) const override;
 
 	static INT_PTR APIENTRY SetupDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 };

@@ -619,7 +619,7 @@ bool AVIOutputFile::init(const wchar_t *szFile) {
 			asi.cb = (sizeof asi)-8 + mSuperIndexLimit*sizeof(_avisuperindex_entry);
 			HeaderWrite(&asi, sizeof asi);
 
-			for(int i=0; i<mSuperIndexLimit; ++i)
+			for(uint32 i=0; i<mSuperIndexLimit; ++i)
 				HeaderWrite(&asie_dummy, sizeof(_avisuperindex_entry));
 		}
 

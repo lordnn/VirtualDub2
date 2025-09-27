@@ -27,15 +27,15 @@ private:
 	static INT_PTR APIENTRY _InfoDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 public:
 	VDInputFileImages(uint32 flags);
-	~VDInputFileImages();
+	~VDInputFileImages() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
 	void setAutomated(bool fAuto);
-	void InfoDialog(VDGUIHandle hwndParent);
+	void InfoDialog(VDGUIHandle hwndParent) override;
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 	int GetFileFlags() {
 		if (single_file_mode) return 0;
 		return IVDInputDriver::kFF_Sequence;

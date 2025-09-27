@@ -80,7 +80,7 @@ VDJobQueue::~VDJobQueue() {
 }
 
 void VDJobQueue::Shutdown() {
-	mpRunningJob = NULL;
+	mpRunningJob = nullptr;
 
 	while(!mJobQueue.empty()) {
 		delete mJobQueue.back();
@@ -152,12 +152,12 @@ VDJob *VDJobQueue::GetJobById(uint64 id) const {
 			return job;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-VDJob *VDJobQueue::ListGet(int index) {
-	if ((unsigned)index >= mJobQueue.size())
-		return NULL;
+VDJob *VDJobQueue::ListGet(uint32 index) {
+	if (index >= mJobQueue.size())
+		return nullptr;
 
 	return mJobQueue[index];
 }
@@ -171,7 +171,7 @@ int VDJobQueue::ListFind(VDJob *vdj_find) {
 	return it - mJobQueue.begin();
 }
 
-long VDJobQueue::ListSize() {
+uint32 VDJobQueue::ListSize() {
 	return mJobCount;
 }
 
@@ -185,7 +185,7 @@ void VDJobQueue::ListClear(bool force_no_update) {
 
 		if (vdj->GetState() != VDJob::kStateInProgress) {
 			VDASSERT(vdj->mpJobQueue == this);
-			vdj->mpJobQueue = NULL;
+			vdj->mpJobQueue = nullptr;
 
 			mJobQueue.erase(mJobQueue.begin() + i);
 			--mJobCount;

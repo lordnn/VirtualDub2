@@ -534,7 +534,7 @@ void JobCreateScript(JobScriptOutput& output, bool project_relative, const DubOp
 
 			output.addf("VirtualDub.audio.filters.Add(\"%s\");", sname.c_str());
 
-			for(unsigned i=0; i<fe.mInputPins; ++i) {
+			for(int i=0; i<fe.mInputPins; ++i) {
 				const VDAudioFilterGraph::FilterConnection& conn = g_audioFilterGraph.mConnections[connidx++];
 				output.addf("VirtualDub.audio.filters.Connect(%d, %d, %d, %d);", conn.filt, conn.pin, srcfilt, i);
 			}

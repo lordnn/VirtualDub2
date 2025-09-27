@@ -708,11 +708,10 @@ static const char *CrashLookupExport(HMODULE hmod, uintptr_t addr, unsigned long
 
 	const char *pszName = NULL;
 	ulong bestdelta = 0xFFFFFFFF;
-	int i;
 
 	addr -= (uintptr_t)pBase;
 
-	for(i=0; i<pExportDir->nametbl_cnt; i++) {
+	for(ulong i=0; i<pExportDir->nametbl_cnt; i++) {
 		ulong fnaddr;
 		int idx;
 
@@ -1233,7 +1232,7 @@ public:
 		Finalize();
 	}
 
-	void Write(const char *s) {
+	void Write(const char *s) override {
 		while(char c = *s++) {
 			if (c == '\n')
 				Put('\r');
@@ -1285,7 +1284,7 @@ public:
 	}
 
 protected:
-	void Write(const char *s) {
+	void Write(const char *s) override {
 		while(char c = *s++) {
 			if (mNext >= kBufferSize - 1)
 				break;
@@ -1320,7 +1319,7 @@ public:
 	}
 
 protected:
-	void Write(const char *s) {
+	void Write(const char *s) override {
 		while(char c = *s++) {
 			if (mNext >= kBufferSize - 1)
 				Flush();

@@ -108,7 +108,7 @@ void guiOpenDebug() {
 #pragma vdpragma_TODO("improve this")
 #ifndef _M_AMD64
 	else if (GetKeyState(VK_CONTROL)<0) {
-		char *p = new char[16384+128];
+		auto p{std::make_uinque<char[]>(16384+128)};
 		static const struct {
 			BITMAPINFOHEADER bih;
 			unsigned long p[8];
@@ -125,13 +125,11 @@ void guiOpenDebug() {
 				0x404040,
 			}
 		};
-		ycblit(p,0);
+		ycblit(p.get(),0);
 
 		HDC hdc = GetDC(g_hWnd);
-		SetDIBitsToDevice(hdc, 0, 0, 128, 128, 0, 0, 0, 128, p, (const BITMAPINFO *)&f.bih, DIB_RGB_COLORS);
+		SetDIBitsToDevice(hdc, 0, 0, 128, 128, 0, 0, 0, 128, p.get(), (const BITMAPINFO *)&f.bih, DIB_RGB_COLORS);
 		ReleaseDC(g_hWnd, hdc);
-
-		delete[] p;
 	}
 #endif
 }

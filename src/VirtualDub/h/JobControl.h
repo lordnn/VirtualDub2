@@ -49,9 +49,9 @@ public:
 
 	int32 GetJobIndexById(uint64 id) const;
 	VDJob *GetJobById(uint64 id) const;
-	VDJob *ListGet(int index);
+	VDJob *ListGet(uint32 index);
 	int ListFind(VDJob *vdj_find);
-	long ListSize();
+	uint32 ListSize();
 	void ListClear(bool force_no_update = false);
 
 	void Refresh(VDJob *job);

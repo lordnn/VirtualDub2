@@ -44,7 +44,7 @@ extern HINSTANCE g_hInst;
 class VDInputFileAPNGSharedData : public vdrefcounted<IVDRefCount> {
 public:
 	VDInputFileAPNGSharedData();
-	~VDInputFileAPNGSharedData();
+	~VDInputFileAPNGSharedData() override;
 
 	void Parse(const wchar_t *filename);
 
@@ -1108,15 +1108,15 @@ private:
 	static INT_PTR APIENTRY _InfoDlgProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 public:
 	VDInputFileAPNG();
-	~VDInputFileAPNG();
+	~VDInputFileAPNG() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
 	void setAutomated(bool fAuto);
-	void InfoDialog(VDGUIHandle hwndParent);
+	void InfoDialog(VDGUIHandle hwndParent) override;
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
 protected:
 	vdrefptr<VDInputFileAPNGSharedData> mpSharedData;

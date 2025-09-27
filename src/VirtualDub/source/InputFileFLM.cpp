@@ -271,27 +271,27 @@ bool VDVideoSourceFLM::setTargetFormat(VDPixmapFormatEx format) {
 class VDInputFileFLM : public InputFile, public IVDInputFileFLM {
 public:
 	VDInputFileFLM();
-	~VDInputFileFLM();
+	~VDInputFileFLM() override;
 
-	int AddRef();
-	int Release();
+	int AddRef() override;
+	int Release() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
 	void setAutomated(bool fAuto);
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
 public:
-	uint32		GetFrameSize() { return mFrameSize; }
-	uint32		GetVisibleFrameSize() { return mVisibleFrameSize; }
-	uint32		GetFrameWidth() { return mFrameWidth; }
-	uint32		GetFrameHeight() { return mFrameHeight; }
-	VDPosition	GetFrameCount() { return mFrameCount; }
-	VDFraction	GetFrameRate() { return mFrameRate; }
+	uint32		GetFrameSize() override { return mFrameSize; }
+	uint32		GetVisibleFrameSize() override { return mVisibleFrameSize; }
+	uint32		GetFrameWidth() override { return mFrameWidth; }
+	uint32		GetFrameHeight() override { return mFrameHeight; }
+	VDPosition	GetFrameCount() override { return mFrameCount; }
+	VDFraction	GetFrameRate() override { return mFrameRate; }
 
-	void		ReadSpan(sint64 pos, void *data, uint32 len);
+	void		ReadSpan(sint64 pos, void *data, uint32 len) override;
 
 protected:
 	VDFile		mFile;

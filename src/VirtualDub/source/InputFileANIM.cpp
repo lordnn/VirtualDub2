@@ -755,7 +755,7 @@ void VDInputFileANIM::Init(const wchar_t *filename) {
 				mFile.read(pal, tc);
 				cksize -= tc;
 
-				for(int i=0; i<tc/3; ++i) {
+				for(uint32 i=0; i<tc/3; ++i) {
 					mColorMap[i] = (uint32)pal[i][2] + ((uint32)pal[i][1] << 8) + ((uint32)pal[i][0]<<16);
 				}
 			}

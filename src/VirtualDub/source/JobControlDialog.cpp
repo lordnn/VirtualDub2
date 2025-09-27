@@ -455,8 +455,9 @@ bool VDUIJobControlDialog::OnMenuHit(uint32 id) {
 					if (vdj->GetState() == VDJob::kStateCompleted) {
 						g_VDJobQueue.Delete(vdj, false);
 						delete vdj;
-					} else
+					} else {
 						++i;
+					}
 				}
 
 				break;

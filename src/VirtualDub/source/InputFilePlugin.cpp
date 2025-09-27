@@ -1235,11 +1235,11 @@ VDTime VDAudioSourcePlugin::PositionToTimeVBR(VDPosition samples) const {
 class VDInputFileOptionsPlugin : public InputFileOptions {
 public:
 	VDInputFileOptionsPlugin(IVDXInputOptions *opts, VDInputDriverContextImpl *context, VDPluginDescription *desc);
-	~VDInputFileOptionsPlugin();
+	~VDInputFileOptionsPlugin() override;
 
 	IVDXInputOptions *GetXObject() const { return mpXOptions; }
 
-	int write(char *buf, int buflen) const;
+	int write(char *buf, int buflen) const override;
 
 protected:
 	vdrefptr<IVDXInputOptions> mpXOptions;
@@ -1271,27 +1271,27 @@ int VDInputFileOptionsPlugin::write(char *buf, int buflen) const {
 class VDInputFilePlugin : public InputFile {
 public:
 	VDInputFilePlugin(IVDXInputFile *p, VDPluginDescription *pDesc, VDInputDriverContextImpl *pContext);
-	~VDInputFilePlugin();
+	~VDInputFilePlugin() override;
 
-	void Init(const wchar_t *szFile);
-	bool Append(const wchar_t *szFile, uint32 flags);
+	void Init(const wchar_t *szFile) override;
+	bool Append(const wchar_t *szFile, uint32 flags) override;
 
-	void setOptions(InputFileOptions *);
-	InputFileOptions *promptForOptions(VDGUIHandle);
-	InputFileOptions *createOptions(const void *buf, uint32 len);
-	void InfoDialog(VDGUIHandle hwndParent);
+	void setOptions(InputFileOptions *) override;
+	InputFileOptions *promptForOptions(VDGUIHandle) override;
+	InputFileOptions *createOptions(const void *buf, uint32 len) override;
+	void InfoDialog(VDGUIHandle hwndParent) override;
 
-	void GetTextInfo(tFileTextInfo& info);
+	void GetTextInfo(tFileTextInfo& info) override;
 
-	bool isOptimizedForRealtime();
-	bool isStreaming();
+	bool isOptimizedForRealtime() override;
+	bool isStreaming() override;
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
-	int GetInputDriverApiVersion(){
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
+	int GetInputDriverApiVersion() const override {
 		return mpContext->max_api_version;
 	}
-	void GetFileTool(IFilterModFileTool **pp){
+	void GetFileTool(IFilterModFileTool **pp) override {
 		*pp=0;
 		if (mpXObject) {
 			IFilterModFileTool* p = (IFilterModFileTool*)mpXObject->AsInterface(IFilterModFileTool::kIID);
@@ -1302,7 +1302,7 @@ public:
 		}
 	}
 
-	virtual int GetFileFlags() {
+	virtual int GetFileFlags() override {
 		if (mpContext->max_api_version>=8) return mpXObject->GetFileFlags();
 		return -1;
 	}

@@ -47,7 +47,7 @@ public:
 	VDInputFileRawVideoOptions();
 
 	void read(const char *buf, int buflen);
-	int write(char *buf, int buflen) const;
+	int write(char *buf, int buflen) const override;
 	bool validate();
 
 	VDFraction	mFrameRate;
@@ -287,7 +287,7 @@ void VDInputFileRawVideoOptionsDialog::OnDataExchange(bool write) {
 
 class IVDInputFileRawVideo : public IVDRefCount {
 public:
-	virtual sint64 GetFileSize() = 0;
+	virtual sint64 GetFileSize() const = 0;
 	virtual void ReadSpan(sint64 pos, void *data, uint32 len) = 0;
 };
 
@@ -456,25 +456,25 @@ bool VDVideoSourceRawVideo::setTargetFormat(VDPixmapFormatEx format) {
 class VDInputFileRawVideo : public InputFile, public IVDInputFileRawVideo {
 public:
 	VDInputFileRawVideo();
-	~VDInputFileRawVideo();
+	~VDInputFileRawVideo() override;
 
-	int AddRef();
-	int Release();
+	int AddRef() override;
+	int Release() override;
 
-	void Init(const wchar_t *szFile);
+	void Init(const wchar_t *szFile) override;
 
-	void setOptions(InputFileOptions *);
-	InputFileOptions *promptForOptions(VDGUIHandle hwndParent);
-	InputFileOptions *createOptions(const void *buf, uint32 len);
+	void setOptions(InputFileOptions *) override;
+	InputFileOptions *promptForOptions(VDGUIHandle hwndParent) override;
+	InputFileOptions *createOptions(const void *buf, uint32 len) override;
 
 	void setAutomated(bool fAuto);
 
-	bool GetVideoSource(int index, IVDVideoSource **ppSrc);
-	bool GetAudioSource(int index, AudioSource **ppSrc);
+	bool GetVideoSource(int index, IVDVideoSource **ppSrc) override;
+	bool GetAudioSource(int index, AudioSource **ppSrc) override;
 
 public:
-	sint64 GetFileSize() { return mFileSize; }
-	void ReadSpan(sint64 pos, void *data, uint32 len);
+	sint64 GetFileSize() const override { return mFileSize; }
+	void ReadSpan(sint64 pos, void *data, uint32 len) override;
 
 protected:
 	VDFile		mFile;

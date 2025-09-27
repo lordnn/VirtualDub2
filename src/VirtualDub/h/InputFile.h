@@ -65,7 +65,7 @@ public:
 
 class InputFile : public vdrefcounted<IVDRefCount> {
 protected:
-	virtual ~InputFile();
+	virtual ~InputFile() override;
 
 public:
 	List2<InputFilenameNode> listFiles;
@@ -89,7 +89,7 @@ public:
 	virtual bool GetAudioSource(int index, AudioSource **ppSrc);
 
 	virtual void GetFileTool(IFilterModFileTool **pp){ *pp=0; }
-	virtual int GetInputDriverApiVersion(){ return -1; }
+	virtual int GetInputDriverApiVersion() const { return -1; }
 	virtual int GetFileFlags(){ return -1; }
 
 protected:
