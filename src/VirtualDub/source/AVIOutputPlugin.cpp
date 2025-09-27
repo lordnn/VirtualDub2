@@ -25,10 +25,10 @@ public:
 	void EndExternalCall();
 
 public:
-	virtual void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPIName);
-	virtual void VDXAPIENTRYV SetError(const char *format, ...);
-	virtual void VDXAPIENTRY SetErrorOutOfMemory();
-	virtual uint32 VDXAPIENTRY GetCPUFeatureFlags();
+	void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPIName) override;
+	void VDXAPIENTRYV SetError(const char *format, ...) override;
+	void VDXAPIENTRY SetErrorOutOfMemory() override;
+	uint32 VDXAPIENTRY GetCPUFeatureFlags() override;
 
 	VDStringW	mName;
 	MyError		mError;
@@ -54,7 +54,7 @@ void VDOutputDriverContextImpl::EndExternalCall() {
 void * VDXAPIENTRY VDOutputDriverContextImpl::GetExtendedAPI(const char *pExtendedAPIName) {
 	if (strcmp(pExtendedAPIName,"IFilterModPixmap")==0)
 		return &g_project->filterModPixmap;
-	return NULL;
+	return nullptr;
 }
 
 void VDXAPIENTRYV VDOutputDriverContextImpl::SetError(const char *format, ...) {

@@ -82,19 +82,19 @@ public:
 	HDC GetHDC() const { return mhdc; }
 
 	void Reset();
-	void SetColor(uint32 color);
-	void SetTextBackColor(uint32 color);
-	void SetTextBackTransparent();
-	void SetTextAlignment(int alignment);
+	void SetColor(uint32 color) override;
+	void SetTextBackColor(uint32 color) override;
+	void SetTextBackTransparent() override;
+	void SetTextAlignment(int alignment) override;
 
-	void SetOffset(int x, int y);
+	void SetOffset(int x, int y) override;
 
-	void DrawLine(int x1, int y1, int x2, int y2);
-	void FillRect(int x, int y, int w, int h);
+	void DrawLine(int x1, int y1, int x2, int y2) override;
+	void FillRect(int x, int y, int w, int h) override;
 
-	void DrawTextLine(int x, int y, const char *text);
+	void DrawTextLine(int x, int y, const char *text) override;
 
-	vduisize MeasureText(const char *text);
+	vduisize MeasureText(const char *text) override;
 
 protected:
 	void UpdatePen();
@@ -234,7 +234,7 @@ public:
 class VDUISprite : public vdrefcounted<IVDRefCount> {
 public:
 	VDUISprite();
-	~VDUISprite();
+	~VDUISprite() override;
 
 	virtual void Attach(IVDUISpriteContext *, VDUISprite *parent);
 	virtual void Detach();
@@ -386,9 +386,9 @@ public:
 	void Render(IVDUIDrawContext& dc);
 
 public:
-	void InvalidateCanvas(const vduirect& r);
-	IVDUIDrawContext *GetIC();
-	void ReleaseIC(IVDUIDrawContext *);
+	void InvalidateCanvas(const vduirect& r) override;
+	IVDUIDrawContext *GetIC() override;
+	void ReleaseIC(IVDUIDrawContext *) override;
 
 public:
 	template<class T>
@@ -495,7 +495,7 @@ LRESULT VDUISpriteBasedControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM lPara
 
 class VDUITextSprite : public VDUISprite {
 public:
-	void RenderLocal(IVDUIDrawContext& dc);
+	void RenderLocal(IVDUIDrawContext& dc) override;
 
 	void SetCenteredText(int cx, int cy, const char *text);
 
@@ -530,9 +530,9 @@ void VDUITextSprite::SetCenteredText(int cx, int cy, const char *text) {
 class VDUIDimensionSprite : public VDUISprite {
 public:
 	VDUIDimensionSprite();
-	~VDUIDimensionSprite();
+	~VDUIDimensionSprite() override;
 
-	void RenderLocal(IVDUIDrawContext& dc);
+	void RenderLocal(IVDUIDrawContext& dc) override;
 
 	void SetLine(int x1, int y1, int x2, int ht, const char *text);
 

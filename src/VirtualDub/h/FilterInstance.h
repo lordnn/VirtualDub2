@@ -164,26 +164,26 @@ public:
 	VDFilterActivationImpl();
 	VDFilterActivationImpl(const VDFilterActivationImpl&);
 
-	const VDXFilterDefinition *filter;
-	void *filter_data;
+	const VDXFilterDefinition *filter{};
+	void *filter_data{};
 	VDXFBitmap&	dst;
 	VDXFBitmap&	src;
-	VDXFBitmap	*_reserved0;
+	VDXFBitmap	*_reserved0{};
 	VDXFBitmap	*const last;
-	uint32		x1;
-	uint32		y1;
-	uint32		x2;
-	uint32		y2;
+	uint32		x1{};
+	uint32		y1{};
+	uint32		x2{};
+	uint32		y2{};
 
-	VDXFilterStateInfo	*pfsi;
-	IVDXFilterPreview	*ifp;
-	IVDXFilterPreview2	*ifp2;			// (V11+)
+	VDXFilterStateInfo	*pfsi{};
+	IVDXFilterPreview	*ifp{};
+	IVDXFilterPreview2	*ifp2{};			// (V11+)
 
-	uint32		mSourceFrameCount;
-	VDXFBitmap *const *mpSourceFrames;	// (V14+)
+	uint32		mSourceFrameCount{};
+	VDXFBitmap *const *mpSourceFrames{};	// (V14+)
 	VDXFBitmap *const *mpOutputFrames;	// (V14+)
 
-	IVDXAContext	*mpVDXA;			// (V15+)
+	IVDXAContext	*mpVDXA{};			// (V15+)
 
 	uint32		mSourceStreamCount;		// (V16+)
 	VDXFBitmap *const *mpSourceStreams;	// (V16+)

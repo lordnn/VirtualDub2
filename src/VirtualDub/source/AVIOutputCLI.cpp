@@ -789,7 +789,7 @@ public:
 	VDMediaOutputStreamCLI(IVDMediaOutputStream *child, VDCLIProcessW32 *process, const wchar_t *encName);
 
 protected:
-	void TranslateError(const MyError& e);
+	void TranslateError(const MyError& e) override;
 
 	VDCLIProcessW32 *mpProcess;
 	VDStringW mEncName;

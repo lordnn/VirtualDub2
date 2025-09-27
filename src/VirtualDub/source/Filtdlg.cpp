@@ -371,30 +371,30 @@ public:
   FilterInstance* pFiltInst;
 
   VDXFilterPreviewThunk(){ editor=0; pFiltInst=0; }
-  virtual void SetButtonCallback(VDXFilterPreviewButtonCallback, void *){}
-  virtual void SetSampleCallback(VDXFilterPreviewSampleCallback, void *){}
+  void SetButtonCallback(VDXFilterPreviewButtonCallback, void *) override {}
+  void SetSampleCallback(VDXFilterPreviewSampleCallback, void *) override {}
 
-  virtual bool isPreviewEnabled(){ return true; }
-  virtual void Toggle(VDXHWND){}
-  virtual void Display(VDXHWND, bool){}
-  virtual void RedoFrame(){
+  bool isPreviewEnabled() override { return true; }
+  void Toggle(VDXHWND) override {}
+  void Display(VDXHWND, bool) override {}
+  void RedoFrame() override {
     editor->mFiltSys.InvalidateCachedFrames(pFiltInst);
     editor->preview->RedoFrame2();
   }
-  virtual void RedoSystem(){
+  void RedoSystem() override {
     editor->preview->AsIVDXFilterPreview2()->RedoSystem();
   }
-  virtual void UndoSystem(){
+  void UndoSystem() override {
     editor->preview->AsIVDXFilterPreview2()->UndoSystem();
   }
-  virtual void InitButton(VDXHWND w){
+  void InitButton(VDXHWND w) override {
     ShowWindow((HWND)w,SW_HIDE);
   }
-  virtual void Close(){}
-  virtual bool SampleCurrentFrame(){ return false; }
-  virtual long SampleFrames(){ return 0; }
+  void Close() override {}
+  bool SampleCurrentFrame() override { return false; }
+  long SampleFrames() override { return 0; }
 
-  virtual bool IsPreviewDisplayed(){ return true; }
+  bool IsPreviewDisplayed() override { return true; }
 };
 
 ///////////////////////////////////////////////////////////////////////////

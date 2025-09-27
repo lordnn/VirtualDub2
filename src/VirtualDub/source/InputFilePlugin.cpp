@@ -60,10 +60,10 @@ public:
 	void EndExternalCall();
 
 public:
-	virtual void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPIName);
-	virtual void VDXAPIENTRYV SetError(const char *format, ...);
-	virtual void VDXAPIENTRY SetErrorOutOfMemory();
-	virtual uint32 VDXAPIENTRY GetCPUFeatureFlags();
+	void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPIName) override;
+	void VDXAPIENTRYV SetError(const char *format, ...) override;
+	void VDXAPIENTRY SetErrorOutOfMemory() override;
+	uint32 VDXAPIENTRY GetCPUFeatureFlags() override;
 
 	VDStringW	mName;
 	int max_api_version;

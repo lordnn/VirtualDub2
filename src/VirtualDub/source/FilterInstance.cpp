@@ -395,23 +395,10 @@ VDFilterStreamDesc VFBitmapInternal::GetStreamDesc() const {
 ///////////////////////////////////////////////////////////////////////////
 
 VDFilterActivationImpl::VDFilterActivationImpl()
-	: filter		(NULL)
-	, filter_data	(NULL)
-	, dst			((VDXFBitmap&)mRealDst)
+	: dst			((VDXFBitmap&)mRealDst)
 	, src			((VDXFBitmap&)mRealSrc)
-	, _reserved0	(NULL)
 	, last			((VDXFBitmap *)&mRealLast)
-	, x1			(0)
-	, y1			(0)
-	, x2			(0)
-	, y2			(0)
-	, pfsi			(NULL)
-	, ifp			(NULL)
-	, ifp2			(NULL)
-	, mSourceFrameCount(0)
-	, mpSourceFrames(NULL)
 	, mpOutputFrames(mOutputFrameArray)
-	, mpVDXA		(NULL)
 	, mRealSrc      ()
 	, mRealDst      ()
 	, mRealLast     ()
@@ -430,23 +417,10 @@ VDFilterActivationImpl::VDFilterActivationImpl()
 }
 
 VDFilterActivationImpl::VDFilterActivationImpl(const VDFilterActivationImpl& src)
-	: filter		(NULL)
-	, filter_data	(NULL)
-	, dst			((VDXFBitmap&)mRealDst)
+	: dst			((VDXFBitmap&)mRealDst)
 	, src			((VDXFBitmap&)mRealSrc)
-	, _reserved0	(NULL)
 	, last			((VDXFBitmap *)&mRealLast)
-	, x1			(0)
-	, y1			(0)
-	, x2			(0)
-	, y2			(0)
-	, pfsi			(NULL)
-	, ifp			(NULL)
-	, ifp2			(NULL)
-	, mSourceFrameCount(0)
-	, mpSourceFrames(NULL)
 	, mpOutputFrames(mOutputFrameArray)
-	, mpVDXA		(NULL)
 	, mRealSrc      (src.mRealSrc)
 	, mRealDst      (src.mRealDst)
 	, mRealLast     (src.mRealLast)
@@ -508,9 +482,9 @@ public:
 		return NULL;
 	}
 
-	virtual void VDXAPIENTRY PrefetchFrame(sint32 srcIndex, sint64 frame, uint64 cookie);
-	virtual void VDXAPIENTRY PrefetchFrameDirect(sint32 srcIndex, sint64 frame);
-	virtual void VDXAPIENTRY PrefetchFrameSymbolic(sint32 srcIndex, sint64 frame);
+	void VDXAPIENTRY PrefetchFrame(sint32 srcIndex, sint64 frame, uint64 cookie) override;
+	void VDXAPIENTRY PrefetchFrameDirect(sint32 srcIndex, sint64 frame) override;
+	void VDXAPIENTRY PrefetchFrameSymbolic(sint32 srcIndex, sint64 frame) override;
 
 	struct PrefetchInfo {
 		sint64 mFrame;

@@ -141,8 +141,8 @@ public:
 	VDAudioFilterPinImpl& InputPin(unsigned p) { return mPins[p]; }
 	VDAudioFilterPinImpl& OutputPin(unsigned p) { return mPins[p + mpDefinition->mInputPins]; }
 
-	const VDPluginInfo *GetPluginInfo() { return mpPluginInfo; }
-	const VDAudioFilterDefinition *GetDefinition() { return mpDefinition; }
+	const VDPluginInfo *GetPluginInfo() override { return mpPluginInfo; }
+	const VDAudioFilterDefinition *GetDefinition() override { return mpDefinition; }
 
 	bool IsPrepared() const { return mbPrepared; }
 	bool IsSerializedIOOnly() const { return !!(mpDefinition->mFlags & kVFAF_SerializedIO); }
@@ -153,13 +153,13 @@ public:
 	void Start();
 	void Stop();
 
-	bool Configure(VDGUIHandle hParent);
-	void SerializeConfig(VDPluginConfig& config);
-	void DeserializeConfig(const VDPluginConfig& config);
-	void SetConfigVal(unsigned idx, const VDPluginConfigVariant& var);
-	void *GetObject();
-	sint64 GetPosition();
-	sint64 GetLength();
+	bool Configure(VDGUIHandle hParent) override;
+	void SerializeConfig(VDPluginConfig& config) override;
+	void DeserializeConfig(const VDPluginConfig& config) override;
+	void SetConfigVal(unsigned idx, const VDPluginConfigVariant& var) override;
+	void *GetObject() override;
+	sint64 GetPosition() override;
+	sint64 GetLength() override;
 
 	uint32 ReadData(unsigned pin, void *dst, uint32 samples, bool bAllowFill, int dstFormat);
 
@@ -168,18 +168,18 @@ public:
 
 	void Seek(sint64 us);
 
-	const VDXWaveFormat *GetOutputPinFormat(int outputPin);
-	bool GetInputPinConnection(unsigned inputPin, IVDAudioFilterInstance*& pFilt, unsigned& outputPin);
-	bool GetOutputPinConnection(unsigned outputPin, IVDAudioFilterInstance*& pFilt, unsigned& inputPin);
+	const VDXWaveFormat *GetOutputPinFormat(int outputPin) override;
+	bool GetInputPinConnection(unsigned inputPin, IVDAudioFilterInstance*& pFilt, unsigned& outputPin) override;
+	bool GetOutputPinConnection(unsigned outputPin, IVDAudioFilterInstance*& pFilt, unsigned& inputPin) override;
 
 protected:
-	bool Service();
-	void DumpStatus();
+	bool Service() override;
+	void DumpStatus() override;
 
-	void VDXAPIENTRYV SetError(const char *format, ...);
-	void VDXAPIENTRY SetErrorOutOfMemory();
-	void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPI);
-	uint32 VDXAPIENTRY GetCPUFeatureFlags();
+	void VDXAPIENTRYV SetError(const char *format, ...) override;
+	void VDXAPIENTRY SetErrorOutOfMemory() override;
+	void * VDXAPIENTRY GetExtendedAPI(const char *pExtendedAPI) override;
+	uint32 VDXAPIENTRY GetCPUFeatureFlags() override;
 
 	VDPluginDescription *mpDescription;
 	const VDPluginInfo *mpPluginInfo;
