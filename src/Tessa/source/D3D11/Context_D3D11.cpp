@@ -1194,31 +1194,7 @@ struct VDTContextD3D11::PrivateData {
 };
 
 VDTContextD3D11::VDTContextD3D11()
-	: mRefCount(0)
-	, mpData(NULL)
-	, mpD3DHolder(NULL)
-	, mpDXGIFactory(NULL)
-	, mpD3DDevice(NULL)
-	, mpD3DDeviceContext(NULL)
-	, mpVSConstBuffer(NULL)
-	, mpPSConstBuffer(NULL)
-	, mpVSConstBufferSys(NULL)
-	, mpPSConstBufferSys(NULL)
-	, mpSwapChain(NULL)
-	, mpCurrentRT(NULL)
-	, mpCurrentVB(NULL)
-	, mCurrentVBOffset(NULL)
-	, mCurrentVBStride(NULL)
-	, mpCurrentIB(NULL)
-	, mpCurrentVP(NULL)
-	, mpCurrentFP(NULL)
-	, mpCurrentVF(NULL)
-	, mpCurrentBS(NULL)
-	, mpCurrentRS(NULL)
-	, mpDefaultBS(NULL)
-	, mpDefaultRS(NULL)
-	, mpDefaultSS(NULL)
-	, mProfChan("Filter 3D accel")
+	: mProfChan("Filter 3D accel")
 {
 	memset(mpCurrentSamplerStates, 0, sizeof mpCurrentSamplerStates);
 	memset(mpCurrentTextures, 0, sizeof mpCurrentTextures);
@@ -1229,11 +1205,11 @@ VDTContextD3D11::~VDTContextD3D11() {
 }
 
 int VDTContextD3D11::AddRef() {
-	return ++mRefCount;
+	return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 }
 
 int VDTContextD3D11::Release() {
-	int rc = --mRefCount;
+	const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
 
 	if (!rc)
 		delete this;

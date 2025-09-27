@@ -1162,41 +1162,28 @@ bool VideoSource::isType1() {
 
 VideoSourceAVI::VideoSourceAVI(InputFileAVI *pParent, IAVIReadHandler *pAVI, AVIStripeSystem *stripesys, IAVIReadHandler **stripe_files, bool use_internal, int mjpeg_mode, uint32 fccForceVideo, uint32 fccForceVideoHandler, const uint32 *key_flags)
 	: VDAVIStreamSource(pParent)
+	, pAVIFile(pAVI)
 	, mpKeyFlags(key_flags)
+	, use_internal(use_internal)
+	, mjpeg_mode(mjpeg_mode)
+	, fccForceVideo(fccForceVideo)
+	, fccForceVideoHandler(fccForceVideoHandler)
 	, mErrorMode(kErrorModeReportAll)
-	, mbMMXBrokenCodecDetected(false)
-	, mbConcealingErrors(false)
-	, mbDecodeStarted(false)
-	, mbDecodeRealTime(false)
 {
-	pAVIFile	= pAVI;
-	pAVIStream	= NULL;
-	mjpeg_reorder_buffer = NULL;
-	mjpeg_reorder_buffer_size = 0;
-	mjpeg_splits = NULL;
-	mjpeg_last = -1;
-	this->fccForceVideo = fccForceVideo;
-	this->fccForceVideoHandler = fccForceVideoHandler;
-	bDirectDecompress = false;
-	bInvertFrames = false;
-	lLastFrame = -1;
-
-	this->use_internal = use_internal;
-	this->mjpeg_mode	= mjpeg_mode;
 }
 
 void VideoSourceAVI::_destruct() {
-	mpDecompressor = NULL;
+	mpDecompressor = nullptr;
 
 	if (pAVIStream) {
 		delete pAVIStream;
-		pAVIStream = NULL;
+		pAVIStream = nullptr;
 	}
 
 	freemem(mjpeg_reorder_buffer);
-	mjpeg_reorder_buffer = NULL;
+	mjpeg_reorder_buffer = nullptr;
 	delete[] mjpeg_splits;
-	mjpeg_splits = NULL;
+	mjpeg_splits = nullptr;
 }
 
 VideoSourceAVI::~VideoSourceAVI() {

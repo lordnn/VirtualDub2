@@ -106,22 +106,22 @@ private:
 
 public:
 	VDScriptInterpreter();
-	~VDScriptInterpreter();
+	~VDScriptInterpreter() override;
 	void Destroy();
 
-	void SetRootHandler(VDScriptRootHandlerPtr, void *);
+	void SetRootHandler(VDScriptRootHandlerPtr, void *) override;
 
-	void ExecuteLine(const char *s);
+	void ExecuteLine(const char *s) override;
 
-	void ScriptError(int e);
-	const char *TranslateScriptError(const VDScriptError& cse);
-	char** AllocTempString(long l);
-	VDScriptValue	DupCString(const char *s);
+	void ScriptError(int e) override;
+	const char *TranslateScriptError(const VDScriptError& cse) override;
+	char** AllocTempString(long l) override;
+	VDScriptValue	DupCString(const char *s) override;
 
-	VDScriptValue	LookupObjectMember(const VDScriptObject *obj, void *lpVoid, char *szIdent);
+	VDScriptValue	LookupObjectMember(const VDScriptObject *obj, void *lpVoid, char *szIdent) override;
 
-	const VDScriptFunctionDef *GetCurrentMethod() { return mpCurrentInvocationMethodOverload; }
-	int GetErrorLocation() { return tokstr - tokbase; }
+	const VDScriptFunctionDef *GetCurrentMethod() override { return mpCurrentInvocationMethodOverload; }
+	int GetErrorLocation() override { return tokstr - tokbase; }
 };
 
 ///////////////////////////////////////////////////////////////////////////

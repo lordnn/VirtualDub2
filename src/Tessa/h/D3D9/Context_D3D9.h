@@ -435,38 +435,38 @@ protected:
 
 	struct PrivateData;
 
-	VDAtomicInt	mRefCount;
-	PrivateData *mpData;
+	std::atomic_int	mRefCount;
+	PrivateData *mpData{};
 
-	IVDRefUnknown *mpD3DHolder;
+	IVDRefUnknown *mpD3DHolder{};
 	IDirect3D9 *mpD3D;
-	IDirect3DDevice9 *mpD3DDevice;
-	IDirect3DDevice9Ex *mpD3DDeviceEx;
+	IDirect3DDevice9 *mpD3DDevice{};
+	IDirect3DDevice9Ex *mpD3DDeviceEx{};
 
-	uint32	mDeviceLossCounter;
-	bool	mbDeviceLost;
-	bool	mbInScene;
-	bool	mbBSDirty;
-	bool	mbRSDirty;
-	bool	mbVPDirty;
-	uint32	mDirtySamplerStates;
+	uint32	mDeviceLossCounter{};
+	bool	mbDeviceLost{};
+	bool	mbInScene{};
+	bool	mbBSDirty{};
+	bool	mbRSDirty{};
+	bool	mbVPDirty{};
+	uint32	mDirtySamplerStates{};
 
-	VDTSurfaceD3D9 *mpCurrentRT;
-	VDTVertexBufferD3D9 *mpCurrentVB;
-	uint32 mCurrentVBOffset;
-	uint32 mCurrentVBStride;
-	VDTIndexBufferD3D9 *mpCurrentIB;
-	VDTVertexProgramD3D9 *mpCurrentVP;
-	VDTFragmentProgramD3D9 *mpCurrentFP;
-	VDTVertexFormatD3D9 *mpCurrentVF;
+	VDTSurfaceD3D9 *mpCurrentRT{};
+	VDTVertexBufferD3D9 *mpCurrentVB{};
+	uint32 mCurrentVBOffset{};
+	uint32 mCurrentVBStride{};
+	VDTIndexBufferD3D9 *mpCurrentIB{};
+	VDTVertexProgramD3D9 *mpCurrentVP{};
+	VDTFragmentProgramD3D9 *mpCurrentFP{};
+	VDTVertexFormatD3D9 *mpCurrentVF{};
 
-	VDTBlendStateD3D9 *mpCurrentBS;
-	VDTRasterizerStateD3D9 *mpCurrentRS;
+	VDTBlendStateD3D9 *mpCurrentBS{};
+	VDTRasterizerStateD3D9 *mpCurrentRS{};
 
-	VDTSurfaceD3D9 *mpDefaultRT;
-	VDTBlendStateD3D9 *mpDefaultBS;
-	VDTRasterizerStateD3D9 *mpDefaultRS;
-	VDTSamplerStateD3D9 *mpDefaultSS;
+	VDTSurfaceD3D9 *mpDefaultRT{};
+	VDTBlendStateD3D9 *mpDefaultBS{};
+	VDTRasterizerStateD3D9 *mpDefaultRS{};
+	VDTSamplerStateD3D9 *mpDefaultSS{};
 	
 	VDTViewport mViewport;
 	VDTDeviceCaps mCaps;

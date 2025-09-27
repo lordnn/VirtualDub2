@@ -29,8 +29,8 @@ class VideoSourceAVI : public VideoSource, public VDAVIStreamSource {
 private:
 	InputFileAVI *mpParent;
 	IAVIReadHandler *pAVIFile;
-	IAVIReadStream *pAVIStream;
-	VDPosition		lLastFrame;
+	IAVIReadStream *pAVIStream{};
+	VDPosition		lLastFrame{-1};
 
 	VDPixmapLayout	mSourceLayout;
 	int				mSourceVariant;
@@ -38,25 +38,25 @@ private:
 
 	bool		fAllKeyFrames;
 	bool		bIsType1;
-	bool		bDirectDecompress;
-	bool		bInvertFrames;
+	bool		bDirectDecompress{};
+	bool		bInvertFrames{};
 
 	const uint32 *mpKeyFlags;
 	bool		use_internal;
 	int			mjpeg_mode;
-	void		*mjpeg_reorder_buffer;
-	int			mjpeg_reorder_buffer_size;
-	long		*mjpeg_splits;
-	VDPosition	mjpeg_last;
+	void		*mjpeg_reorder_buffer{};
+	int			mjpeg_reorder_buffer_size{};
+	long		*mjpeg_splits{};
+	VDPosition	mjpeg_last{-1};
 	long		mjpeg_last_size;
 	uint32		fccForceVideo;
 	uint32		fccForceVideoHandler;
 
 	ErrorMode	mErrorMode;
-	bool		mbMMXBrokenCodecDetected;
-	bool		mbConcealingErrors;
-	bool		mbDecodeStarted;
-	bool		mbDecodeRealTime;
+	bool		mbMMXBrokenCodecDetected{};
+	bool		mbConcealingErrors{};
+	bool		mbDecodeStarted{};
+	bool		mbDecodeRealTime{};
 
 	vdautoptr<IVDVideoDecompressor>	mpDecompressor;
 

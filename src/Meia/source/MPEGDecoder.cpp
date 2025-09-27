@@ -19,12 +19,12 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <math.h>
+#include <atomic>
 
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
-#include <vd2/system/atomic.h>
 #include <vd2/system/memory.h>
 #include <vd2/Meia/MPEGDecoder.h>
 #include <vd2/Meia/MPEGPredict.h>
@@ -518,13 +518,13 @@ private:
 
 	// non-critical stuff here.
 
-	VDAtomicInt mRefCount;
-	
+	std::atomic_int mRefCount{};
+
 	struct MPEGBuffer {
 		YCCSample *pY, *pCr, *pCb;
 		YCCSample *pYBuffer, *pCBuffer;
 		long frame;
-	} *mpBuffers;
+	} *mpBuffers{};
 	int mnBuffers;
 	unsigned	mnHeight;
 
@@ -538,7 +538,7 @@ private:
 
 	int		mUnscaledIntraQ[64];
 	int		mUnscaledNonintraQ[64];
-	bool	mbQuantizersDirty;
+	bool	mbQuantizersDirty{true};
 
 	//////
 
@@ -572,8 +572,8 @@ public:
 	VDMPEGDecoder();
 	~VDMPEGDecoder() noexcept;
 	
-	int AddRef() { return mRefCount.inc(); }
-	int Release() { int rc = mRefCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() { return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1; }
+	int Release() { int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1; if (!rc) delete this; return rc; }
 	
 	// decoding
 	
@@ -869,9 +869,6 @@ private:
 ///////////////////////////////////////////////////////////////////////////
 
 VDMPEGDecoder::VDMPEGDecoder()
-	: mRefCount(0)
-	, mpBuffers(NULL)
-	, mbQuantizersDirty(true)
 {
 }
 

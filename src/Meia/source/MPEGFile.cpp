@@ -8,7 +8,6 @@
 #include <set>
 
 #include <vd2/system/vdtypes.h>
-#include <vd2/system/atomic.h>
 #include <vd2/system/file.h>
 #include <vd2/system/Progress.h>
 
@@ -103,7 +102,7 @@ private:
 	int						mnStreamID;
 
 	unsigned long master_header;
-	VDAtomicInt refCount;
+	std::atomic_int refCount{};
 
 	typedef std::pair<unsigned long, int64> tFrameLocation;	// offset:size, packet_offset
 	typedef std::map<long, tFrameLocation> tFrameMap;
@@ -111,7 +110,7 @@ private:
 
 	long		mFrameSize;		// frame size in samples -- 576 for MPEG-2, 1152 for MPEG-1
 	long		mSamplingRate;	// sampling rate in Hz
-	long		mInitialFrame;
+	long		mInitialFrame{-1};
 
 	/////////////////////
 
@@ -180,18 +179,15 @@ private:
 public:
 	VDMPEGAudioStream(IVDMPEGPacketReader *pReader, int id)
 			: VDMPEGStream(pReader)
-			, refCount(0)
 			, mnStreamID(id)
-			, mParseDesiredFrame(-1)
-			, mInitialFrame(-1)
 	{
 	}
 
 	~VDMPEGAudioStream() {
 	}
 	
-	int AddRef() override { return refCount.inc(); }
-	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.fetch_add(1, std::memory_order_relaxed) + 1; }
+	int Release() override { const int rc = refCount.fetch_sub(1, std::memory_order_relaxed) - 1; if (!rc) delete this; return rc; }
 
 	void getInitialFormat(VDMPEGAudioFormat &format) override {
 		format.sampling_rate = mSamplingRate;
@@ -302,7 +298,7 @@ public:
 
 	long mParseFrame;
 	unsigned long mParseHeader;
-	unsigned long mParseDesiredFrame;
+	const long mParseDesiredFrame{-1};
 	int64			mParseLastPacket;
 	unsigned long	mParseLastLength;
 	int				mParseSkip;
@@ -372,7 +368,7 @@ public:
 					if (mParseFrame == mParseDesiredFrame)
 						return kParseComplete;
 
-					if (mParseFrame > (long)mParseDesiredFrame)
+					if (mParseFrame > mParseDesiredFrame)
 						return kParseRewind;
 
 					++mParseFrame;
@@ -436,7 +432,7 @@ private:
 	int						mnStreamID;
 
 	VDMPEGSequenceHeader	mParsedHdr, mInitialSeqHdr;
-	VDAtomicInt refCount;
+	std::atomic_int refCount{};
 
 	// mGOPTable maps byte positions to GOPs.
 
@@ -456,23 +452,21 @@ private:
 	int64		mFrameInProgressStart;
 	bool		mbFrameInProgress;
 
-	long		mFirstFrame;
+	long		mFirstFrame{-1};
 
 public:
 
 	VDMPEGVideoStream(IVDMPEGPacketReader *pReader, int id)
 			: VDMPEGStream(pReader)
-			, refCount(0)
 			, mnStreamID(id)
-			, mFirstFrame(-1)
 	{
 	}
 
 	~VDMPEGVideoStream() {
 	}
 	
-	int AddRef() override { return refCount.inc(); }
-	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.fetch_add(1, std::memory_order_relaxed) + 1; }
+	int Release() override { const int rc = refCount.fetch_sub(1, std::memory_order_relaxed) - 1; if (!rc) delete this; return rc; }
 
 	void getInitialFormat(VDMPEGSequenceHeader& dst) override {
 		dst = mInitialSeqHdr;
@@ -496,7 +490,7 @@ public:
 		while(f>0) {
 			FrameType type;
 
-			if (ReadPicture(f, NULL, 0, type)<0)
+			if (ReadPicture(f, nullptr, 0, type)<0)
 				return -1;
 
 			if (type == kIFrame)
@@ -514,7 +508,7 @@ public:
 
 			--f;
 
-			if (ReadPicture(f, NULL, 0, type)<0)
+			if (ReadPicture(f, nullptr, 0, type)<0)
 				return -1;
 
 			if (type == kIFrame || type == kPFrame)
@@ -542,7 +536,7 @@ public:
 			if (f > lastframe)
 				return -1;
 
-			if (ReadPicture(f, NULL, 0, type)<0)
+			if (ReadPicture(f, nullptr, 0, type)<0)
 				return -1;
 
 			if (type == kIFrame || type == kPFrame)
@@ -584,7 +578,7 @@ public:
 				return -1;
 
 			FrameType t;
-			ReadPicture(f, NULL, 0, t);
+			ReadPicture(f, nullptr, 0, t);
 
 			bAttemptedScan = true;
 
@@ -616,7 +610,7 @@ public:
 
 		if (it == mFrameTable.end()) {
 			FrameType t;
-			ReadPicture(f, NULL, 0, t);
+			ReadPicture(f, nullptr, 0, t);
 
 			if (it == mFrameTable.end())
 				return -1;
@@ -1345,13 +1339,13 @@ private:
 	enum { kInitScanLimit = 131072 };
 	enum { kBufferSize = 131072 };
 
-	VDAtomicInt refCount;
+	std::atomic_int refCount{};
 
 	unsigned char *pBuffer;
-	int64 posBufferBase;
-	long nBufferLimit;
-	long nBufferOffset;
-	long nBufferSize;
+	int64 posBufferBase{};
+	long nBufferLimit{};
+	long nBufferOffset{};
+	const long nBufferSize;
 
 	MPEGSystemHeader syshdr;
 
@@ -1369,11 +1363,7 @@ private:
 
 public:
 	VDMPEGFile()
-		: refCount(0)
-		, pBuffer(new unsigned char[kBufferSize])
-		, posBufferBase(0)
-		, nBufferLimit(0)
-		, nBufferOffset(0)
+		: pBuffer(new unsigned char[kBufferSize])
 		, nBufferSize(kBufferSize)
 		, mPacketCache(128, 4096)
 	{
@@ -1386,8 +1376,8 @@ public:
 		delete[] pBuffer;
 	}
 
-	int AddRef() override { return refCount.inc(); }
-	int Release() override { int rc = refCount.dec(); if (!rc) delete this; return rc; }
+	int AddRef() override { return refCount.fetch_add(1, std::memory_order_relaxed) + 1; }
+	int Release() override { const int rc = refCount.fetch_sub(1, std::memory_order_relaxed) - 1; if (!rc) delete this; return rc; }
 
 	void Open(const wchar_t *pszFile) override {
 		mFile.open(pszFile, nsVDFile::kRead | nsVDFile::kDenyWrite | nsVDFile::kOpenExisting | nsVDFile::kSequential);
@@ -1403,12 +1393,12 @@ public:
 
 		for(i=0; i<32; ++i) {
 			delete pAudioStream[i];
-			pAudioStream[i] = NULL;
+			pAudioStream[i] = nullptr;
 		}
 
 		for(i=0; i<16; ++i) {
 			delete pVideoStream[i];
-			pVideoStream[i] = NULL;
+			pVideoStream[i] = nullptr;
 		}
 
 		mFile.closeNT();		// It's open for read.  We don't care if the close fails.
@@ -1449,7 +1439,7 @@ public:
 				if (!pAudioStream[stream]) {
 					pAudioStream[stream] = new VDMPEGAudioStream(this, stream);
 					pAudioStream[stream]->AddRef();
-					pAudioStream[stream]->ParseInit(NULL, 0, -1, 0);
+					pAudioStream[stream]->ParseInit(nullptr, 0, -1, 0);
 					++nStreamsWithoutFormat;
 					nAudioStreamMask |= (1<<stream);
 				}
@@ -1559,19 +1549,17 @@ public:
 	long getVideoStreamMask() override { return nVideoStreamMask; }
 
 	IVDMPEGAudioStream *getAudioStream(int n) override {
-		if (!pAudioStream[n])
-			return NULL;
-
-		pAudioStream[n]->AddRef();
+		if (pAudioStream[n]) {
+			pAudioStream[n]->AddRef();
+		}
 
 		return pAudioStream[n];
 	}
 
 	IVDMPEGVideoStream *getVideoStream(int n) override {
-		if (!pVideoStream[n])
-			return NULL;
-
-		pVideoStream[n]->AddRef();
+		if (pVideoStream[n]) {
+			pVideoStream[n]->AddRef();
+		}
 
 		return pVideoStream[n];
 	}

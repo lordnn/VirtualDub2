@@ -428,34 +428,34 @@ protected:
 
 	struct PrivateData;
 
-	VDAtomicInt	mRefCount;
-	PrivateData *mpData;
+	std::atomic_int	mRefCount{};
+	PrivateData *mpData{};
 
-	IVDRefUnknown *mpD3DHolder;
-	IDXGIFactory *mpDXGIFactory;
-	ID3D11Device *mpD3DDevice;
-	ID3D11DeviceContext *mpD3DDeviceContext;
-	ID3D11Buffer *mpVSConstBuffer;
-	ID3D11Buffer *mpVSConstBufferSys;
-	ID3D11Buffer *mpPSConstBuffer;
-	ID3D11Buffer *mpPSConstBufferSys;
+	IVDRefUnknown *mpD3DHolder{};
+	IDXGIFactory *mpDXGIFactory{};
+	ID3D11Device *mpD3DDevice{};
+	ID3D11DeviceContext *mpD3DDeviceContext{};
+	ID3D11Buffer *mpVSConstBuffer{};
+	ID3D11Buffer *mpVSConstBufferSys{};
+	ID3D11Buffer *mpPSConstBuffer{};
+	ID3D11Buffer *mpPSConstBufferSys{};
 
-	VDTSwapChainD3D11 *mpSwapChain;
-	VDTSurfaceD3D11 *mpCurrentRT;
-	VDTVertexBufferD3D11 *mpCurrentVB;
-	uint32 mCurrentVBOffset;
-	uint32 mCurrentVBStride;
-	VDTIndexBufferD3D11 *mpCurrentIB;
-	VDTVertexProgramD3D11 *mpCurrentVP;
-	VDTFragmentProgramD3D11 *mpCurrentFP;
-	VDTVertexFormatD3D11 *mpCurrentVF;
+	VDTSwapChainD3D11 *mpSwapChain{};
+	VDTSurfaceD3D11 *mpCurrentRT{};
+	VDTVertexBufferD3D11 *mpCurrentVB{};
+	uint32 mCurrentVBOffset{};
+	uint32 mCurrentVBStride{};
+	VDTIndexBufferD3D11 *mpCurrentIB{};
+	VDTVertexProgramD3D11 *mpCurrentVP{};
+	VDTFragmentProgramD3D11 *mpCurrentFP{};
+	VDTVertexFormatD3D11 *mpCurrentVF{};
 
-	VDTBlendStateD3D11 *mpCurrentBS;
-	VDTRasterizerStateD3D11 *mpCurrentRS;
+	VDTBlendStateD3D11 *mpCurrentBS{};
+	VDTRasterizerStateD3D11 *mpCurrentRS{};
 
-	VDTBlendStateD3D11 *mpDefaultBS;
-	VDTRasterizerStateD3D11 *mpDefaultRS;
-	VDTSamplerStateD3D11 *mpDefaultSS;
+	VDTBlendStateD3D11 *mpDefaultBS{};
+	VDTRasterizerStateD3D11 *mpDefaultRS{};
+	VDTSamplerStateD3D11 *mpDefaultSS{};
 
 	VDTViewport mViewport;
 	VDTDeviceCaps mCaps;
