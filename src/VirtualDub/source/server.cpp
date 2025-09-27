@@ -69,41 +69,38 @@ enum {
 
 class FrameserverSession {
 private:
-	HANDLE hArena;
+	HANDLE hArena{INVALID_HANDLE_VALUE};
 
 public:
-	FrameserverSession *next, *prev;
+	FrameserverSession *next{}, *prev{};
 
-	char *arena;
-	long arena_size;
-	DWORD id;
+	char *arena{};
+	long arena_size{};
+	LPARAM id;
 
 	FrameserverSession();
-	DWORD Init(LONG arena_size, DWORD session_id);
+	LPARAM Init(LONG arena_size, DWORD session_id);
 	~FrameserverSession();
 };
 
-FrameserverSession::FrameserverSession() {
-	next = prev = NULL;
-	hArena = INVALID_HANDLE_VALUE;
-}
+FrameserverSession::FrameserverSession() = default;
 
-DWORD FrameserverSession::Init(LONG arena_size, DWORD session_id) {
+LPARAM FrameserverSession::Init(LONG arena_size, DWORD session_id) {
 	wchar_t buf[16];
 
 	wsprintfW(buf, L"VDUBF%08lx", session_id);
 
 	hArena = OpenFileMappingW(FILE_MAP_WRITE, FALSE, buf);
 	if (INVALID_HANDLE_VALUE == hArena) {
-		return NULL;
+		return 0;
 	}
 
 	arena = (char*)MapViewOfFile(hArena, FILE_MAP_WRITE, 0, 0, arena_size);
 	if (!arena) {
-		return NULL;
+		return 0;
 	}
 
-	this->id = (DWORD)this;
+	this->id = (LPARAM)this;
 	this->arena_size = arena_size;
 
 	return this->id;
@@ -140,7 +137,7 @@ private:
 
 	HWND			hwndStatus;
 
-	typedef std::map<DWORD, FrameserverSession *> tSessions;
+	typedef std::map<LPARAM, FrameserverSession *> tSessions;
 	tSessions	mSessions;
 
 	char *lpszFsname;
@@ -483,11 +480,11 @@ FrameserverSession *Frameserver::SessionLookup(LPARAM lParam) {
 	tSessions::const_iterator it(mSessions.find(lParam));
 
 	if (it != mSessions.end())
-		return (*it).second;
+		return it->second;
 
 	VDDEBUG("Session lookup failed on %08lx\n", lParam);
 
-	return NULL;
+	return nullptr;
 }
 
 LRESULT Frameserver::SessionOpen(LPARAM mmapID, WPARAM arena_len) {
@@ -500,19 +497,17 @@ LRESULT Frameserver::SessionOpen(LPARAM mmapID, WPARAM arena_len) {
 		delete fs;
 	}
 
-	return NULL;
+	return 0;
 }
 
 LRESULT Frameserver::SessionClose(LPARAM lParam) {
-	FrameserverSession *fs = SessionLookup(lParam);
+    if (FrameserverSession *fs = SessionLookup(lParam)) {
+        delete fs;
+        mSessions.erase(lParam);
+        return VDSRVERR_OK;
+    }
 
-	if (!fs) return VDSRVERR_BADSESSION;
-
-	delete fs;
-
-	mSessions.erase(lParam);
-
-	return VDSRVERR_OK;
+    return VDSRVERR_BADSESSION;
 }
 
 LRESULT Frameserver::SessionStreamInfo(LPARAM lParam, WPARAM stream) {
