@@ -292,6 +292,7 @@ protected:
 
 	HICON shIcon1[uIcon_count];
 	HICON shIcon2[uIcon_count];
+	VDStringW hintWStr_;
 };
 
 ATOM VDPositionControlW32::Register() {
@@ -302,10 +303,10 @@ ATOM VDPositionControlW32::Register() {
 	wc.cbClsExtra	= 0;
 	wc.cbWndExtra	= sizeof(VDPositionControlW32 *);
 	wc.hInstance	= g_hInst;
-	wc.hIcon		= NULL;
+	wc.hIcon		= nullptr;
 	wc.hCursor		= LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground= (HBRUSH)(COLOR_3DFACE+1);	//GetStockObject(LTGRAY_BRUSH);
-	wc.lpszMenuName	= NULL;
+	wc.lpszMenuName	= nullptr;
 	wc.lpszClassName= POSITIONCONTROLCLASS;
 
 	return RegisterClass(&wc);
@@ -610,14 +611,14 @@ VDEvent<IVDPositionControl, VDPositionControlEventData>& VDPositionControlW32::P
 
 BOOL CALLBACK VDPositionControlW32::InitChildrenProc(HWND hWnd, LPARAM lParam) {
 	VDPositionControlW32 *pThis = (VDPositionControlW32 *)lParam;
-	UINT id;
+	UINT_PTR id;
 	int fill = GetSysColor(COLOR_BTNFACE);
 	int fill_r = fill & 0xFF;
 	int fill_g = (fill & 0xFF00) >> 8;
 	int fill_b = (fill & 0xFF0000) >> 16;
 	int fill_y = ((fill_b * 19 + fill_g * 183 + fill_r * 54) >> 8);
 
-	switch(id = GetWindowLong(hWnd, GWL_ID)) {
+	switch(id = GetWindowLongPtr(hWnd, GWL_ID)) {
 	case IDC_STOP:
 	case IDC_PLAY:
 	case IDC_PLAYPREVIEW:
@@ -666,7 +667,7 @@ LRESULT APIENTRY VDPositionControlW32::StaticWndProc(HWND hwnd, UINT msg, WPARAM
 		pcd->mhwnd = NULL;
 		pcd->Release();
 		SetWindowLongPtr(hwnd, 0, 0);
-		pcd = NULL;
+		pcd = nullptr;
 		break;
 	}
 
@@ -694,7 +695,7 @@ LRESULT CALLBACK VDPositionControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM l
 	case WM_NOTIFY:
 		if (TTN_GETDISPINFO == ((LPNMHDR)lParam)->code) {
 			NMTTDISPINFO *lphdr = (NMTTDISPINFO*)lParam;
-			UINT id = (lphdr->uFlags & TTF_IDISHWND) ? GetWindowLong((HWND)lphdr->hdr.idFrom, GWL_ID) : lphdr->hdr.idFrom;
+			UINT_PTR id = (lphdr->uFlags & TTF_IDISHWND) ? GetWindowLongPtr((HWND)lphdr->hdr.idFrom, GWL_ID) : lphdr->hdr.idFrom;
 
 			*lphdr->lpszText = 0;
 
@@ -702,7 +703,9 @@ LRESULT CALLBACK VDPositionControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM l
 
 			for(const auto& posctltip : g_posctltips) {
 				if (id == posctltip.id) {
-					lphdr->lpszText = const_cast<wchar_t*>(VDTextAToW(posctltip.tip).c_str());
+				    hintWStr_ = VDTextAToW(posctltip.tip);
+					lphdr->lpszText = const_cast<wchar_t*>(hintWStr_.c_str());
+					break;
 				}
 			}
 
@@ -812,7 +815,7 @@ LRESULT CALLBACK VDPositionControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM l
 				return 0;
 			}
 
-			LRESULT r = SendMessage(GetParent(mhwnd), WM_COMMAND, MAKELONG(GetWindowLong(mhwnd, GWL_ID), cmd), (LPARAM)mhwnd);
+			LRESULT r = SendMessage(GetParent(mhwnd), WM_COMMAND, MAKELONG(GetWindowLongPtr(mhwnd, GWL_ID), cmd), (LPARAM)mhwnd);
 			if(r==-1) switch(LOWORD(wParam)) {
 			case IDC_SCENEREV:
 			case IDC_SCENEFWD:
@@ -869,7 +872,7 @@ LRESULT CALLBACK VDPositionControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM l
 				GetWindowRect(hwndFrame,&r);
 				MapWindowPoints(0,mhwnd,(POINT*)&r,2);
 				if (PtInRect(&r, pt)) {
-					SendMessage(GetParent(mhwnd), WM_COMMAND, MAKELONG(GetWindowLong(mhwnd, GWL_ID), PCN_JUMPTO), (LPARAM)mhwnd);
+					SendMessage(GetParent(mhwnd), WM_COMMAND, MAKELONG(GetWindowLongPtr(mhwnd, GWL_ID), PCN_JUMPTO), (LPARAM)mhwnd);
 				}
 			}
 		}
@@ -909,7 +912,7 @@ LRESULT CALLBACK VDPositionControlW32::WndProc(UINT msg, WPARAM wParam, LPARAM l
 				if (PtInRect(&r, pt)) {
 					HMENU	popup = GetSubMenu(mhmenuPopup, 0);
 					ClientToScreen(mhwnd, &pt);
-					TrackPopupMenu(popup, TPM_RIGHTALIGN | TPM_BOTTOMALIGN, pt.x, pt.y, 0, mhwnd, NULL);
+					TrackPopupMenu(popup, TPM_RIGHTALIGN | TPM_BOTTOMALIGN, pt.x, pt.y, 0, mhwnd, nullptr);
 				}
 			}
 		}
@@ -1022,7 +1025,7 @@ void VDPositionControlW32::OnCreate() {
 	TOOLINFO ti;
 	HWND hwndTT;
 
-	dwStyles = GetWindowLong(mhwnd, GWL_STYLE);
+	dwStyles = GetWindowLongPtr(mhwnd, GWL_STYLE);
 	mbHasPlaybackControls	= !!(dwStyles & PCS_PLAYBACK);
 	mbHasMarkControls		= !!(dwStyles & PCS_MARK);
 	mbHasSceneControls		= !!(dwStyles & PCS_SCENE);
@@ -1123,7 +1126,7 @@ void VDPositionControlW32::OnCreate() {
 	if (mTickWidth<1) mTickWidth = 1;
 
 	if (mbHasPosText) {
-		CreateWindowExW(WS_EX_STATICEDGE,L"STATIC",NULL,WS_CHILD|WS_VISIBLE,0,0,0,ht,mhwnd,(HMENU)IDC_FRAME,g_hInst,NULL);
+		CreateWindowExW(WS_EX_STATICEDGE,L"STATIC",nullptr,WS_CHILD|WS_VISIBLE,0,0,0,ht,mhwnd,(HMENU)IDC_FRAME,g_hInst,nullptr);
 		mhmenuPopup = LoadMenu(g_hInst, MAKEINTRESOURCE(IDR_POSITION_MENU));
 	}
 
@@ -1163,29 +1166,29 @@ void VDPositionControlW32::OnCreate() {
 	}
 
 	if (mbHasPlaybackControls) {
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_STOP       , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_PLAY       , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_PLAYPREVIEW    , g_hInst, NULL);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_STOP       , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_PLAY       , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_PLAYPREVIEW    , g_hInst, nullptr);
 	}
 	if (mbHasNavControls) {
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_START      , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_BACKWARD   , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FORWARD    , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_END        , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_KEYPREV    , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_KEYNEXT    , g_hInst, NULL);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_START      , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_BACKWARD   , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FORWARD    , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_END        , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_KEYPREV    , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_KEYNEXT    , g_hInst, nullptr);
 	}
 	if (mbHasSceneControls) {
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX | BS_PUSHLIKE | buttonStyle   ,0,0,ht,ht,mhwnd, (HMENU)IDC_SCENEREV, g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX | BS_PUSHLIKE | buttonStyle   ,0,0,ht,ht,mhwnd, (HMENU)IDC_SCENEFWD, g_hInst, NULL);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX | BS_PUSHLIKE | buttonStyle   ,0,0,ht,ht,mhwnd, (HMENU)IDC_SCENEREV, g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_AUTOCHECKBOX | BS_PUSHLIKE | buttonStyle   ,0,0,ht,ht,mhwnd, (HMENU)IDC_SCENEFWD, g_hInst, nullptr);
 	}
 	if (mbHasMarkControls) {
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_MARKIN , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_MARKOUT    , g_hInst, NULL);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_MARKIN , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_MARKOUT    , g_hInst, nullptr);
 	}
 	if (mbHasFilterControls) {
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FILTER_MARKIN  , g_hInst, NULL);
-		CreateWindowExA(0                ,"BUTTON"       ,NULL,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FILTER_MARKOUT , g_hInst, NULL);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FILTER_MARKIN  , g_hInst, nullptr);
+		CreateWindowExA(0                ,"BUTTON"       ,nullptr,WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON | buttonStyle           ,0,0,ht,ht,mhwnd, (HMENU)IDC_FILTER_MARKOUT , g_hInst, nullptr);
 	}
 
 	if (mFrameFont)
@@ -1193,9 +1196,9 @@ void VDPositionControlW32::OnCreate() {
 
 	// Create tooltip control.
 
-	hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, NULL, WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,
+	hwndTT = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, nullptr, WS_POPUP|TTS_NOPREFIX|TTS_ALWAYSTIP,
 			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-			mhwnd, NULL, g_hInst, NULL);
+			mhwnd, nullptr, g_hInst, nullptr);
 
 	if (hwndTT) {
 
@@ -1651,7 +1654,7 @@ void VDPositionControlW32::RecalcThumbRect(VDPosition pos, bool update) {
 bool VDPositionControlW32::Notify(UINT code, VDPositionControlEventData::EventType eventType) {
 	NMHDR nm;
 	nm.hwndFrom = mhwnd;
-	nm.idFrom	= GetWindowLong(mhwnd, GWL_ID);
+	nm.idFrom	= GetWindowLongPtr(mhwnd, GWL_ID);
 	nm.code		= code;
 	int r = SendMessage(GetParent(mhwnd), WM_NOTIFY, nm.idFrom, (LPARAM)&nm);
 	if (r==-1) return false;
