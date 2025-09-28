@@ -80,16 +80,16 @@ VDFilterAccelConverter::RunResult VDFilterAccelConverter::RunRequests(const uint
 		return kRunResult_Idle;
 
 	if (mpRequest) {
-		if (mProcessStatus == kProcess_Pending)
+		if (mProcessStatus.load(std::memory_order_acquire) == kProcess_Pending)
 			return kRunResult_Blocked;
 
-		bool succeeded = (mProcessStatus == kProcess_Succeeded);
+		bool succeeded = (mProcessStatus.load(std::memory_order_acquire) == kProcess_Succeeded);
 		mpRequest->MarkComplete(succeeded);
 		CompleteRequest(mpRequest, succeeded);
 		mpRequest.clear();
 		return kRunResult_Running;
 	} else {
-		VDASSERT(mProcessStatus != kProcess_Pending);
+		VDASSERT(mProcessStatus.load(std::memory_order_acquire) != kProcess_Pending);
 	}
 
 	vdrefptr<VDFilterFrameRequest> req;
@@ -124,7 +124,7 @@ VDFilterAccelConverter::RunResult VDFilterAccelConverter::RunRequests(const uint
 	VDFilterFrameBufferAccel *dstbuf = static_cast<VDFilterFrameBufferAccel *>(req->GetResultBuffer());
 	mpLockedSrc = srcbuf;
 	mpLockedDst = dstbuf;
-	mProcessStatus = kProcess_Pending;
+	mProcessStatus.store(kProcess_Pending, std::memory_order_release);
 
 	mpFrameEngine->ScheduleProcess(0);
 	mpRequest.swap(req);
@@ -135,11 +135,11 @@ VDFilterAccelConverter::RunResult VDFilterAccelConverter::RunProcess(int index) 
 	if (index>0)
 		return kRunResult_Idle;
 
-	if (mProcessStatus != kProcess_Pending)
+	if (mProcessStatus.load(std::memory_order_acquire) != kProcess_Pending)
 		return kRunResult_Idle;
 
 	mpEngine->Convert(mpLockedDst, mLayout, mpLockedSrc, mSourceLayout, mSourceRect);
-	mProcessStatus = kProcess_Succeeded;
+	mProcessStatus.store(kProcess_Succeeded, std::memory_order_release);
 
 	mpFrameEngine->Schedule();
 	return kRunResult_IdleWasActive;

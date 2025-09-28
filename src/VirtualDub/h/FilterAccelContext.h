@@ -18,9 +18,9 @@ public:
 	VDFilterAccelContext();
 	~VDFilterAccelContext();
 
-	int VDXAPIENTRY AddRef();
-	int VDXAPIENTRY Release();
-	void *VDXAPIENTRY AsInterface(uint32 iid);
+	int VDXAPIENTRY AddRef() override;
+	int VDXAPIENTRY Release() override;
+	void *VDXAPIENTRY AsInterface(uint32 iid) override;
 
 	bool Init(VDFilterAccelEngine& eng);
 	void Shutdown();
@@ -30,19 +30,19 @@ public:
 	uint32 RegisterRenderTarget(IVDTSurface *surf, uint32 rw, uint32 rh, uint32 bw, uint32 bh);
 	uint32 RegisterTexture(IVDTTexture2D *tex, uint32 imageW, uint32 imageH);
 
-	uint32 VDXAPIENTRY CreateTexture2D(uint32 width, uint32 height, uint32 mipCount, VDXAFormat format, bool wrap, const VDXAInitData2D *initData);
-	uint32 VDXAPIENTRY CreateRenderTexture(uint32 width, uint32 height, uint32 borderWidth, uint32 borderHeight, VDXAFormat format, bool wrap);
-	uint32 VDXAPIENTRY CreateFragmentProgram(VDXAProgramFormat programFormat, const void *data, uint32 length);
-	void VDXAPIENTRY DestroyObject(uint32 handle);
+	uint32 VDXAPIENTRY CreateTexture2D(uint32 width, uint32 height, uint32 mipCount, VDXAFormat format, bool wrap, const VDXAInitData2D *initData) override;
+	uint32 VDXAPIENTRY CreateRenderTexture(uint32 width, uint32 height, uint32 borderWidth, uint32 borderHeight, VDXAFormat format, bool wrap) override;
+	uint32 VDXAPIENTRY CreateFragmentProgram(VDXAProgramFormat programFormat, const void *data, uint32 length) override;
+	void VDXAPIENTRY DestroyObject(uint32 handle) override;
 
-	void VDXAPIENTRY GetTextureDesc(uint32 handle, VDXATextureDesc& desc);
+	void VDXAPIENTRY GetTextureDesc(uint32 handle, VDXATextureDesc& desc) override;
 
-	void VDXAPIENTRY SetTextureMatrix(uint32 coordIndex, uint32 textureHandle, float xoffset, float yoffset, const float uvMatrix[12]);
-	void VDXAPIENTRY SetTextureMatrixDual(uint32 coordIndex, uint32 textureHandle, float xoffset, float yoffset, float xoffset2, float yoffset2);
-	void VDXAPIENTRY SetSampler(uint32 samplerIndex, uint32 textureHandle, VDXAFilterMode filter);
-	void VDXAPIENTRY SetFragmentProgramConstF(uint32 startIndex, uint32 count, const float *data);
-	void VDXAPIENTRY DrawRect(uint32 renderTargetHandle, uint32 fragmentProgram, const VDXRect *destRect);
-	void VDXAPIENTRY FillRects(uint32 renderTargetHandle, uint32 rectCount, const VDXRect *rects, uint32 colorARGB);
+	void VDXAPIENTRY SetTextureMatrix(uint32 coordIndex, uint32 textureHandle, float xoffset, float yoffset, const float uvMatrix[12]) override;
+	void VDXAPIENTRY SetTextureMatrixDual(uint32 coordIndex, uint32 textureHandle, float xoffset, float yoffset, float xoffset2, float yoffset2) override;
+	void VDXAPIENTRY SetSampler(uint32 samplerIndex, uint32 textureHandle, VDXAFilterMode filter) override;
+	void VDXAPIENTRY SetFragmentProgramConstF(uint32 startIndex, uint32 count, const float *data) override;
+	void VDXAPIENTRY DrawRect(uint32 renderTargetHandle, uint32 fragmentProgram, const VDXRect *destRect) override;
+	void VDXAPIENTRY FillRects(uint32 renderTargetHandle, uint32 rectCount, const VDXRect *rects, uint32 colorARGB) override;
 
 protected:
 	enum {
@@ -85,7 +85,7 @@ protected:
 
 	float	mUVTransforms[8][12];
 
-	VDAtomicInt	mRefCount;
+	std::atomic_int	mRefCount{};
 };
 
 #endif	// f_VD2_FILTERACCELCONTEXT_H

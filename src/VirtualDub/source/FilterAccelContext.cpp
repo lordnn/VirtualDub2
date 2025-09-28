@@ -8,7 +8,6 @@ VDFilterAccelContext::VDFilterAccelContext()
 	: mpParent(NULL)
 	, mNextFreeHandle(0)
 	, mbErrorState(false)
-	, mRefCount(0)
 {
 }
 
@@ -17,20 +16,21 @@ VDFilterAccelContext::~VDFilterAccelContext() {
 }
 
 int VDFilterAccelContext::AddRef() {
-	return ++mRefCount;
+	return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 }
 
 int VDFilterAccelContext::Release() {
-	int rc = --mRefCount;
+	const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
 
-	if (!rc)
+	if (!rc) {
 		delete this;
+	}
 
-	return 0;
+	return rc;
 }
 
 void *VDXAPIENTRY VDFilterAccelContext::AsInterface(uint32 iid) {
-	return NULL;
+	return nullptr;
 }
 
 bool VDFilterAccelContext::Init(VDFilterAccelEngine& eng) {

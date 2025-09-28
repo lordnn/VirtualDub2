@@ -22,8 +22,6 @@
 #include "FilterFrameBufferAccel.h"
 
 VDFilterAccelUploader::VDFilterAccelUploader()
-	: mProcessStatus(kProcess_Idle)
-	, mpLockedSrc(NULL)
 {
 }
 
@@ -39,7 +37,7 @@ void VDFilterAccelUploader::Init(VDFilterAccelEngine *engine, IVDFilterFrameSour
 	mAllocator.AddSizeRequirement((outputLayout.h << 16) + outputLayout.w);
 	mAllocator.SetAccelerationRequirement(VDFilterFrameAllocatorProxy::kAccelModeUpload);
 
-	mProcessStatus = kProcess_Idle;
+	mProcessStatus.store(kProcess_Idle, std::memory_order_release);
 }
 
 void VDFilterAccelUploader::Start(IVDFilterFrameEngine *frameEngine) {
@@ -87,7 +85,7 @@ VDFilterAccelUploader::RunResult VDFilterAccelUploader::RunRequests(const uint32
 		return kRunResult_Idle;
 
 	if (mpRequest) {
-		if (mProcessStatus == kProcess_Pending)
+		if (mProcessStatus.load(std::memory_order_acquire) == kProcess_Pending)
 			return kRunResult_Blocked;
 
 		VDASSERT(mpLockedSrc);
@@ -95,13 +93,13 @@ VDFilterAccelUploader::RunResult VDFilterAccelUploader::RunRequests(const uint32
 		srcbuf->Unlock();
 		mpLockedSrc = NULL;
 
-		bool succeeded = (mProcessStatus == kProcess_Succeeded);
+		bool succeeded = (mProcessStatus.load(std::memory_order_acquire) == kProcess_Succeeded);
 		mpRequest->MarkComplete(succeeded);
 		CompleteRequest(mpRequest, succeeded);
 		mpRequest.clear();
 		return kRunResult_Running;
 	} else {
-		VDASSERT(mProcessStatus != kProcess_Pending);
+		VDASSERT(mProcessStatus.load(std::memory_order_acquire) != kProcess_Pending);
 		VDASSERT(!mpLockedSrc);
 	}
 
@@ -143,7 +141,7 @@ VDFilterAccelUploader::RunResult VDFilterAccelUploader::RunRequests(const uint32
 
 	VDFilterFrameBufferAccel *dstbuf = static_cast<VDFilterFrameBufferAccel *>(req->GetResultBuffer());
 	mpLockedDst = dstbuf;
-	mProcessStatus = kProcess_Pending;
+	mProcessStatus.store(kProcess_Pending, std::memory_order_release);
 
 	mpFrameEngine->ScheduleProcess(0);
 	mpRequest.swap(req);
@@ -154,11 +152,11 @@ VDFilterAccelUploader::RunResult VDFilterAccelUploader::RunProcess(int index) {
 	if (index>0)
 		return kRunResult_Idle;
 
-	if (mProcessStatus != kProcess_Pending)
+	if (mProcessStatus.load(std::memory_order_acquire) != kProcess_Pending)
 		return kRunResult_Idle;
 
 	mpEngine->Upload(mpLockedDst, mpLockedSrc, mSourceLayout);
-	mProcessStatus = kProcess_Succeeded;
+	mProcessStatus.store(kProcess_Succeeded, std::memory_order_release);
 
 	mpFrameEngine->Schedule();
 	return kRunResult_IdleWasActive;

@@ -36,35 +36,35 @@ public:
 	int filter_index;
 
 	VDFilterFrameManualSource();
-	~VDFilterFrameManualSource();
+	~VDFilterFrameManualSource() override;
 
-	void *AsInterface(uint32 id);
+	void *AsInterface(uint32 id) override;
 
-	const char *GetDebugDesc() const { return ""; }
+	const char *GetDebugDesc() const override { return ""; }
 
-	VDFilterFrameAllocatorProxy *GetOutputAllocatorProxy();
+	VDFilterFrameAllocatorProxy *GetOutputAllocatorProxy() override;
 
-	void VDFilterFrameManualSource::RegisterSourceAllocReqs(uint32 index, VDFilterFrameAllocatorProxy *prev);
-	void RegisterAllocatorProxies(VDFilterFrameAllocatorManager *mgr);
+	void RegisterSourceAllocReqs(uint32 index, VDFilterFrameAllocatorProxy *prev) override;
+	void RegisterAllocatorProxies(VDFilterFrameAllocatorManager *mgr) override;
 	void SetOutputLayout(const VDPixmapLayout& layout);
 
-	bool IsAccelerated() const { return false; }
+	bool IsAccelerated() const override { return false; }
 
-	bool CreateRequest(sint64 outputFrame, bool writable, uint32 batchNumber, IVDFilterFrameClientRequest **req);
-	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex);
-	sint64 GetSourceFrame(sint64 outputFrame);
-	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source);
-	sint64 GetNearestUniqueFrame(sint64 outputFrame);
-	const VDPixmapLayout& GetOutputLayout() { return mLayout; }
-	void InvalidateAllCachedFrames();
+	bool CreateRequest(sint64 outputFrame, bool writable, uint32 batchNumber, IVDFilterFrameClientRequest **req) override;
+	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex) override;
+	sint64 GetSourceFrame(sint64 outputFrame) override;
+	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source) override;
+	sint64 GetNearestUniqueFrame(sint64 outputFrame) override;
+	const VDPixmapLayout& GetOutputLayout() override { return mLayout; }
+	void InvalidateAllCachedFrames() override;
 
-	void DumpStatus(VDTextOutputStream&) {}
+	void DumpStatus(VDTextOutputStream&) override {}
 
-	void Start(IVDFilterFrameEngine *frameEngine) {}
-	void Stop() {}
-	int AllocateNodes(int threads) { return 1; }
-	RunResult RunRequests(const uint32 *batchNumberLimit, int index) { return kRunResult_Idle; }
-	RunResult RunProcess(int index) { return kRunResult_Idle; }
+	void Start(IVDFilterFrameEngine *frameEngine) override {}
+	void Stop() override {}
+	int AllocateNodes(int threads) override { return 1; }
+	RunResult RunRequests(const uint32 *batchNumberLimit, int index) override { return kRunResult_Idle; }
+	RunResult RunProcess(int index) override { return kRunResult_Idle; }
 
 	bool PeekNextRequestFrame(VDPosition& pos);
 	bool GetNextRequest(const uint32 *batchLimit, VDFilterFrameRequest **ppReq);

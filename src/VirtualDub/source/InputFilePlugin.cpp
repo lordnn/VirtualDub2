@@ -140,25 +140,26 @@ namespace {
 
 	template<class T> class vdxunknown : public T {
 	public:
-		vdxunknown() : mRefCount(0) {}
-		vdxunknown(const vdxunknown<T>& src) : mRefCount(0) {}		// do not copy the refcount
+		vdxunknown() {}
+		vdxunknown(const vdxunknown<T>& src) {}		// do not copy the refcount
 		virtual ~vdxunknown() {}
 
 		vdxunknown<T>& operator=(const vdxunknown<T>&) {}			// do not copy the refcount
 
 		inline virtual int VDXAPIENTRY AddRef() {
-			return mRefCount.inc();
+			return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 		}
 
 		inline virtual int VDXAPIENTRY Release() {
-			if (mRefCount == 1) {		// We are the only reference, so there is no threading issue.  Don't decrement to zero as this can cause double destruction with a temporary addref/release in destruction.
+		    const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
+			if (!rc) {		// We are the only reference, so there is no threading issue.  Don't decrement to zero as this can cause double destruction with a temporary addref/release in destruction.
 				delete this;
 				return 0;
 			}
 
-			VDASSERT(mRefCount > 1);
+			VDASSERT(rc > 0);
 
-			return mRefCount.dec();
+			return rc;
 		}
 
 		virtual void *VDXAPIENTRY AsInterface(uint32 iid) {
@@ -168,11 +169,11 @@ namespace {
 			if (iid == T::kIID)
 				return static_cast<T *>(this);
 
-			return NULL;
+			return nullptr;
 		}
 
 	protected:
-		VDXAtomicInt		mRefCount;
+		std::atomic_int		mRefCount{};
 	};
 
 	template<class T>
@@ -191,7 +192,7 @@ namespace {
 class VDVideoDecoderModelDefaultIP : public vdxunknown<IVDXVideoDecoderModel> {
 public:
 	VDVideoDecoderModelDefaultIP(IVDVideoSource *pVS);
-	~VDVideoDecoderModelDefaultIP();
+	~VDVideoDecoderModelDefaultIP() override;
 
 	void	VDXAPIENTRY Reset();
 	void	VDXAPIENTRY SetDesiredFrame(sint64 frame_num);
@@ -281,7 +282,7 @@ bool VDXAPIENTRY VDVideoDecoderModelDefaultIP::IsDecodable(sint64 sample_num) {
 class VDVideoDecoderDefault : public vdxunknown<IVDXVideoDecoder> {
 public:
 	VDVideoDecoderDefault(IVDVideoDecompressor *decomp, int w, int h);
-	~VDVideoDecoderDefault();
+	~VDVideoDecoderDefault() override;
 
 	const void *		VDXAPIENTRY DecodeFrame(const void *inputBuffer, uint32 data_len, bool is_preroll, sint64 sampleNumber, sint64 targetFrame);
 	uint32				VDXAPIENTRY GetDecodePadding();

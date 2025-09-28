@@ -26,8 +26,8 @@
 #ifndef f_VD2_SYSTEM_REFCOUNT_H
 #define f_VD2_SYSTEM_REFCOUNT_H
 
+#include <atomic>
 #include <vd2/system/vdtypes.h>
-#include <vd2/system/atomic.h>
 
 ///////////////////////////////////////////////////////////////////////////
 //	IVDRefCount
@@ -89,18 +89,18 @@ public:
 ///////////////////////////////////////////////////////////////////////////
 class vdrefcount {
 public:
-	vdrefcount() : mRefCount(0) {}
-	vdrefcount(const vdrefcount& src) : mRefCount(0) {}		// do not copy the refcount
+	vdrefcount() {}
+	vdrefcount(const vdrefcount& src) {}		// do not copy the refcount
 	virtual ~vdrefcount() {}
 
 	vdrefcount& operator=(const vdrefcount&) {}			// do not copy the refcount
 
 	int AddRef() {
-		return mRefCount.inc();
+		return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 	}
 
 	int Release() {
-		int rc = --mRefCount;
+		const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
 
 		if (!rc) {
 			delete this;
@@ -112,7 +112,7 @@ public:
 	}
 
 protected:
-	VDAtomicInt		mRefCount;
+	std::atomic_int		mRefCount{};
 };
 
 ///////////////////////////////////////////////////////////////////////////
@@ -125,18 +125,18 @@ protected:
 ///
 template<class T> class vdrefcounted : public T {
 public:
-	vdrefcounted() : mRefCount(0) {}
-	vdrefcounted(const vdrefcounted<T>& src) : mRefCount(0) {}		// do not copy the refcount
+	vdrefcounted() {}
+	vdrefcounted(const vdrefcounted<T>& src) {}		// do not copy the refcount
 	virtual ~vdrefcounted() {}
 
 	vdrefcounted<T>& operator=(const vdrefcounted<T>&) {}			// do not copy the refcount
 
 	inline virtual int AddRef() {
-		return mRefCount.inc();
+		return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 	}
 
 	inline virtual int Release() {
-		int rc = --mRefCount;
+		const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
 
 		if (!rc) {
 			delete this;
@@ -149,7 +149,7 @@ public:
 	}
 
 protected:
-	VDAtomicInt		mRefCount;
+	std::atomic_int		mRefCount{};
 };
 
 ///////////////////////////////////////////////////////////////////////////

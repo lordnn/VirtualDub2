@@ -35,15 +35,15 @@ class VDFilterFrameVideoSource : public VDFilterFrameManualSource {
 
 public:
 	VDFilterFrameVideoSource();
-	~VDFilterFrameVideoSource();
+	~VDFilterFrameVideoSource() override;
 
 	void Init(IVDVideoSource *vs, const VDPixmapLayout& layout);
 
-	RunResult RunRequests(const uint32 *batchNumberLimit, int index);
+	RunResult RunRequests(const uint32 *batchNumberLimit, int index) override;
 	bool IsPreroll();
 
 public:	// IVDFilterFrameSource
-	virtual sint64 GetNearestUniqueFrame(sint64 outputFrame);
+	sint64 GetNearestUniqueFrame(sint64 outputFrame) override;
 
 protected:
 	IVDVideoSource *mpVS;

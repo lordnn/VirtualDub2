@@ -30,22 +30,22 @@ class VDFilterAccelConverter : public VDFilterFrameManualSource {
 	VDFilterAccelConverter& operator=(const VDFilterAccelConverter&);
 public:
 	VDFilterAccelConverter();
-	~VDFilterAccelConverter();
+	~VDFilterAccelConverter() override;
 
 	void Init(VDFilterAccelEngine *engine, IVDFilterFrameSource *source, const VDPixmapLayout& outputLayout, const vdrect32 *srcRect);
-	void Start(IVDFilterFrameEngine *frameEngine);
-	void Stop();
+	void Start(IVDFilterFrameEngine *frameEngine) override;
+	void Stop() override;
 
-	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex);
-	sint64 GetSourceFrame(sint64 outputFrame);
-	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source);
-	sint64 GetNearestUniqueFrame(sint64 outputFrame);
+	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex) override;
+	sint64 GetSourceFrame(sint64 outputFrame) override;
+	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source) override;
+	sint64 GetNearestUniqueFrame(sint64 outputFrame) override;
 
-	RunResult RunRequests(const uint32 *batchNumberLimit, int index);
-	RunResult RunProcess(int index);
+	RunResult RunRequests(const uint32 *batchNumberLimit, int index) override;
+	RunResult RunProcess(int index) override;
 
 protected:
-	bool InitNewRequest(VDFilterFrameRequest *req, sint64 outputFrame, bool writable, uint32 batchNumber);
+	bool InitNewRequest(VDFilterFrameRequest *req, sint64 outputFrame, bool writable, uint32 batchNumber) override;
 
 	VDFilterAccelEngine	*mpEngine;
 	IVDFilterFrameSource *mpSource;
@@ -62,7 +62,7 @@ protected:
 		kProcess_Failed
 	};
 
-	VDAtomicInt mProcessStatus;
+	std::atomic_int mProcessStatus;
 	VDFilterFrameBufferAccel *mpLockedDst;
 	VDFilterFrameBufferAccel *mpLockedSrc;
 };

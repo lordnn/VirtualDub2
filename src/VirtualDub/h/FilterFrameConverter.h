@@ -29,23 +29,23 @@ class VDFilterFrameConverter : public VDFilterFrameManualSource {
 	VDFilterFrameConverter& operator=(const VDFilterFrameConverter&);
 public:
 	VDFilterFrameConverter();
-	~VDFilterFrameConverter();
+	~VDFilterFrameConverter() override;
 
 	void Init(IVDFilterFrameSource *source, const VDPixmapLayout& outputLayout, const VDPixmapLayout *sourceLayoutOverride, bool normalize16);
-	void Start(IVDFilterFrameEngine *frameEngine);
-	void Stop();
+	void Start(IVDFilterFrameEngine *frameEngine) override;
+	void Stop() override;
 
-	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex);
-	sint64 GetSourceFrame(sint64 outputFrame);
-	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source);
-	sint64 GetNearestUniqueFrame(sint64 outputFrame);
+	bool GetDirectMapping(sint64 outputFrame, sint64& sourceFrame, int& sourceIndex) override;
+	sint64 GetSourceFrame(sint64 outputFrame) override;
+	sint64 GetSymbolicFrame(sint64 outputFrame, IVDFilterFrameSource *source) override;
+	sint64 GetNearestUniqueFrame(sint64 outputFrame) override;
 
-	int AllocateNodes(int threads);
-	RunResult RunRequests(const uint32 *batchNumberLimit, int index);
-	RunResult RunProcess(int index);
+	int AllocateNodes(int threads) override;
+	RunResult RunRequests(const uint32 *batchNumberLimit, int index) override;
+	RunResult RunProcess(int index) override;
 
 protected:
-	bool InitNewRequest(VDFilterFrameRequest *req, sint64 outputFrame, bool writable, uint32 batchNumber);
+	bool InitNewRequest(VDFilterFrameRequest *req, sint64 outputFrame, bool writable, uint32 batchNumber) override;
 
 	IVDFilterFrameEngine *mpEngine;
 	IVDFilterFrameSource *mpSource;
