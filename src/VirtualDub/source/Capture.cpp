@@ -747,29 +747,29 @@ protected:
 	void	CapProcessData2(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock);
 
 	std::unique_ptr<IVDCaptureDriver>	mpDriver;
-	int			mDriverIndex;
-	VDGUIHandle	mhwnd;
+	int			mDriverIndex{-1};
+	VDGUIHandle	mhwnd{};
 
-	IVDCaptureProjectCallback	*mpCB;
+	IVDCaptureProjectCallback	*mpCB{};
 
-	DisplayMode	mDisplayMode;
+	DisplayMode	mDisplayMode{kDisplayNone};
 
 	VDStringW	mFilename;
-	bool		mbStripingEnabled;
+	bool		mbStripingEnabled{};
 
 	int			mDisplayChromaKey;
 
-	bool		mbEnableSpill;
-	bool		mbEnableAudioVumeter;
-	bool		mbEnableVideoHistogram;
-	bool		mbEnableVideoFrameTransfer;
-	VDAtomicInt	mSuspendVideoFrameTransferCount;
-	bool		mbVideoFrameTransferActive;
+	bool		mbEnableSpill{};
+	bool		mbEnableAudioVumeter{};
+	bool		mbEnableVideoHistogram{};
+	bool		mbEnableVideoFrameTransfer{};
+	VDAtomicInt	mSuspendVideoFrameTransferCount{};
+	bool		mbVideoFrameTransferActive{};
 
 	// driver state shadowing
-	bool		mbDisplayVisible;
-	bool		mbAudioCaptureEnabled;
-	bool		mbAudioPlaybackEnabled;
+	bool		mbDisplayVisible{true};
+	bool		mbAudioCaptureEnabled{true};
+	bool		mbAudioPlaybackEnabled{};
 
 	VDCriticalSection		mVideoFilterLock;
 	std::unique_ptr<IVDCaptureFilterSystem>	mpFilterSys;
@@ -777,10 +777,10 @@ protected:
 	VDPixmapLayout			mFilterInputLayout;
 	VDPixmapLayout			mFilterOutputLayout;
 
-	VDCaptureData	*mpCaptureData;
+	VDCaptureData	*mpCaptureData{};
 	DWORD		mMainThreadId;
 
-	bool		mbLoggingEnabled;
+	bool		mbLoggingEnabled{};
 	std::unique_ptr<IVDCaptureLogFilter>	mpLogFilter;
 
 	struct DriverEntry {
@@ -813,7 +813,7 @@ protected:
 
 	uint32		mFilterPalette[256];
 
-	VDAtomicInt	mRefCount;
+	std::atomic_int	mRefCount{};
 	VDCaptureTimingAccuracyBooster mTimingAccuracyBooster;
 
 	VDCriticalSection			mEventLock;
@@ -823,23 +823,6 @@ protected:
 IVDCaptureProject *VDCreateCaptureProject() { return new VDCaptureProject; }
 
 VDCaptureProject::VDCaptureProject()
-	: mDriverIndex(-1)
-	, mhwnd(NULL)
-	, mpCB(NULL)
-	, mDisplayMode(kDisplayNone)
-	, mbStripingEnabled(false)
-	, mbEnableSpill(false)
-	, mbEnableAudioVumeter(false)
-	, mbEnableVideoHistogram(false)
-	, mbEnableVideoFrameTransfer(false)
-	, mSuspendVideoFrameTransferCount(0)
-	, mbVideoFrameTransferActive(false)
-	, mbDisplayVisible(true)
-	, mbAudioCaptureEnabled(true)
-	, mbAudioPlaybackEnabled(false)
-	, mpCaptureData(NULL)
-	, mbLoggingEnabled(false)
-	, mRefCount(0)
 {
 	mTimingSetup.mSyncMode				= VDCaptureTimingSetup::kSyncAudioToVideo;
 	mTimingSetup.mbAllowEarlyDrops		= true;
@@ -894,16 +877,16 @@ VDCaptureProject::~VDCaptureProject() {
 }
 
 int VDCaptureProject::AddRef() {
-	return ++mRefCount;
+	return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 }
 
 int VDCaptureProject::Release() {
-	if (mRefCount == 1) {
+    const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
+	if (!rc) {
 		delete this;
-		return 0;
 	}
 
-	return --mRefCount;
+	return rc;
 }
 
 bool VDCaptureProject::Attach(VDGUIHandle hwnd) {

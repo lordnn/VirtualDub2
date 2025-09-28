@@ -145,7 +145,7 @@ protected:
 	bool AllocSampleBlock(PerSampleInfo *psi);
 
 	uint32	mTlsIndex;
-	VDAtomicInt	mEnableCount;
+	std::atomic_int	mEnableCount{};
 
 	mutable VDCriticalSection mMutex;
 	vdfastvector<VDThreadEventScope> mScopes;
@@ -158,7 +158,6 @@ protected:
 
 VDEventProfilerW32::VDEventProfilerW32()
 	: mTlsIndex(::TlsAlloc())
-	, mEnableCount(0)
 {
 	VDThreadEventScope scope;
 	scope.name = "";
@@ -199,15 +198,15 @@ VDEventProfilerW32::~VDEventProfilerW32() {
 }
 
 void VDEventProfilerW32::Attach() {
-	++mEnableCount;
+	mEnableCount.fetch_add(1, std::memory_order_release);
 }
 
 void VDEventProfilerW32::Detach() {
-	--mEnableCount;
+	mEnableCount.fetch_sub(1, std::memory_order_release);
 }
 
 void VDEventProfilerW32::SetComment(uintptr scopeId, const char* data) {
-	if (!mEnableCount)
+	if (!mEnableCount.load(std::memory_order_acquire))
 		return;
 
 	if (!data || !data[0])
@@ -227,7 +226,7 @@ void VDEventProfilerW32::SetComment(uintptr scopeId, const char* data) {
 }
 
 void VDEventProfilerW32::InsertSample(int name, uint64 data) {
-	if (!mEnableCount)
+	if (!mEnableCount.load(std::memory_order_acquire))
 		return;
 
 	PerSampleInfo* psi = &mSample[name];
@@ -248,7 +247,7 @@ void VDEventProfilerW32::InsertSample(int name, uint64 data) {
 }
 
 void VDEventProfilerW32::BeginScope(const char *name, uintptr *cache, uint32 data, uint32 flags) {
-	if (!mEnableCount)
+	if (!mEnableCount.load(std::memory_order_acquire))
 		return;
 
 	uintptr scopeId = *cache;
@@ -281,7 +280,7 @@ void VDEventProfilerW32::BeginScope(const char *name, uintptr *cache, uint32 dat
 }
 
 void VDEventProfilerW32::BeginDynamicScope(const char *name, uintptr *cache, uint32 data, uint32 flags) {
-	if (!mEnableCount)
+	if (!mEnableCount.load(std::memory_order_acquire))
 		return;
 
 	uintptr scopeId = *cache;
@@ -317,7 +316,7 @@ void VDEventProfilerW32::EndScope() {
 	if (!pti)
 		return;
 
-	if (!mEnableCount)
+	if (!mEnableCount.load(std::memory_order_acquire))
 		return;
 
 	uint32 idx = pti->mCurrentIndex;
@@ -504,7 +503,7 @@ VDEventProfilerW32::PerThreadInfo *VDEventProfilerW32::AllocPerThreadInfo() {
 
 bool VDEventProfilerW32::AllocBlock(PerThreadInfo *pti) {
 	mMutex.Lock();
-	bool enabled = mEnableCount > 0;
+	bool enabled = mEnableCount.load(std::memory_order_acquire) > 0;
 	if (enabled) {
 		EventBlock *block = new EventBlock;
 		pti->mEventBlocks.push_back(block);
@@ -536,7 +535,7 @@ bool VDEventProfilerW32::AllocBlock(PerThreadInfo *pti) {
 
 bool VDEventProfilerW32::AllocSampleBlock(PerSampleInfo *psi) {
 	mMutex.Lock();
-	bool enabled = mEnableCount > 0;
+	bool enabled = mEnableCount.load(std::memory_order_acquire) > 0;
 	if (enabled) {
 		VDSampleBlock *block = new VDSampleBlock;
 		psi->mBlocks.push_back(block);

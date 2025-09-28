@@ -343,22 +343,22 @@ public:
 	VDCaptureProjectUI();
 	~VDCaptureProjectUI();
 
-	int AddRef();
-	int Release();
+	int AddRef() override;
+	int Release() override;
 
-	bool Attach(VDGUIHandle hwnd, IVDCaptureProject *pProject);
-	void Detach();
+	bool Attach(VDGUIHandle hwnd, IVDCaptureProject *pProject) override;
+	void Detach() override;
 
-	bool	SetDriver(const wchar_t *s);
-	void	SetCaptureFile(const wchar_t *s);
-	void	PreallocateCaptureFile(sint64 size);
-	bool	SetTunerChannel(int ch);
-	bool	SetTunerExactFrequency(uint32 freq);
-	void	SetTunerInputMode(bool cable);
-	void	SetTimeLimit(int limitsecs);
-	void	SetAudioCaptureEnabled(bool enabled);
-	void	SetAudioPlaybackEnabled(bool enabled);
-	void	Capture();
+	bool	SetDriver(const wchar_t *s) override;
+	void	SetCaptureFile(const wchar_t *s) override;
+	void	PreallocateCaptureFile(sint64 size) override;
+	bool	SetTunerChannel(int ch) override;
+	bool	SetTunerExactFrequency(uint32 freq) override;
+	void	SetTunerInputMode(bool cable) override;
+	void	SetTimeLimit(int limitsecs) override;
+	void	SetAudioCaptureEnabled(bool enabled) override;
+	void	SetAudioPlaybackEnabled(bool enabled) override;
+	void	Capture() override;
 
 protected:
 	void	SetDisplayMode(DisplayMode mode);
@@ -429,37 +429,37 @@ protected:
 	void	ShutdownTimingGraph();
 
 	// callbacks
-	void	UICaptureDriversUpdated();
-	void	UICaptureDriverDisconnecting(int driver);
-	void	UICaptureDriverChanging(int driver);
-	void	UICaptureDriverChanged(int driver);
-	void	UICaptureAudioDriversUpdated();
-	void	UICaptureAudioDriverChanged(int driver);
-	void	UICaptureAudioSourceChanged(int source);
-	void	UICaptureAudioInputChanged(int input);
-	void	UICaptureFileUpdated();
-	void	UICaptureAudioFormatUpdated();
-	void	UICaptureVideoFormatUpdated();
-	void	UICaptureVideoPreviewFormatUpdated();
-	void	UICaptureVideoSourceChanged(int source);
-	void	UICaptureTunerChannelChanged(int ch, bool init);
-	void	UICaptureParmsUpdated();
-	bool	UICaptureAnalyzeBegin(const VDPixmap& px);
-	void	UICaptureAnalyzeFrame(const VDPixmap& px);
-	void	UICaptureAnalyzeEnd();
-	void	UICaptureVideoHistoBegin();
-	void	UICaptureVideoHisto(const float data[256]);
-	void	UICaptureVideoHistoEnd();
-	void	UICaptureAudioPeaksUpdated(int count, float* peak);
-	void	UICaptureStart(bool test);
-	bool	UICapturePreroll();
-	void	UICaptureStatusUpdated(VDCaptureStatus&);
-	void	UICaptureEnd(bool success);
+	void	UICaptureDriversUpdated() override;
+	void	UICaptureDriverDisconnecting(int driver) override;
+	void	UICaptureDriverChanging(int driver) override;
+	void	UICaptureDriverChanged(int driver) override;
+	void	UICaptureAudioDriversUpdated() override;
+	void	UICaptureAudioDriverChanged(int driver) override;
+	void	UICaptureAudioSourceChanged(int source) override;
+	void	UICaptureAudioInputChanged(int input) override;
+	void	UICaptureFileUpdated() override;
+	void	UICaptureAudioFormatUpdated() override;
+	void	UICaptureVideoFormatUpdated() override;
+	void	UICaptureVideoPreviewFormatUpdated() override;
+	void	UICaptureVideoSourceChanged(int source) override;
+	void	UICaptureTunerChannelChanged(int ch, bool init) override;
+	void	UICaptureParmsUpdated() override;
+	bool	UICaptureAnalyzeBegin(const VDPixmap& px) override;
+	void	UICaptureAnalyzeFrame(const VDPixmap& px) override;
+	void	UICaptureAnalyzeEnd() override;
+	void	UICaptureVideoHistoBegin() override;
+	void	UICaptureVideoHisto(const float data[256]) override;
+	void	UICaptureVideoHistoEnd() override;
+	void	UICaptureAudioPeaksUpdated(int count, float* peak) override;
+	void	UICaptureStart(bool test) override;
+	bool	UICapturePreroll() override;
+	void	UICaptureStatusUpdated(VDCaptureStatus&) override;
+	void	UICaptureEnd(bool success) override;
 
 	static LRESULT CALLBACK StaticStatusWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	LRESULT StatusWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 	LRESULT CommonWndProc(UINT message, WPARAM wParam, LPARAM lParam);
 	LRESULT RestrictedWndProc(UINT message, WPARAM wParam, LPARAM lParam);
 	LRESULT MainWndProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -519,7 +519,6 @@ protected:
 	};
 
 	volatile bool	mbDisplayAccelActive{};
-	VDAtomicInt		mDisplayAccelUpdateCounter{};
 
 	bool	mbSwitchSourcesTogether{true};
 	bool	mbStretchToWindow{};
@@ -586,7 +585,7 @@ protected:
 
 //	VDOneShotTimer	mOneShotTimer;
 
-	VDAtomicInt		mRefCount{};
+	std::atomic_int		mRefCount{};
 };
 
 IVDCaptureProjectUI *VDCreateCaptureProjectUI() {
@@ -606,14 +605,15 @@ VDCaptureProjectUI::~VDCaptureProjectUI() {
 }
 
 int VDCaptureProjectUI::AddRef() {
-	return ++mRefCount;
+	return mRefCount.fetch_add(1, std::memory_order_relaxed) + 1;
 }
 
 int VDCaptureProjectUI::Release() {
-	int rc = --mRefCount;
+	const int rc = mRefCount.fetch_sub(1, std::memory_order_relaxed) - 1;
 
-	if (!rc)
+	if (!rc) {
 		delete this;
+	}
 
 	return rc;
 }

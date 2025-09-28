@@ -110,7 +110,7 @@ protected:
 	VDScheduler *mpScheduler;
 
 	VDAtomicInt mbActive;
-	VDAtomicInt mbBlocked;
+	std::atomic_bool mbBlocked{true};
 	//VDAtomicInt mbBlockedPending;
 	const bool mbAccelerated;
 
@@ -123,7 +123,6 @@ VDFilterSystemProcessNode::VDFilterSystemProcessNode(IVDFilterFrameSource *src, 
 	, mpRootScheduler(rootScheduler)
 	, mpScheduler(0)
 	, mbActive(false)
-	, mbBlocked(true)
 	, mbAccelerated(src->IsAccelerated())
 {
 	//if (src->IsAccelerated()) threads = 1;
@@ -152,7 +151,7 @@ void VDFilterSystemProcessNode::RemoveFromScheduler() {
 }
 
 void VDFilterSystemProcessNode::Unblock() {
-	mbBlocked = false;
+	mbBlocked.store(false, std::memory_order_release);
 
 	if (mpScheduler) {
 		{for(int i=0; i<proxy_count; i++) proxy[i].Reschedule(); }
@@ -167,7 +166,7 @@ bool VDFilterSystemProcessNode::Service(int index) {
 	if (index>=proxy_count)
 		return false;
 
-	if (mbBlocked)
+	if (mbBlocked.load(std::memory_order_acquire))
 		return false;
 
 	VDPROFILEBEGIN("Run filter");
@@ -218,7 +217,7 @@ void VDFilterSystemProcessNode::ScheduleProcess(int index) {
 
 	VDDEBUG_FILTERSYS_DETAIL("FilterSystem[%s]: Process rescheduling request.\n", mpSource->GetDebugDesc());
 	if (mpScheduler) {
-		if (!mbBlocked) {
+		if (!mbBlocked.load(std::memory_order_acquire)) {
 			proxy[index].Reschedule();
 		}
 	} else {
