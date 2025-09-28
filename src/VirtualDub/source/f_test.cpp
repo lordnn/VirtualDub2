@@ -37,7 +37,7 @@
 		VDVideoFilterTestDialog(VDVideoFilterTestConfig& config);
 
 	protected:
-		void OnDataExchange(bool write);
+		void OnDataExchange(bool write) override;
 
 		VDVideoFilterTestConfig& mConfig;
 	};

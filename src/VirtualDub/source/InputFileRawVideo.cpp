@@ -144,8 +144,8 @@ public:
 	VDInputFileRawVideoOptionsDialog(VDInputFileRawVideoOptions& options);
 
 protected:
-	bool OnLoaded();
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
 
 	VDInputFileRawVideoOptions& mOptions;
 	static const int kFormats[];

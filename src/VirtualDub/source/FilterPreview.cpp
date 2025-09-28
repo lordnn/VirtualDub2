@@ -71,12 +71,12 @@ public:
 	void Update(int x, int y, const uint32 pixels[7][7], const VDSample& ps);
 	void UpdateText();
 
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 
 	IVDVideoDisplayDrawMode* drawMode;
 
 protected:
-	bool OnLoaded();
+	bool OnLoaded() override;
 	bool OnEraseBkgnd(HDC hdc);
 	void OnPaint();
 

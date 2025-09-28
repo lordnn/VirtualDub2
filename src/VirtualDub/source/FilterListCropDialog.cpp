@@ -18,10 +18,10 @@ public:
 	VDFilterClippingDialog(FilterInstance *pFiltInst, VDFilterChainDesc *pFilterChainDesc, sint64 initialTimeUS);
 
 protected:
-	void OnDataExchange(bool write);
-	bool OnLoaded();
+	void OnDataExchange(bool write) override;
+	bool OnLoaded() override;
 
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	void UpdateFrame(VDPosition pos);
 

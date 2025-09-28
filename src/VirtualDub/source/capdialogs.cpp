@@ -66,7 +66,7 @@ public:
 	VDDialogCaptureDiskIO(VDCaptureDiskSettings& sets) : VDDialogBaseW32(IDD_CAPTURE_DISKIO), mDiskSettings(sets) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	VDCaptureDiskSettings& mDiskSettings;
 };
@@ -199,9 +199,9 @@ public:
 	VDDialogCaptureNRThreshold(IVDCaptureProject *pProject) : VDDialogBaseW32(IDD_CAPTURE_NOISEREDUCTION), mpProject(pProject) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
-	bool PreNCDestroy() {
+	bool PreNCDestroy() override {
 		return true;
 	}
 
@@ -292,7 +292,7 @@ public:
 	VDDialogCaptureSettings(VDCaptureSettings& parms) : VDDialogBaseW32(IDD_CAPTURE_SETTINGS), mParms(parms) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	ModelessDlgNode mDlgNode;
 	VDCaptureSettings&	mParms;
@@ -388,7 +388,7 @@ public:
 	VDDialogCaptureAllocate(const VDStringW& path) : VDDialogBaseW32(IDD_CAPTURE_PREALLOCATE), mPath(path) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	const VDStringW&		mPath;
 };
@@ -483,7 +483,7 @@ public:
 	VDDialogCaptureStopPrefs(VDCaptureStopPrefs& prefs) : VDDialogBaseW32(IDD_CAPTURE_STOPCOND), mPrefs(prefs) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	VDCaptureStopPrefs& mPrefs;
 };
@@ -1007,7 +1007,7 @@ public:
 		SetWindowTextA(c0,s);
 	}
 
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override {
 		switch(msg) {
 		case WM_INITDIALOG:
 			initMask();

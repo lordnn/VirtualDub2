@@ -50,18 +50,18 @@ public:
 	FilterDefinitionInstance *Activate(VDGUIHandle hParent);
 
 protected:
-	bool OnLoaded();
-	void OnDataExchange(bool write);
-	bool OnCommand(uint32 id, uint32 extcode);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
 	void RebuildList();
 	void ReloadCheck();
 	void OnItemCheckedChanged(VDUIProxyListView *sender, int item);
 	void OnSelectionChanged(VDUIProxyListView *sender, int selIdx);
 	void OnDoubleClick(VDUIProxyListView *sender, int selIdx);
 	void OnColumnClicked(VDUIProxyListView *source, int column);
-	void OnDestroy();
-	void OnSize();
-	bool OnErase(VDZHDC hdc);
+	void OnDestroy() override;
+	void OnSize() override;
+	bool OnErase(VDZHDC hdc) override;
 
 	VDUIProxyListView mListView;
 	FilterDefinitionInstance	*mpFilterDefInst;

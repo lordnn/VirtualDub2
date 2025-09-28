@@ -43,7 +43,7 @@ public:
 		return 0 != ShowDialog(hParent);
 	}
 
-	void OnDataExchange(bool write) {
+	void OnDataExchange(bool write) override {
 		ExchangeControlValueDouble(write, IDC_RATIO, L"%.12g", mConfig.ratio, 0.5, 2.0);
 	}
 

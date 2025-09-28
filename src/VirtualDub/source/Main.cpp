@@ -1603,7 +1603,7 @@ public:
 	VDSaveImageSeqDialogW32();
 	~VDSaveImageSeqDialogW32();
 
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void UpdateFilenames();
 	void UpdateEnables();
 	void UpdateChecks();

@@ -321,9 +321,9 @@ public:
 		}
 	}
 
-	bool OnLoaded();
-	bool OnCommand(uint32 id, uint32 extcode);
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	bool OnLoaded() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 
 	FilterActivation* fa;
 	VDVideoFilterFill* filter;

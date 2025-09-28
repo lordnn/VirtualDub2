@@ -326,7 +326,7 @@ public:
 protected:
 	void ThreadRun();
 
-	VDAtomicInt			mbQuit;
+	std::atomic_bool		mbQuit{};
 	int					mBlockSize;
 	VDSignal			msigRead;
 	VDSignal			msigWrite;
@@ -337,8 +337,7 @@ protected:
 };
 
 InputFileMPEGPrefetcher::InputFileMPEGPrefetcher(VDFile& file, VDFile *unfile, int blocksize, int blockcount)
-	: mbQuit(0)
-	, mBlockSize(blocksize)
+	: mBlockSize(blocksize)
 	, mBuffer(blocksize * blockcount)
 	, mFile(file)
 	, mpUnbufferedFile(unfile)
@@ -347,7 +346,7 @@ InputFileMPEGPrefetcher::InputFileMPEGPrefetcher(VDFile& file, VDFile *unfile, i
 }
 
 InputFileMPEGPrefetcher::~InputFileMPEGPrefetcher() {
-	mbQuit = true;
+	mbQuit.store(true, std::memory_order_release);
 	msigRead.signal();
 	ThreadWait();
 }
@@ -377,7 +376,7 @@ sint32 InputFileMPEGPrefetcher::readData(void *p, sint32 count) {
 			continue;
 		}
 
-		if (mbQuit) {
+		if (mbQuit.load(std::memory_order_acquire)) {
 			if (mError.gets())
 				throw mError;
 
@@ -402,7 +401,7 @@ void InputFileMPEGPrefetcher::ThreadRun() {
 		else
 			bufferedThreshold = 0;
 
-		while(!mbQuit) {
+		while(!mbQuit.load(std::memory_order_acquire)) {
 			int actual;
 			void *p;
 
@@ -433,7 +432,7 @@ void InputFileMPEGPrefetcher::ThreadRun() {
 		mError.assign(e);
 	}
 
-	mbQuit = true;
+	mbQuit.store(true, std::memory_order_release);
 	msigWrite.signal();
 }
 

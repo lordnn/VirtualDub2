@@ -101,8 +101,8 @@ public:
 	bool Service(int index);
 	bool ServiceSync();
 
-	virtual void Schedule();
-	virtual void ScheduleProcess(int index);
+	void Schedule() override;
+	void ScheduleProcess(int index) override;
 
 protected:
 	IVDFilterFrameSource *const mpSource;

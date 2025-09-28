@@ -67,10 +67,10 @@ public:
 	const VDPluginDescription *GetFilter() const { return mpSelectedFilter; }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 
-	bool OnLoaded();
-	void OnDestroy();
+	bool OnLoaded() override;
+	void OnDestroy() override;
 	void UpdateDescription();
 
 	std::vector<VDPluginDescription *> mAudioFilters;
@@ -298,9 +298,9 @@ public:
 	VDDialogAudioFiltersW32(VDAudioFilterGraph& afg, AudioSource *pAS);
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
-	bool OnLoaded();
-	void OnSize();
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
+	bool OnLoaded() override;
+	void OnSize() override;
 
 	void SaveDialogSettings();
 	void FilterSelected() {

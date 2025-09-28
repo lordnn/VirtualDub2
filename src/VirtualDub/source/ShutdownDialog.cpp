@@ -9,9 +9,9 @@ public:
 	VDUIShutdownDialog();
 
 protected:
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 
-	bool OnLoaded();
+	bool OnLoaded() override;
 	bool OnTimer();
 
 	int mPos;

@@ -77,7 +77,7 @@ public:
 	inline bool Activate(VDGUIHandle hParent) { return 0!=ActivateDialog(hParent); }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 	void RecomputeBandwidth();
 
@@ -375,12 +375,12 @@ public:
 	int GetSelectedFormat() const { return mFormat; }
 
 protected:
-	bool OnLoaded();
+	bool OnLoaded() override;
 	void RebuildList();
-	void OnDataExchange(bool write);
-	void OnSize();
-	bool OnErase(VDZHDC hdc);
-	void OnDestroy() {
+	void OnDataExchange(bool write) override;
+	void OnSize() override;
+	bool OnErase(VDZHDC hdc) override;
+	void OnDestroy()  override{
 		VDUISaveWindowPlacementW32(mhdlg, "FormatList");
 	}
 	void OnColumnClicked(VDUIProxyListView *source, int column);
@@ -901,10 +901,10 @@ public:
 	void setCapture(BITMAPINFOHEADER* bm) { capSrc = bm; }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
-	bool OnLoaded();
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnDataExchange(bool write);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
+	bool OnLoaded() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnDataExchange(bool write) override;
 	void InitFocus();
 	void InitFinalFormat();
 	void ApplyChanges();
@@ -1432,9 +1432,9 @@ public:
 	VDDialogPerformanceOptions() : VDDialogFrameW32(IDD_PERFORMANCE) {}
 
 protected:
-	bool OnLoaded();
-	void OnHScroll(uint32 id, int code);
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnHScroll(uint32 id, int code) override;
+	void OnDataExchange(bool write) override;
 
 	VDStringW	mOutputBufferFormat;
 	VDStringW	mWaveBufferFormat;
@@ -1570,7 +1570,7 @@ public:
 	bool Activate(VDGUIHandle hParent) { return 0 != ActivateDialog(hParent); }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 
 	DubOptions& mOpts;
@@ -1791,7 +1791,7 @@ public:
 	inline bool Activate(VDGUIHandle hParent) { return 0 != ActivateDialog(hParent); }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 
 	void MSToFrames(UINT idFrames, UINT idMS);
@@ -1989,7 +1989,7 @@ public:
 	inline bool Activate(VDGUIHandle hParent) { return 0 != ActivateDialog(hParent); }
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 
 	float SliderPositionToFactor(int pos);
@@ -2120,7 +2120,7 @@ public:
 	bool cmd_jump;
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 	void ReinitEdit();
 	void OnPositionNotify(int code);
@@ -2436,7 +2436,7 @@ public:
 	void ComputeMode();
 
 protected:
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	void ReinitDialog();
 
 	const char *const mpszSettingsKey;
@@ -2528,7 +2528,7 @@ protected:
 	void EndEdit(bool write);
 	void UpdateRow(int index);
 
-	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT message, WPARAM wParam, LPARAM lParam) override;
 	static LRESULT CALLBACK LVStaticWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	LRESULT LVWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK LVStaticEditProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);

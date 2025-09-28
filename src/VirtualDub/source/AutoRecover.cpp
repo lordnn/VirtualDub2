@@ -44,10 +44,10 @@ public:
 	bool Scan(const wchar_t *path);
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	void OnDataExchange(bool write);
-	bool OnCommand(uint32 id, uint32 extcode);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	void OnDataExchange(bool write) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
 
 	void OnItemSelectionChanged(VDUIProxyListView *source, int index);
 

@@ -1534,8 +1534,8 @@ public:
 	VDUIDialogSaveRawVideoFormat(VDAVIOutputRawVideoFormat& format);
 
 protected:
-	virtual bool OnLoaded();
-	virtual void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
 
 	VDAVIOutputRawVideoFormat& mFormat;
 
@@ -1670,9 +1670,9 @@ public:
 	VDExtEncSet *GetSelectedSet() const { return mpSelectedSet; }
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	void OnDataExchange(bool write) override;
 
 	vdrefptr<VDExtEncSet> mpSelectedSet;
 	typedef vdfastvector<VDExtEncSet *> Sets;

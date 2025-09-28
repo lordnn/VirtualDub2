@@ -124,14 +124,14 @@ protected:
 		}
 	};
 
-	bool OnLoaded();
-	void OnDestroy();
+	bool OnLoaded() override;
+	void OnDestroy() override;
 	void codec_unref();
 	void SaveCompVars(COMPVARS2* vars);
-	void OnDataExchange(bool write);
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnHScroll(uint32 id, int code);
-	void OnHelp();
+	void OnDataExchange(bool write) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnHScroll(uint32 id, int code) override;
+	void OnHelp() override;
 	void EnumerateCodecs();
 	void EnumeratePluginCodecs();
 	void RebuildCodecList();

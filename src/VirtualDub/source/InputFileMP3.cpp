@@ -571,8 +571,8 @@ class VDInputFileOptionsDialogMP3 : public VDDialogFrameW32 {
 public:
 	VDInputFileOptionsDialogMP3(VDInputFileOptionsMP3 *opts) : VDDialogFrameW32(IDD_EXTOPENOPTS_MP3), mOpts(*opts) {}
 
-	bool OnLoaded();
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
 
 protected:
 	VDInputFileOptionsMP3& mOpts;

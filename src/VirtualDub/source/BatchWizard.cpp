@@ -42,8 +42,8 @@ public:
 	const wchar_t *GetReplaceString() const { return mReplaceString.c_str(); }
 
 protected:
-	bool OnLoaded();
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
 
 	VDStringW	mSearchString;
 	VDStringW	mReplaceString;
@@ -87,15 +87,15 @@ public:
 	~VDUIBatchWizard();
 
 protected:
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 	static LRESULT CALLBACK ListProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	bool OnLoaded();
+	bool OnLoaded() override;
 	void InitCommands();
 	void SetOutputAbsolute();
-	void OnDestroy();
-	void OnSize();
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnDropFiles(IVDUIDropFileList *dropFileList);
+	void OnDestroy() override;
+	void OnSize() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnDropFiles(IVDUIDropFileList *dropFileList) override;
 	bool CheckAndConfirmConflicts();
 	void DeleteSelected();
 

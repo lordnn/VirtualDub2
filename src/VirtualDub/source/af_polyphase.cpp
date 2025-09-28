@@ -393,7 +393,7 @@ public:
 		return 0 != ShowDialog(hParent);
 	}
 
-	void OnDataExchange(bool write) {
+	void OnDataExchange(bool write) override {
 		if (!write) {
 			SetControlTextF(IDC_CUTOFF, L"%u", mConfig.cutoff);
 			SetControlTextF(IDC_TAPS, L"%u", mConfig.taps);
@@ -556,7 +556,7 @@ public:
 		return 0 != ShowDialog(hParent);
 	}
 
-	void OnDataExchange(bool write) {
+	void OnDataExchange(bool write) override {
 		if (!write) {
 			SetControlTextF(IDC_FREQ, L"%d", mConfig.newfreq);
 			SetControlTextF(IDC_TAPS, L"%d", mConfig.taps);
@@ -709,7 +709,7 @@ public:
 		return 0 != ShowDialog(hParent);
 	}
 
-	void OnDataExchange(bool write) {
+	void OnDataExchange(bool write) override {
 		ExchangeControlValueDouble(write, IDC_RATIO, L"%.12g", mConfig.ratio, 0.1, 10.0);
 	}
 

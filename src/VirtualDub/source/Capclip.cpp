@@ -41,12 +41,12 @@ public:
 	VDDialogCaptureCropping(IVDCaptureProject *pProject) : VDDialogBaseW32(IDD_CAPTURE_CLIPPING), mpProject(pProject) {}
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 	void OnInit();
 	void OnCleanup();
 	void Layout();
 
-	void UICaptureAnalyzeFrame(const VDPixmap& format);
+	void UICaptureAnalyzeFrame(const VDPixmap& format) override;
 
 	IVDCaptureProject		*mpProject;
 	nsVDCapture::DisplayMode	mOldDisplayMode;

@@ -40,7 +40,7 @@ public:
 		return 0 != ActivateDialog(hParent);
 	}
 
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) {
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override {
 		char buf[256];
 
 		switch(msg) {

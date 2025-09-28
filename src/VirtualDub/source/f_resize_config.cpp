@@ -734,7 +734,7 @@ public:
 	VDVF1ResizeDlg(VDResizeFilterData& config, IVDXFilterPreview2 *ifp, uint32 w, uint32 h);
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 
 	void InitDialog();
 	uint32 ExchangeWithDialog(bool write);
@@ -1099,7 +1099,7 @@ public:
 	VDVFCanvasDlg(VDCanvasFilterData& config, IVDXFilterPreview2 *ifp, uint32 w, uint32 h);
 
 protected:
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 	void InitDialog();
 	uint32 ExchangeWithDialog(bool write, bool changeMode);
 	void UpdateDialogAbsoluteSize();

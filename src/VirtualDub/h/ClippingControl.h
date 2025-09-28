@@ -123,9 +123,9 @@ public:
 	int clip_flags;
 
 	VDClippingDialog2(int res_is);
-	bool OnLoaded();
+	bool OnLoaded() override;
 
-	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam);
+	INT_PTR DlgProc(UINT msg, WPARAM wParam, LPARAM lParam) override;
 	void SetClipEdit();
 	void init_crop();
 	void init_size();

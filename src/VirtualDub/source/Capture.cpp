@@ -130,10 +130,10 @@ public:
 		wBitsPerSample = pwfex->wBitsPerSample;
 	}
 
-	void CapBegin(sint64 global_clock){ mpCB->CapBegin(global_clock); }
-	void CapEnd(const MyError *pError){ mpCB->CapEnd(pError); }
-	bool CapEvent(DriverEvent event, int data){ return mpCB->CapEvent(event,data); }
-	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock);
+	void CapBegin(sint64 global_clock) override { mpCB->CapBegin(global_clock); }
+	void CapEnd(const MyError *pError) override { mpCB->CapEnd(pError); }
+	bool CapEvent(DriverEvent event, int data) override { return mpCB->CapEvent(event,data); }
+	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock) override;
 
 protected:
 	IVDCaptureDriverCallback *mpCB;
@@ -170,10 +170,10 @@ public:
 		mBuffer.resize(cn2*4096*ssize);
 	}
 
-	void CapBegin(sint64 global_clock){ mpCB->CapBegin(global_clock); }
-	void CapEnd(const MyError *pError){ mpCB->CapEnd(pError); }
-	bool CapEvent(DriverEvent event, int data){ return mpCB->CapEvent(event,data); }
-	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock);
+	void CapBegin(sint64 global_clock) override { mpCB->CapBegin(global_clock); }
+	void CapEnd(const MyError *pError) override { mpCB->CapEnd(pError); }
+	bool CapEvent(DriverEvent event, int data) override { return mpCB->CapEvent(event,data); }
+	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock) override;
 
 protected:
 	IVDCaptureDriverCallback *mpCB;
@@ -242,10 +242,10 @@ public:
 	void Init(IVDCaptureDriverCallback *pCB, const WAVEFORMATEX *pwfex);
 	void GetStats(VDCaptureStatus& stats);
 
-	void CapBegin(sint64 global_clock);
-	void CapEnd(const MyError *pError);
-	bool CapEvent(DriverEvent event, int data);
-	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock);
+	void CapBegin(sint64 global_clock) override;
+	void CapEnd(const MyError *pError) override;
+	bool CapEvent(DriverEvent event, int data) override;
+	void CapProcessData(int stream, const void *data, uint32 size, sint64 timestamp, bool key, sint64 global_clock) override;
 
 protected:
 	IVDCaptureDriverCallback *mpCB{};
@@ -557,170 +557,170 @@ class VDCaptureProject : public IVDCaptureProject, public IVDCaptureDriverCallba
 	friend class VDCaptureData;
 public:
 	VDCaptureProject();
-	~VDCaptureProject();
+	~VDCaptureProject() override;
 
-	int		AddRef();
-	int		Release();
+	int		AddRef() override;
+	int		Release() override;
 
-	bool	Attach(VDGUIHandle hwnd);
-	void	Detach();
+	bool	Attach(VDGUIHandle hwnd) override;
+	void	Detach() override;
 
-	IVDCaptureProjectCallback *GetCallback() { return mpCB; }
-	void	SetCallback(IVDCaptureProjectCallback *pCB);
+	IVDCaptureProjectCallback *GetCallback() override { return mpCB; }
+	void	SetCallback(IVDCaptureProjectCallback *pCB) override;
 
-	void	LockUpdates();
-	void	UnlockUpdates();
+	void	LockUpdates() override;
+	void	UnlockUpdates() override;
 
-	bool	IsHardwareDisplayAvailable();
-	void	SetDisplayMode(DisplayMode mode);
-	DisplayMode	GetDisplayMode();
-	void	SetDisplayChromaKey(int key) { mDisplayChromaKey = key; }
-	void	SetDisplayRect(const vdrect32& r);
-	vdrect32 GetDisplayRectAbsolute();
-	void	SetDisplayVisibility(bool vis);
+	bool	IsHardwareDisplayAvailable() override;
+	void	SetDisplayMode(DisplayMode mode) override;
+	DisplayMode	GetDisplayMode() override;
+	void	SetDisplayChromaKey(int key) override { mDisplayChromaKey = key; }
+	void	SetDisplayRect(const vdrect32& r) override;
+	vdrect32 GetDisplayRectAbsolute() override;
+	void	SetDisplayVisibility(bool vis) override;
 
-	void	SetVideoFrameTransferEnabled(bool ena);
-	bool	IsVideoFrameTransferEnabled();
+	void	SetVideoFrameTransferEnabled(bool ena) override;
+	bool	IsVideoFrameTransferEnabled() override;
 
-	void	SetVideoHistogramEnabled(bool ena);
-	bool	IsVideoHistogramEnabled();
+	void	SetVideoHistogramEnabled(bool ena) override;
+	bool	IsVideoHistogramEnabled() override;
 
-	void	SetFrameTime(sint32 lFrameTime);
-	sint32	GetFrameTime();
-	VDFraction	GetFrameRate();
+	void	SetFrameTime(sint32 lFrameTime) override;
+	sint32	GetFrameTime() override;
+	VDFraction	GetFrameRate() override;
 
-	void	SetTimingSetup(const VDCaptureTimingSetup& timing) { mTimingSetup = timing; UpdateTimingOptions(); }
-	const VDCaptureTimingSetup&	GetTimingSetup() { return mTimingSetup; }
+	void	SetTimingSetup(const VDCaptureTimingSetup& timing) override { mTimingSetup = timing; UpdateTimingOptions(); }
+	const VDCaptureTimingSetup&	GetTimingSetup() override { return mTimingSetup; }
 
-	void	SetLogEnabled(bool ena);
-	bool	IsLogEnabled();
-	bool	IsLogAvailable();
-	void	SaveLog(const wchar_t *path);
+	void	SetLogEnabled(bool ena) override;
+	bool	IsLogEnabled() override;
+	bool	IsLogAvailable() override;
+	void	SaveLog(const wchar_t *path) override;
 
-	bool	SetTunerChannel(int channel);
-	int		GetTunerChannel();
-	bool	GetTunerChannelRange(int& minChannel, int& maxChannel);
-	uint32	GetTunerFrequencyPrecision();
-	uint32	GetTunerExactFrequency();
-	bool	SetTunerExactFrequency(uint32 freq);
-	nsVDCapture::TunerInputMode	GetTunerInputMode();
-	void	SetTunerInputMode(nsVDCapture::TunerInputMode tunerMode);
+	bool	SetTunerChannel(int channel) override;
+	int		GetTunerChannel() override;
+	bool	GetTunerChannelRange(int& minChannel, int& maxChannel) override;
+	uint32	GetTunerFrequencyPrecision() override;
+	uint32	GetTunerExactFrequency() override;
+	bool	SetTunerExactFrequency(uint32 freq) override;
+	nsVDCapture::TunerInputMode	GetTunerInputMode() override;
+	void	SetTunerInputMode(nsVDCapture::TunerInputMode tunerMode) override;
 
-	int		GetAudioDeviceCount();
-	const wchar_t *GetAudioDeviceName(int idx);
-	void	SetAudioDevice(int idx);
-	int		GetAudioDeviceIndex();
-	int		GetAudioDeviceByName(const wchar_t *name);
+	int		GetAudioDeviceCount() override;
+	const wchar_t *GetAudioDeviceName(int idx) override;
+	void	SetAudioDevice(int idx) override;
+	int		GetAudioDeviceIndex() override;
+	int		GetAudioDeviceByName(const wchar_t *name) override;
 
-	int		GetVideoSourceCount();
-	const wchar_t *GetVideoSourceName(int idx);
-	bool	SetVideoSource(int idx);
-	int		GetVideoSourceIndex();
-	int		GetVideoSourceByName(const wchar_t *name);
+	int		GetVideoSourceCount() override;
+	const wchar_t *GetVideoSourceName(int idx) override;
+	bool	SetVideoSource(int idx) override;
+	int		GetVideoSourceIndex() override;
+	int		GetVideoSourceByName(const wchar_t *name) override;
 
-	int		GetAudioSourceCount();
-	const wchar_t *GetAudioSourceName(int idx);
-	bool	SetAudioSource(int idx);
-	int		GetAudioSourceIndex();
-	int		GetAudioSourceByName(const wchar_t *name);
+	int		GetAudioSourceCount() override;
+	const wchar_t *GetAudioSourceName(int idx) override;
+	bool	SetAudioSource(int idx) override;
+	int		GetAudioSourceIndex() override;
+	int		GetAudioSourceByName(const wchar_t *name) override;
 
-	int		GetAudioSourceForVideoSource(int idx);
+	int		GetAudioSourceForVideoSource(int idx) override;
 
-	int		GetAudioInputCount();
-	const wchar_t *GetAudioInputName(int idx);
-	bool	SetAudioInput(int idx);
-	int		GetAudioInputIndex();
-	int		GetAudioInputByName(const wchar_t *name);
+	int		GetAudioInputCount() override;
+	const wchar_t *GetAudioInputName(int idx) override;
+	bool	SetAudioInput(int idx) override;
+	int		GetAudioInputIndex() override;
+	int		GetAudioInputByName(const wchar_t *name) override;
 
-	void	SetAudioCaptureEnabled(bool ena);
-	bool	IsAudioCaptureEnabled();
-	bool	IsAudioCaptureAvailable();
+	void	SetAudioCaptureEnabled(bool ena) override;
+	bool	IsAudioCaptureEnabled() override;
+	bool	IsAudioCaptureAvailable() override;
 
-	void	SetAudioPlaybackEnabled(bool ena);
-	bool	IsAudioPlaybackEnabled();
-	bool	IsAudioPlaybackAvailable();
+	void	SetAudioPlaybackEnabled(bool ena) override;
+	bool	IsAudioPlaybackEnabled() override;
+	bool	IsAudioPlaybackAvailable() override;
 
-	void	SetAudioVumeterEnabled(bool b);
-	bool	IsAudioVumeterEnabled();
+	void	SetAudioVumeterEnabled(bool b) override;
+	bool	IsAudioVumeterEnabled() override;
 
-	void	SetHardwareBuffering(int videoBuffers, int audioBuffers, int audioBufferSize);
-	bool	GetHardwareBuffering(int& videoBuffers, int& audioBuffers, int& audioBufferSize);
+	void	SetHardwareBuffering(int videoBuffers, int audioBuffers, int audioBufferSize) override;
+	bool	GetHardwareBuffering(int& videoBuffers, int& audioBuffers, int& audioBufferSize) override;
 
-	bool	IsDriverDialogSupported(DriverDialog dlg);
-	void	DisplayDriverDialog(DriverDialog dlg);
+	bool	IsDriverDialogSupported(DriverDialog dlg) override;
+	void	DisplayDriverDialog(DriverDialog dlg) override;
 
-	bool	IsPropertySupported(uint32 id);
-	sint32	GetPropertyInt(uint32 id, bool *pAutomatic);
-	void	SetPropertyInt(uint32 id, sint32 value, bool automatic);
-	void	GetPropertyInfoInt(uint32 id, sint32& minVal, sint32& maxVal, sint32& step, sint32& defaultVal, bool& automatic, bool& manual);
+	bool	IsPropertySupported(uint32 id) override;
+	sint32	GetPropertyInt(uint32 id, bool *pAutomatic) override;
+	void	SetPropertyInt(uint32 id, sint32 value, bool automatic) override;
+	void	GetPropertyInfoInt(uint32 id, sint32& minVal, sint32& maxVal, sint32& step, sint32& defaultVal, bool& automatic, bool& manual) override;
 
-	void	GetPreviewImageSize(sint32& w, sint32& h);
+	void	GetPreviewImageSize(sint32& w, sint32& h) override;
 
-	void	SetFilterSetup(const VDCaptureFilterSetup& setup);
-	const VDCaptureFilterSetup& GetFilterSetup();
+	void	SetFilterSetup(const VDCaptureFilterSetup& setup) override;
+	const VDCaptureFilterSetup& GetFilterSetup() override;
 
-	void	SetStopPrefs(const VDCaptureStopPrefs& prefs);
-	const VDCaptureStopPrefs& GetStopPrefs();
+	void	SetStopPrefs(const VDCaptureStopPrefs& prefs) override;
+	const VDCaptureStopPrefs& GetStopPrefs() override;
 
-	void	SetDiskSettings(const VDCaptureDiskSettings& sets);
-	const VDCaptureDiskSettings& GetDiskSettings();
+	void	SetDiskSettings(const VDCaptureDiskSettings& sets) override;
+	const VDCaptureDiskSettings& GetDiskSettings() override;
 
-	uint32	GetPreviewFrameCount();
+	uint32	GetPreviewFrameCount() override;
 
-	void  LoadVideoConfig(VDRegistryAppKey& key) {
+	void  LoadVideoConfig(VDRegistryAppKey& key) override {
 		if (mpDriver) mpDriver->LoadVideoConfig(key);
 	}
-	void  SaveVideoConfig(VDRegistryAppKey& key) {
+	void  SaveVideoConfig(VDRegistryAppKey& key) override {
 		if (mpDriver) mpDriver->SaveVideoConfig(key);
 	}
-	void  LoadAudioConfig(VDRegistryAppKey& key) {
+	void  LoadAudioConfig(VDRegistryAppKey& key) override {
 		if (mpDriver) mpDriver->LoadAudioConfig(key);
 	}
-	void  SaveAudioConfig(VDRegistryAppKey& key) {
+	void  SaveAudioConfig(VDRegistryAppKey& key) override {
 		if (mpDriver) mpDriver->SaveAudioConfig(key);
 	}
 
-	bool	SetVideoFormat(const VDAVIBitmapInfoHeader& bih, LONG cbih);
-	bool	GetVideoFormat(vdstructex<VDAVIBitmapInfoHeader>& bih);
+	bool	SetVideoFormat(const VDAVIBitmapInfoHeader& bih, LONG cbih) override;
+	bool	GetVideoFormat(vdstructex<VDAVIBitmapInfoHeader>& bih) override;
 
-	void	GetAvailableAudioFormats(std::list<vdstructex<VDWaveFormat> >& aformats);
+	void	GetAvailableAudioFormats(std::list<vdstructex<VDWaveFormat> >& aformats) override;
 
-	bool	SetAudioFormat(const VDWaveFormat& wfex, LONG cbwfex);
-	bool	GetAudioFormat(vdstructex<VDWaveFormat>& wfex);
-	void	ValidateAudioFormat();
+	bool	SetAudioFormat(const VDWaveFormat& wfex, LONG cbwfex) override;
+	bool	GetAudioFormat(vdstructex<VDWaveFormat>& wfex) override;
+	void	ValidateAudioFormat() override;
 
-	void	SetAudioMask(VDAudioMaskParam& param);
-	void	GetAudioMask(VDAudioMaskParam& param){ param = audioMask; }
+	void	SetAudioMask(VDAudioMaskParam& param) override;
+	void	GetAudioMask(VDAudioMaskParam& param) override { param = audioMask; }
 
-	void	SetAudioCompFormat();
-	void	SetAudioCompFormat(const VDWaveFormat& wfex, uint32 cbwfex, const char *pShortNameHint);
-	bool	GetAudioCompFormat(vdstructex<VDWaveFormat>& wfex, VDStringA& hint);
+	void	SetAudioCompFormat() override;
+	void	SetAudioCompFormat(const VDWaveFormat& wfex, uint32 cbwfex, const char *pShortNameHint) override;
+	bool	GetAudioCompFormat(vdstructex<VDWaveFormat>& wfex, VDStringA& hint) override;
 
-	void		SetCaptureFile(const wchar_t *filename, bool bIsStripeSystem);
-	VDStringW	GetCaptureFile();
-	void		PreallocateCaptureFile(sint64 size);
-	bool		IsStripingEnabled();
+	void		SetCaptureFile(const wchar_t *filename, bool bIsStripeSystem) override;
+	VDStringW	GetCaptureFile() override;
+	void		PreallocateCaptureFile(sint64 size) override;
+	bool		IsStripingEnabled() override;
 
-	void	SetSpillSystem(bool enable);
-	bool	IsSpillEnabled();
+	void	SetSpillSystem(bool enable) override;
+	bool	IsSpillEnabled() override;
 
-	void	IncrementFileID();
-	void	DecrementFileID();
-	void	IncrementFileIDUntilClear();
+	void	IncrementFileID() override;
+	void	DecrementFileID() override;
+	void	IncrementFileIDUntilClear() override;
 
-	void	ScanForDrivers();
-	int		GetDriverCount();
-	const wchar_t *GetDriverName(int i);
-	int		GetDriverByName(const wchar_t *name);
-	bool	SelectDriver(int nDriver);
-	bool	IsDriverConnected();
-	int		GetConnectedDriverIndex();
-	const wchar_t *GetConnectedDriverName() { return GetDriverName(GetConnectedDriverIndex()); }
-	virtual void  DumpDriverStatus() { if(mpDriver) mpDriver->DisplayDump(); }
+	void	ScanForDrivers() override;
+	int		GetDriverCount() override;
+	const wchar_t *GetDriverName(int i) override;
+	int		GetDriverByName(const wchar_t *name) override;
+	bool	SelectDriver(int nDriver) override;
+	bool	IsDriverConnected() override;
+	int		GetConnectedDriverIndex() override;
+	const wchar_t *GetConnectedDriverName() override { return GetDriverName(GetConnectedDriverIndex()); }
+	virtual void  DumpDriverStatus() override { if(mpDriver) mpDriver->DisplayDump(); }
 
-	void	Capture(bool bTest);
-	void	CaptureStop();
-	bool	IsModeActive(int info);
+	void	Capture(bool bTest) override;
+	void	CaptureStop() override;
+	bool	IsModeActive(int info) override;
 
 protected:
 	int		GetByName(int count, const wchar_t *(VDCaptureProject::*pGetNameRout)(int), const wchar_t *name);

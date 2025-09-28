@@ -88,9 +88,9 @@ public:
 	}
 
 protected:
-	bool OnLoaded();
-	void OnDataExchange(bool write);
-	bool OnCommand(uint32 id, uint32 extcode);
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
 	void UpdateEnables();
 
 	void OnTypeChangedHandler(VDUIProxyComboBoxControl *source, int index);
@@ -263,7 +263,7 @@ public:
 	~VDUIDialogExtEncAudio();
 
 protected:
-	void OnDataExchange(bool write);
+	void OnDataExchange(bool write) override;
 
 	VDExtEncProfile& mProfile;
 };
@@ -299,7 +299,7 @@ public:
 	~VDUIDialogExtEncVideo();
 
 protected:
-	void OnDataExchange(bool write);
+	void OnDataExchange(bool write) override;
 
 	VDExtEncProfile& mProfile;
 	HFONT fixed_font;
@@ -396,9 +396,9 @@ public:
 	~VDUIDialogExtEncProfile();
 
 protected:
-	bool OnLoaded();
-	void OnDataExchange(bool write);
-	void OnSize();
+	bool OnLoaded() override;
+	void OnDataExchange(bool write) override;
+	void OnSize() override;
 
 	void SyncAll();
 	void SetActivePane(int idx);
@@ -556,9 +556,9 @@ public:
 	~VDUIDialogEditExternalEncoderSet();
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	void OnDataExchange(bool write);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	void OnDataExchange(bool write) override;
 
 	typedef vdfastvector<VDExtEncProfile *> Profiles;
 	Profiles mVideoProfiles;
@@ -684,10 +684,10 @@ public:
 	~VDUIDialogConfigureExternalEncoders();
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	void OnDataExchange(bool write);
-	bool OnCommand(uint32 id, uint32 extcode);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	void OnDataExchange(bool write) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
 
 	void OnTabChanged(VDUIProxyTabControl *sender, int tabIndex);
 	void OnSelChanged(VDUIProxyListView *sender, int selIndex);

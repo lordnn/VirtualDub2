@@ -408,7 +408,7 @@ public:
 	VDDialogFilterOptions(FilterInstance *fi);
 
 protected:
-	void OnDataExchange(bool write);
+	void OnDataExchange(bool write) override;
 
 	FilterInstance *mpFI;
 };
@@ -445,7 +445,7 @@ public:
 	const char *GetName() const { return mName.c_str(); }
 
 protected:
-	void OnDataExchange(bool write);
+	void OnDataExchange(bool write) override;
 
 	VDStringA mName;
 };
@@ -805,14 +805,14 @@ public:
 	bool is_first;
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	bool OnOK();
-	bool OnCancel();
-	void OnSize();
-	bool OnErase(VDZHDC hdc);
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnContextMenu(uint32 id, int x, int y);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	bool OnOK() override;
+	bool OnCancel() override;
+	void OnSize() override;
+	bool OnErase(VDZHDC hdc) override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnContextMenu(uint32 id, int x, int y) override;
 
 	void OnItemCheckedChanged(VDUIProxyListView *sender, int item);
 	void OnItemCheckedChanging(VDUIProxyListView *sender, VDUIProxyListView::CheckedChangingEvent *event);

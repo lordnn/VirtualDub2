@@ -707,11 +707,11 @@ public:
 	~VDAVIFileInfoDialog();
 
 protected:
-	virtual void ThreadRun();
-	virtual bool OnLoaded();
-	virtual void OnDestroy();
-	virtual bool OnCommand(uint32 id, uint32 extcode);
-	virtual bool OnTimer(uint32 id);
+	void ThreadRun() override;
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	bool OnTimer(uint32 id) override;
 
 	enum {
 		kUpdateTimerId = 100
@@ -721,46 +721,31 @@ protected:
 	vdrefptr<IVDVideoSource> mpVideo;
 	vdrefptr<AudioSource> mpAudio;
 
-	VDAtomicInt mbAbortScan;
+	std::atomic_bool mbAbortScan{};
 
-	long	lVideoKFrames;
-	long	lVideoKMinSize;
-	sint64 i64VideoKTotalSize;
-	long	lVideoKMaxSize;
-	long	lVideoCFrames;
-	long	lVideoCMinSize;
-	sint64	i64VideoCTotalSize;
-	long	lVideoCMaxSize;
+	long	lVideoKFrames{};
+	long	lVideoKMinSize{};
+	sint64 i64VideoKTotalSize{};
+	long	lVideoKMaxSize{};
+	long	lVideoCFrames{};
+	long	lVideoCMinSize{};
+	sint64	i64VideoCTotalSize{};
+	long	lVideoCMaxSize{};
 
-	long	lAudioFrames;
-	long	lAudioMinSize;
-	sint64	i64AudioTotalSize;
-	long	lAudioMaxSize;
+	long	lAudioFrames{};
+	long	lAudioMinSize{};
+	sint64	i64AudioTotalSize{};
+	long	lAudioMaxSize{};
 
-	long	lAudioPreload;
+	long	lAudioPreload{};
 
-	bool	bAudioFramesIndeterminate;
+	bool	bAudioFramesIndeterminate{};
 
 };
 
 VDAVIFileInfoDialog::VDAVIFileInfoDialog(InputFileAVI *file)
 	: VDDialogFrameW32(IDD_AVI_INFO)
 	, mpFile(file)
-	, mbAbortScan(false)
-	, lVideoKFrames(0)
-	, lVideoKMinSize(0)
-	, i64VideoKTotalSize(0)
-	, lVideoKMaxSize(0)
-	, lVideoCFrames(0)
-	, lVideoCMinSize(0)
-	, i64VideoCTotalSize(0)
-	, lVideoCMaxSize(0)
-	, lAudioFrames(0)
-	, lAudioMinSize(0)
-	, i64AudioTotalSize(0)
-	, lAudioMaxSize(0)
-	, lAudioPreload(0)
-	, bAudioFramesIndeterminate(false)
 {
 	file->GetVideoSource(0, ~mpVideo);
 	file->GetAudioSource(0, ~mpAudio);
@@ -801,8 +786,9 @@ void VDAVIFileInfoDialog::ThreadRun() {
 			}
 		}
 
-		if (mbAbortScan)
+		if (mbAbortScan.load(std::memory_order_acquire)) {
 			return;
+		}
 	}
 
 	if (inputAudioAVI) {
@@ -830,8 +816,9 @@ void VDAVIFileInfoDialog::ThreadRun() {
 			if (lActualBytes < lAudioMinSize) lAudioMinSize = lActualBytes;
 			if (lActualBytes > lAudioMaxSize) lAudioMaxSize = lActualBytes;
 
-			if (mbAbortScan)
+			if (mbAbortScan.load(std::memory_order_acquire)) {
 				return;
+			}
 		}
 	}
 }
@@ -1023,7 +1010,7 @@ bool VDAVIFileInfoDialog::OnLoaded() {
 void VDAVIFileInfoDialog::OnDestroy() {
 	ClearPeriodicTimer(kUpdateTimerId);
 
-	mbAbortScan = true;
+	mbAbortScan.store(true, std::memory_order_release);
 	ThreadWait();
 
 	VDDialogFrameW32::OnDestroy();

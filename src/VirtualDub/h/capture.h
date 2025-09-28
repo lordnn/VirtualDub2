@@ -206,32 +206,32 @@ public:
 
 class VDCaptureProjectBaseCallback : public IVDCaptureProjectCallback {
 public:
-	virtual void UICaptureDriversUpdated();
-	virtual void UICaptureDriverDisconnecting(int driver);
-	virtual void UICaptureDriverChanging(int driver);
-	virtual void UICaptureDriverChanged(int driver);
-	virtual void UICaptureAudioDriversUpdated();
-	virtual void UICaptureAudioDriverChanged(int driver);
-	virtual void UICaptureAudioSourceChanged(int input);
-	virtual void UICaptureAudioInputChanged(int input);
-	virtual void UICaptureFileUpdated();
-	virtual void UICaptureAudioFormatUpdated();
-	virtual void UICaptureVideoFormatUpdated();
-	virtual void UICaptureVideoPreviewFormatUpdated();
-	virtual void UICaptureVideoSourceChanged(int source);
-	virtual void UICaptureTunerChannelChanged(int ch, bool init);
-	virtual void UICaptureParmsUpdated();
-	virtual bool UICaptureAnalyzeBegin(const VDPixmap& format);
-	virtual void UICaptureAnalyzeFrame(const VDPixmap& format);
-	virtual void UICaptureAnalyzeEnd();
-	virtual void UICaptureVideoHistoBegin();
-	virtual void UICaptureVideoHisto(const float data[256]);
-	virtual void UICaptureVideoHistoEnd();
-	virtual void UICaptureAudioPeaksUpdated(int count, float* peak);
-	virtual void UICaptureStart(bool test);
-	virtual bool UICapturePreroll();
-	virtual void UICaptureStatusUpdated(VDCaptureStatus&);
-	virtual void UICaptureEnd(bool success);
+	void UICaptureDriversUpdated() override;
+	void UICaptureDriverDisconnecting(int driver) override;
+	void UICaptureDriverChanging(int driver) override;
+	void UICaptureDriverChanged(int driver) override;
+	void UICaptureAudioDriversUpdated() override;
+	void UICaptureAudioDriverChanged(int driver) override;
+	void UICaptureAudioSourceChanged(int input) override;
+	void UICaptureAudioInputChanged(int input) override;
+	void UICaptureFileUpdated() override;
+	void UICaptureAudioFormatUpdated() override;
+	void UICaptureVideoFormatUpdated() override;
+	void UICaptureVideoPreviewFormatUpdated() override;
+	void UICaptureVideoSourceChanged(int source) override;
+	void UICaptureTunerChannelChanged(int ch, bool init) override;
+	void UICaptureParmsUpdated() override;
+	bool UICaptureAnalyzeBegin(const VDPixmap& format) override;
+	void UICaptureAnalyzeFrame(const VDPixmap& format) override;
+	void UICaptureAnalyzeEnd() override;
+	void UICaptureVideoHistoBegin() override;
+	void UICaptureVideoHisto(const float data[256]) override;
+	void UICaptureVideoHistoEnd() override;
+	void UICaptureAudioPeaksUpdated(int count, float* peak) override;
+	void UICaptureStart(bool test) override;
+	bool UICapturePreroll() override;
+	void UICaptureStatusUpdated(VDCaptureStatus&) override;
+	void UICaptureEnd(bool success) override;
 };
 
 class VDINTERFACE IVDCaptureProject : public IVDRefCount {

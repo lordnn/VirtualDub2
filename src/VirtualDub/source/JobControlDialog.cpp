@@ -52,7 +52,7 @@ class VDUIJobErrorDialog : public VDDialogFrameW32 {
 public:
 	VDUIJobErrorDialog(const VDJob& job);
 
-	bool OnLoaded();
+	bool OnLoaded() override;
 
 protected:
 	const VDJob&	mJob;
@@ -102,7 +102,7 @@ public:
 	VDUIJobLogDialog(const VDJob::tLogEntries& logents);
 
 protected:
-	bool OnLoaded();
+	bool OnLoaded() override;
 
 	const VDJob::tLogEntries& mLogEnts;
 };
@@ -132,11 +132,11 @@ public:
 	~VDUIJobControlDialog();
 
 protected:
-	bool OnLoaded();
-	void OnSize();
-	void OnDestroy();
-	bool OnCommand(uint32 id, uint32 extcode);
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	bool OnLoaded() override;
+	void OnSize() override;
+	void OnDestroy() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 
 	bool OnMenuHit(uint32 id);
 

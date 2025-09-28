@@ -112,11 +112,11 @@ public:
 	VDVFLogoDialog(VDVFLogoConfig& config, IVDXFilterPreview2 *mifp2);
 
 protected:
-	bool OnLoaded();
-	void OnDestroy();
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnHScroll(uint32 id, int code);
-	void OnVScroll(uint32 id, int code);
+	bool OnLoaded() override;
+	void OnDestroy() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnHScroll(uint32 id, int code) override;
+	void OnVScroll(uint32 id, int code) override;
 	void UpdateEnables();
 	void UpdateOpacityText();
 	void UpdateOffsets();

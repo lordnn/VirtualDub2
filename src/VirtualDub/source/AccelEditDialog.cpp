@@ -19,13 +19,13 @@ public:
 	~VDDialogEditAccelerators();
 
 protected:
-	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam);
+	VDZINT_PTR DlgProc(VDZUINT msg, VDZWPARAM wParam, VDZLPARAM lParam) override;
 
-	void OnDataExchange(bool write);
-	bool OnLoaded();
-	bool OnCommand(uint32 id, uint32 extcode);
-	void OnSize();
-	void OnDestroy();
+	void OnDataExchange(bool write) override;
+	bool OnLoaded() override;
+	bool OnCommand(uint32 id, uint32 extcode) override;
+	void OnSize() override;
+	void OnDestroy() override;
 	void LoadTable(const VDAccelTableDefinition& table);
 	void RefilterCommands(const char *pattern);
 	void RefreshBoundList();
